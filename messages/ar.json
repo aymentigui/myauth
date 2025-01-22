@@ -1,0 +1,100 @@
+{
+    "Index": {
+        "title": "مرحبا بكم"
+    },
+    "System": {
+        "title": "النظام",
+        "Mise a jour succes": "تحديث نجاح",
+        "Mise a jour echoue": "فشل التحديث",
+        "deletesuccess": "حذف نجاح",
+        "deletefail": "فشل الحذف",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "delete": "حذف",
+        "loading": "تحميل...",
+        "createdat": "تم الانشاء في"
+    },
+    "Menu": {
+        "title": "القائمة",
+        "home": "الصفحة الرئيسية",
+        "settings": "الإعدادات",
+        "logout": "تسجيل الخروج",
+        "footer": "© 2025 جميع الحقوق محفوظة"
+    },
+    "Error": {
+        "title": "خطأ",
+        "error": "خطأ",
+        "getInfo": "خطأ في الحصول على المعلومات",
+        "unauthorized": "غير مصرح",
+        "usernotfound": "المستخدم غير موجود"
+    },
+    "Settings": {
+        "title": "الإعدادات",
+        "username": "اسم المستخدم",
+        "change username": "تغيير اسم المستخدم",
+        "email": "البريد الإلكتروني",
+        "change email": "تغيير البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "change password": "تغيير كلمة المرور",
+        "twofactor": "تأكيد التوثيق بخطوتين",
+        "twofactordescription": "اذا قمت بتفعيل التوثيق بخطوتين سوف تكون عليك ادخال كود التوثيق الموحد عند كل تسجيل دخول.",
+        "resetpassword": "إعادة تعيين كلمة المرور",
+        "currentpassword": "كلمة المرور الحالية",
+        "newpassword": "كلمة المرور الجديدة",
+        "confirmpassword": "تأكيد كلمة المرور"
+    },
+    "Sessions": {
+        "title": "الجلسات",
+        "ip": "IP",
+        "browser": "متصفح",
+        "device": "جهاز",
+        "os": "نظام التشغيل",
+        "lastactivity": "آخر نشاط",
+        "mobile": "موبايل",
+        "desktop": "كمبيوتر",
+        "tablet": "تابلات",
+        "tv": "تلفاز",
+        "console": "الكونسول",
+        "car": "سيارة",
+        "unknown": "غير معروف",
+        "activesessions": "جميع الجلسات النشطة",
+        "sessionid": "معرف الجلسة",
+        "deletesession": "حذف الجلسة",
+        "deleteallsessions": "حذف جميع الجلسات",
+        "sessionnotfound": "الجلسة غير موجودة"
+    },
+    "Settings error": {
+        "title": "خطأ",
+        "username": "اسم المستخدم مطلوب",
+        "usernameexists": "اسم المستخدم موجود مسبقا",
+        "usernameinvalid": "اسم المستخدم غير صالح",
+        "username6": "اسم المستخدم يجب أن يحتوي على 6 أحرف على الأقل",
+        "email": "البريد الإلكتروني مطلوب",
+        "emailexists": "البريد الإلكتروني موجود مسبقا",
+        "password": "كلمة المرور مطلوبة",
+        "twofactor": "تأكيد البطاقة الثنائية مطلوب",
+        "resetpassword": "إعادة تعيين كلمة المرور مطلوب",
+        "currentpassword": "كلمة المرور الحالية مطلوبة",
+        "newpassword": "كلمة المرور الجديدة مطلوبة",
+        "confirmpassword": "تأكيد كلمة المرور مطلوب",
+        "emailinvalid": "البريد الإلكتروني غير صالح",
+        "passwordinvalid": "كلمة المرور غير صالحة",
+        "twofactorinvalid": "تأكيد البطاقة الثنائية غير صالح",
+        "resetpasswordinvalid": "إعادة تعيين كلمة المرور غير صالح",
+        "currentpasswordinvalid": "كلمة المرور الحالية غير صالحة",
+        "newpasswordinvalid": "كلمة المرور الجديدة غير صالحة",
+        "confirmpasswordinvalid": "تأكيد كلمة المرور غير صالح",
+        "passwordnotmatch": "كلمات المرور غير متطابقة",
+        "emailnotmatch": "البريد الإلكتروني غير متطابق",
+        "currentpasswordnotmatch": "كلمة المرور الحالية غير متطابقة",
+        "newpasswordnotmatch": "كلمة المرور الجديدة غير متطابقة",
+        "confirmpasswordnotmatch": "تأكيد كلمة المرور غير متطابق",
+        "password6": "كلمة المرور يجب ان تحتوي على 6 حروف على الاقل"
+    },
+    "Settings validation": {
+        "title": "تصديق",
+        "email maj": "تم تحديث البريد الإلكتروني",
+        "username maj": "تم تحديث اسم المستخدم",
+        "password maj": "تم تحديث كلمة المرور"
+    }
+}

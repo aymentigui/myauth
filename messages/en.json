@@ -1,0 +1,99 @@
+{
+    "Index":{
+        "title": "Hello World"
+    }, 
+    "System" : {
+        "title": "System",
+        "Mise a jour succes" : "Update success",
+        "Mise a jour echouee" : "Update failed",
+        "deletesuccess" : "Delete success",
+        "deletefail" : "Delete failed",
+        "save" : "Save",
+        "cancel" : "Cancel",
+        "delete" : "Delete",
+        "loading" : "Loading...",
+        "createdat" : "Created at"
+    },
+    "Menu" : {
+        "title": "Menu",
+        "home": "Home",
+        "settings" : "Settings",
+        "logout" : "Logout",
+        "footer" : "© 2025 All rights reserved"
+    },
+    "Error" : {
+        "title": "Error",
+        "error" : "Error",
+        "getInfo" : "Error in getinfo",
+        "unauthorized" : "Unauthorized",
+        "usernotfound" : "User not found"
+    },
+    "Settings" : {
+        "title": "Settings",
+        "username" : "Username",
+        "change username" : "Change Username",
+        "email" : "Email",
+        "change email" : "Change Email",
+        "password" : "Password",
+        "change password" : "Change Password",
+        "twofactor" : "Two Factor Confermation",
+        "twofactordescription": "If you enable two factor confermation, you will be asked to provide a unique authentication code during each login.",
+        "resetpassword" : "Reset Password",
+        "currentpassword" : "Current Password",
+        "newpassword" : "New Password",
+        "confirmpassword" : "Confirm Password"
+    },
+    "Sessions" : {
+        "title": "Sessions",
+        "ip" : "IP",
+        "browser" : "Browser",
+        "device" : "Device",
+        "os" : "OS",
+        "lastactivity" : "Last Activity",
+        "mobile" : "Mobile",
+        "desktop" : "Desktop",
+        "tablet" : "Tablet",
+        "tv" : "TV",
+        "console" : "Console",
+        "car" : "Car",
+        "unknown" : "Unknown",
+        "activesessions" : "Active Sessions",
+        "sessionid" : "Session ID",
+        "deletesession" : "Delete Session",
+        "deleteallsessions" : "Delete All Sessions",
+        "sessionnotfound" : "Session not found"
+    },
+    "Settings error" : {
+        "title": "Error",
+        "username" : "Username is required",
+        "usernameexists" : "Username already exists",
+        "usernameinvalid" : "Username is invalid",
+        "username6" : "Username must be at least 6 characters",
+        "email" : "Email is required",
+        "emailexists" : "Email already exists",
+        "password" : "Password is required",
+        "twofactor" : "Two Factor Confermation is required",
+        "resetpassword" : "Reset Password is required",
+        "currentpassword" : "Current Password is required",
+        "newpassword" : "New Password is required",
+        "confirmpassword" : "Confirm Password is required",
+        "emailinvalid" : "Email is invalid",
+        "passwordinvalid" : "Password is invalid",
+        "twofactorinvalid" : "Two Factor Confermation is invalid",
+        "resetpasswordinvalid" : "Reset Password is invalid",
+        "currentpasswordinvalid" : "Current Password is invalid",
+        "newpasswordinvalid" : "New Password is invalid",
+        "confirmpasswordinvalid" : "Confirm Password is invalid",
+        "passwordnotmatch" : "Password not match",
+        "currentpasswordnotmatch" : "Current Password not match",
+        "newpasswordnotmatch" : "New Password not match",
+        "confirmpasswordnotmatch" : "Confirm Password not match",
+        "password6" : "Password must contain at least 6 characters"
+    },
+    "Settings validation" : {
+        "title": "Validation",
+        "email maj" : "Email updated",
+        "username maj" : "Username updated",
+        "password maj" : "Password updated"
+    }
+}

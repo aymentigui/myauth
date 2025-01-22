@@ -1,0 +1,99 @@
+{
+    "Index":{
+        "title": "Bonjour le monde"
+    },
+    "System": {
+        "title": "Système",
+        "Mise a jour succes" : "Mise à jour avec succès",
+        "Mise a jour echoue" : "Mise à jour echoue",
+        "deletesuccess" : "Suppression avec succès",
+        "deletefail" : "Suppression echouée",
+        "save" : "Enregistrer",
+        "cancel" : "Annuler",
+        "delete" : "Supprimer",
+        "loading" : "Chargement...",
+        "createdat" : "Créé le"
+    },
+    "Menu" : {
+        "title": "Menu",
+        "home": "Accueil",
+        "settings" : "Paramètres",
+        "logout" : "Se deconnecter",
+        "footer" : "© 2025 Tous droits réservés"
+    },
+    "Error" : {
+        "title": "Erreur",
+        "error" : "Erreur",
+        "getInfo" : "Erreur dans getinfo",
+        "unauthorized" : "Non autorisé",
+        "usernotfound" : "Utilisateur non trouvé"
+    },
+    "Settings" : {
+        "title": "Paramètres",
+        "username" : "Nom d'utilisateur",
+        "change username" : "Changer le nom d'utilisateur",
+        "email" : "Email",
+        "change email" : "Changer l'email",
+        "password" : "Mot de passe",
+        "change password" : "Changer le mot de passe",
+        "twofactor" : "la verification de deux facteurs",
+        "twofactordescription" : "Si vous activez la vérification de deux facteurs, vous serez invité à fournir un code d'authentification unique lors de chaque connexion.",
+        "resetpassword" : "Réinitialiser le mot de passe",
+        "currentpassword" : "Mot de passe actuel",
+        "newpassword" : "Nouveau mot de passe",
+        "confirmpassword" : "Confirmer le mot de passe"
+    },
+    "Sessions" : {
+        "title": "Sessions",
+        "ip" : "IP",
+        "browser" : "Navigateur",
+        "device" : "Dispositif",
+        "os" : "Système d'exploitation",
+        "lastactivity" : "Dernière activité",
+        "mobile" : "Mobile",
+        "desktop" : "Desktop",
+        "tablet" : "Tablet",
+        "tv" : "TV",
+        "console" : "Console",
+        "car" : "Voiture",
+        "unknown" : "Inconnu",
+        "activesessions" : "Toutes les sessions actives",
+        "sessionid" : "ID de session",
+        "deletesession" : "Supprimer la session",
+        "deleteallsessions" : "Supprimer toutes les sessions",
+        "sessionnotfound" : "Session introuvable"
+    },
+    "Settings error" : {
+        "title": "Erreur",
+        "username" : "Le nom d'utilisateur est requis",
+        "username6" : "Le nom d'utilisateur doit contenir au moins 6 caractères",
+        "usernameexists" : "Le nom d'utilisateur existe deja",
+        "usernameinvalid" : "Le nom d'utilisateur est invalide",
+        "email" : "L'email est requis",
+        "emailexists" : "L'email existe deja",
+        "password" : "Le mot de passe est requis",
+        "twofactor" : "La confirmation de deux facteurs est requise",
+        "currentpassword" : "Le mot de passe actuel est requis",        
+        "newpassword" : "Le nouveau mot de passe est requis",
+        "confirmpassword" : "La confirmation du mot de passe est requise",
+        "emailinvalid" : "L'email est invalide",
+        "passwordinvalid" : "Le mot de passe est invalide",
+        "twofactorinvalid" : "La confirmation de deux facteurs est invalide",
+        "resetpasswordinvalid" : "La réinitialisation du mot de passe est invalide",
+        "currentpasswordinvalid" : "Le mot de passe actuel est invalide",
+        "newpasswordinvalid" : "Le nouveau mot de passe est invalide",
+        "confirmpasswordinvalid" : "La confirmation du mot de passe est invalide",
+        "passwordnotmatch" : "Les mots de passe ne correspondent pas",
+        "emailnotmatch" : "Les emails ne correspondent pas",
+        "currentpasswordnotmatch" : "Le mot de passe actuel ne correspond pas",
+        "newpasswordnotmatch" : "Le nouveau mot de passe ne correspond pas",
+        "confirmpasswordnotmatch" : "La confirmation du mot de passe ne correspond pas",
+        "password6" : "Le mot de passe doit contenir au moins 6 caractères"
+    },
+    "Settings validation" : {
+        "title" : "Validation",
+        "email maj" : "Email mis à jour",
+        "username maj" : "Nom d'utilisateur mis à jour",
+        "password maj" : "Mot de passe mis à jour"
+    }
+}
