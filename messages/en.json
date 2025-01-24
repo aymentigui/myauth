@@ -6,18 +6,36 @@
         "title": "System",
         "Mise a jour succes" : "Update success",
         "Mise a jour echouee" : "Update failed",
-        "deletesuccess" : "Delete success",
-        "deletefail" : "Delete failed",
+        "createsuccess": "Create success",
+        "createfail": "Create failed",
+        "updatesuccess": "Update success",
+        "updatefail": "Update failed",
+        "deletesuccess": "Delete success",
+        "deletefail": "Delete failed",
+        "create": "Create",
         "save" : "Save",
+        "update" : "Update",
+        "confirm" : "Confirm",
         "cancel" : "Cancel",
         "delete" : "Delete",
         "loading" : "Loading...",
-        "createdat" : "Created at"
+        "createdat" : "Created at",
+        "emailsent" : "Email sent",
+        "login" : "Login",
+        "loginsuccess" : "Login success",
+        "register" : "Register",
+        "registersuccess" : "Register success",
+        "next" : "Next",
+        "reset" : "Reset",
+        "options" : "Options",
+        "noresults" : "No results"
     },
     "Menu" : {
         "title": "Menu",
         "home": "Home",
         "settings" : "Settings",
+        "roles" : "Roles",
+        "users" : "Users",
         "logout" : "Logout",
         "footer" : "© 2025 All rights reserved"
     },
@@ -26,13 +44,20 @@
         "error" : "Error",
         "getInfo" : "Error in getinfo",
         "unauthorized" : "Unauthorized",
-        "usernotfound" : "User not found"
+        "forbidden" : "Forbidden",
+        "usernotfound" : "User not found",
+        "verificationtokennotfound" : "Verification token not found",
+        "invalidcode" : "Invalid code",
+        "codeexpired" : "Code expired",
+        "invalidtoken" : "Invalid token",
+        "tokenexpired" : "Token expired"
     },
     "Settings" : {
         "title": "Settings",
         "username" : "Username",
         "change username" : "Change Username",
         "email" : "Email",
+        "emailorusername" : "Email or Username",
         "change email" : "Change Email",
         "password" : "Password",
         "change password" : "Change Password",
@@ -41,7 +66,9 @@
         "resetpassword" : "Reset Password",
         "currentpassword" : "Current Password",
         "newpassword" : "New Password",
-        "confirmpassword" : "Confirm Password"
+        "confirmpassword" : "Confirm Password",
+        "codeverification" : "Verification code",
+        "forgetpassword" : "Forget Password ?"
     },
     "Sessions" : {
         "title": "Sessions",
@@ -69,6 +96,7 @@
         "usernameexists" : "Username already exists",
         "usernameinvalid" : "Username is invalid",
         "username6" : "Username must be at least 6 characters",
+        "username20" : "Username must be at most 20 characters",
         "email" : "Email is required",
         "emailexists" : "Email already exists",
         "password" : "Password is required",
@@ -95,5 +123,33 @@
         "email maj" : "Email updated",
         "username maj" : "Username updated",
         "password maj" : "Password updated"
+    },
+    "Roles" : {
+        "title": "Roles",
+        "name" : "Name",
+        "description" : "Description",
+        "addrole" : "Add Role",
+        "deleterole" : "Delete Role",
+        "totalusers" : "Total Users",
+        "searchroles": "Search Roles",
+        "rolename" : "Role Name",
+        "rolenamerequired" : "Please enter a role name",
+        "permissionrequired" : "You need to select at least one permission"
+    },
+    "Users" : {
+        "title": "Users",
+        "username" : "Username",
+        "email" : "Email",
+        "roles" : "Roles",
+        "adduser" : "Add User",
+        "deleteuser" : "Delete User"
+    },
+    "Permissions" : {
+        "title": "Permissions",
+        "dashboard_view": "Dashboard View",
+        "users_view": "Users View",
+        "users_create": "Users Create",
+        "users_update": "Users Update",
+        "users_delete": "Users Delete"
     }
 }

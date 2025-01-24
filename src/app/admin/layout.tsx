@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import DivAdmin from "@/components/my/div-admin";
-import { getLocale } from "next-intl/server";
+import DivAdmin from "@/components/my/admin/div-admin";
+import HeaderAdmin from "@/components/my/admin/header";
 
 
 export const metadata: Metadata = {
@@ -15,16 +15,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const locale = await getLocale();
 
   return (
-    <SidebarProvider >
-      <AppSidebar />
-      <DivAdmin />
-      <main className="w-full p-4">
-        <SidebarTrigger />
-        {children}
-      </main>
-    </SidebarProvider>
+    <div>
+      <SidebarProvider >
+        <AppSidebar />
+        <DivAdmin />
+        <main className="flex min-h-screen flex-col w-full">
+          <HeaderAdmin>
+            <SidebarTrigger />
+          </HeaderAdmin>
+          <div className="w-full p-4">
+            {children}
+          </div>
+        </main>
+      </SidebarProvider>
+    </div>
   );
 }

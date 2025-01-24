@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react'
-import { ResestSchema } from '@/lib/schema'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,6 +17,7 @@ import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { useRouter,useSearchParams  } from 'next/navigation'
 import { resetPasswordWithoutConnection } from '@/actions/auth/password-change'
+import { useTranslations } from 'next-intl'
 
 const ResetForm = () => {
     const [loading, setLoading] = useState(false)
@@ -26,12 +26,30 @@ const ResetForm = () => {
     const params = useSearchParams()
     const email= params.get('email')
 
+    const te=useTranslations('Settings error');
+    const s=useTranslations('System');
+    const t=useTranslations('Settings');
+
     if(!email){
         router.push('/auth/login')
     }
 
-    const form = useForm<z.infer<typeof ResestSchema>>({
-        resolver: zodResolver(ResestSchema),
+    const ResetSchema = z.object({
+        password: z.string().optional(),
+        passwordConfermation: z.string().optional(),
+        code : z.string().optional(),
+      })
+      .refine((data) => data.password !=="" || data.password !==null || String(data.password).length < 6, {
+        path: ["password"],
+        message: te("password6"),
+      })
+      .refine((data) => data.password === data.passwordConfermation, {
+        path: ["passwordConfermation"],
+        message: te("confirmpasswordnotmatch"),
+      });
+
+    const form = useForm<z.infer<typeof ResetSchema>>({
+        resolver: zodResolver(ResetSchema),
         defaultValues: {
             passwordConfermation: "",
             password: "",
@@ -39,7 +57,7 @@ const ResetForm = () => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof ResestSchema>) {
+    function onSubmit(values: z.infer<typeof ResetSchema>) {
         setLoading(true)
         if(!email){
             router.push('/auth/login')
@@ -75,9 +93,9 @@ const ResetForm = () => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Mot de passe</FormLabel>
+                                <FormLabel>{t("password")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="mot de passe" {...field} />
+                                    <Input placeholder={t("password")}{...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -88,9 +106,9 @@ const ResetForm = () => {
                         name="passwordConfermation"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Confirmer le mot de passe</FormLabel>
+                                <FormLabel>{t("confirmpassword")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Confirmer le mot de passe" {...field} />
+                                    <Input placeholder={t("confirmpassword")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -103,7 +121,7 @@ const ResetForm = () => {
                         name="code"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Code de confermation</FormLabel>
+                                <FormLabel>{t("codeverification")}</FormLabel>
                                 <FormControl>
                                     <Input placeholder="XXXX" {...field} />
                                 </FormControl>
@@ -114,7 +132,7 @@ const ResetForm = () => {
                 </>}
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{!passwordForget ? 'Suivant' : 'Connecter'}</Button>
+                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{!passwordForget ? s("next") : s("reset")}</Button>
                 </div>
             </form>
         </Form>

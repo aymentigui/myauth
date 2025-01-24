@@ -1,7 +1,9 @@
 "use server"
 import { prisma } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
 export async function createTowFactorConfermation(id: string) : Promise<{ status: number, data: any }> {
+    const e=await getTranslations('Error');
     try {
         const existingTwoFactorConfermation=await getTowFactorConfermationByUserId(id);
         if(existingTwoFactorConfermation.status===200 && existingTwoFactorConfermation.data){
@@ -16,11 +18,13 @@ export async function createTowFactorConfermation(id: string) : Promise<{ status
         return { status: 200, data: verificationToken };
     } catch (error) {
         console.error("An error occurred in createTowFactorConfermation");
-        return { status: 500, data: { message: 'An error occurred in createTowFactorConfermation' } };  
+        return { status: 500, data: { message: e("error") } };  
     }
 }
 
 export async function getTowFactorConfermationByUserId(id: string) : Promise<{ status: number, data: any }> {
+    const e=await getTranslations('Error');
+
     try {
         const verificationToken=await prisma.twoFactorConfermation.findFirst({
             where : {
@@ -28,7 +32,7 @@ export async function getTowFactorConfermationByUserId(id: string) : Promise<{ s
             }
         })
         if(!verificationToken){
-            return { status: 404, data: { message: 'Verification token not found' } };
+            return { status: 404, data: { message: e("verificationtokennotfound") } };
         }
         return { status: 200, data: verificationToken };
     } catch (error) {
@@ -38,6 +42,7 @@ export async function getTowFactorConfermationByUserId(id: string) : Promise<{ s
 }
 
 export async function deleteTowFactorConfermationByUserId(id: string) : Promise<{ status: number, data: any }> {
+    const e=await getTranslations('Error');
     try {
         const verificationToken=await prisma.twoFactorConfermation.deleteMany({
             where : {
@@ -47,6 +52,6 @@ export async function deleteTowFactorConfermationByUserId(id: string) : Promise<
         return { status: 200, data: verificationToken };
     } catch (error) {
         console.error("An error occurred in deleteTowFactorConfermation");
-        return { status: 500, data: { message: 'An error occurred in deleteTowFactorConfermation' } };  
+        return { status: 500, data: { message: e("error") } };  
     }
 }

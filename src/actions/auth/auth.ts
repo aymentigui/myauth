@@ -1,16 +1,31 @@
 "use server"
 import { auth, signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/db';
-import { LoginSchema, RegisterSchema } from '@/lib/schema';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { deleteVerificationTokenByEmail, generateVerificationToken, getVerificationTokenByEmail, getVerificationTokenByToken } from './verification-token';
 import { sendEmail } from '../email';
 import { createTowFactorConfermation } from './tow-factor-confermation';
+import { getTranslations } from 'next-intl/server';
 
-export async function registerUser(data: z.infer<typeof RegisterSchema>): Promise<{ status: number, data: any }> {
 
-    const result = RegisterSchema.safeParse(data);
+
+export async function registerUser(data: any): Promise<{ status: number, data: any }> {
+    const te=await getTranslations('Settings error');
+    const registerSchema = z.object({
+        username: z
+            .string({ required_error: te("username") })
+            .min(3, { message: te("username6") })
+            .max(20, { message: te("username20") }),
+        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
+        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+        passwordConfirm: z.string({ required_error: te("confirmpassword") }).min(6, { message: te("password6") }),
+    }).refine((data) => data.password === data.passwordConfirm, {
+        path: ["passwordConfirm"],
+        message: te("confirmpasswordnotmatch"),
+    });
+
+    const result = registerSchema.safeParse(data);
 
     if (!result.success) {
         console.log(result.error.errors);
@@ -59,7 +74,15 @@ export async function registerUser(data: z.infer<typeof RegisterSchema>): Promis
     }
 }
 
-export async function loginUser(data: z.infer<typeof LoginSchema>): Promise<{ status: number, data: any }> {
+export async function loginUser(data: any): Promise<{ status: number, data: any }> {
+
+    const te = await getTranslations("Settings error")
+
+    const LoginSchema = z.object({
+        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
+        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+        code: z.string().optional(),
+    });
 
     const result = LoginSchema.safeParse(data);
 
@@ -176,7 +199,7 @@ export async function verifySession(): Promise<{ status: number, data: any }> {
 
         return { status: 200, data: session }
     } catch (error) {
-        console.error("An error occurred in verifySession");
+        console.log("An error occurred in verifySession");
         return { status: 500, data: { message: 'An error occurred in verifySession' } }
     }
 }

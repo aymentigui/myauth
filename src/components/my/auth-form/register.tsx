@@ -1,5 +1,4 @@
 "use client"
-import { RegisterSchema } from '@/lib/schema'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -17,9 +16,26 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { registerUser } from '@/actions/auth/auth'
+import { useTranslations } from 'next-intl'
 
 const RegisterForm = () => {
     const [loading, setLoading] = useState(false)
+    const te=useTranslations('Settings error');
+    const s=useTranslations('System');
+    const t=useTranslations('Settings');
+
+    const RegisterSchema = z.object({
+        username: z
+            .string({ required_error: te("username") })
+            .min(3, { message: te("username6") })
+            .max(20, { message: te("username20") }),
+        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
+        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+        passwordConfirm: z.string({ required_error: te("confirmpassword") }).min(6, { message: te("password6") }),
+    }).refine((data) => data.password === data.passwordConfirm, {
+        path: ["passwordConfirm"],
+        message: te("confirmpasswordnotmatch"),
+    });
 
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
@@ -34,7 +50,7 @@ const RegisterForm = () => {
         setLoading(true)
         registerUser(values).then((res) => {
             if (res.status === 201) {  
-                toast.success('Inscription réussie')
+                toast.success(s("registersuccess"))
             } else {
                 toast.error(res.data.message)
             }
@@ -50,9 +66,9 @@ const RegisterForm = () => {
                     name="username"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Username</FormLabel>
+                            <FormLabel>{t("username")}</FormLabel>
                             <FormControl>
-                                <Input placeholder="username" {...field} />
+                                <Input placeholder={t("username")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -63,9 +79,9 @@ const RegisterForm = () => {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>{t("email")}</FormLabel>
                             <FormControl>
-                                <Input placeholder="email" {...field} />
+                                <Input placeholder={t("email")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -76,9 +92,9 @@ const RegisterForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>{t("password")}</FormLabel>
                             <FormControl>
-                                <Input placeholder="password" {...field} />
+                                <Input placeholder={t("password")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -89,9 +105,9 @@ const RegisterForm = () => {
                     name="passwordConfirm"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Confirm password</FormLabel>
+                            <FormLabel>{t("confirmpassword")}</FormLabel>
                             <FormControl>
-                                <Input placeholder="confirm password" {...field} />
+                                <Input placeholder={t("confirmpassword")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -99,7 +115,7 @@ const RegisterForm = () => {
                 />
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">Inscrire</Button>
+                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{s("register")}</Button>
                 </div>
             </form>
         </Form>

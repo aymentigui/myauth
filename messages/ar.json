@@ -6,18 +6,36 @@
         "title": "النظام",
         "Mise a jour succes": "تحديث نجاح",
         "Mise a jour echoue": "فشل التحديث",
-        "deletesuccess": "حذف نجاح",
+        "createsuccess": "إنشاء ناجح",
+        "createfail": "فشل الإنشاء",
+        "updatesuccess": "تحديث ناجح",
+        "updatefail": "فشل التحديث",
+        "deletesuccess": "حذف ناجح",
         "deletefail": "فشل الحذف",
+        "create": "إنشاء",
         "save": "حفظ",
+        "update" : "تحديث",
+        "confirm": "تأكيد",
         "cancel": "إلغاء",
         "delete": "حذف",
         "loading": "تحميل...",
-        "createdat": "تم الانشاء في"
+        "createdat": "تم الانشاء في",
+        "emailsent": "تم ارسال البريد الإلكتروني",
+        "login": "تسجيل الدخول",
+        "loginsuccess": "تم تسجيل الدخول بنجاح",
+        "register": "تسجيل جديد",
+        "registersuccess": "تم التسجيل بنجاح",
+        "next": "التالي",
+        "reset": "إعادة تعيين",
+        "options": "خيارات",
+        "noresults": "لم يتم العثور على نتائج"
     },
     "Menu": {
         "title": "القائمة",
         "home": "الصفحة الرئيسية",
         "settings": "الإعدادات",
+        "roles": "الادوار",
+        "users": "المستخدمين",
         "logout": "تسجيل الخروج",
         "footer": "© 2025 جميع الحقوق محفوظة"
     },
@@ -26,13 +44,20 @@
         "error": "خطأ",
         "getInfo": "خطأ في الحصول على المعلومات",
         "unauthorized": "غير مصرح",
-        "usernotfound": "المستخدم غير موجود"
+        "forbidden": "ممنوع",
+        "usernotfound": "المستخدم غير موجود",
+        "verificationtokennotfound": "لم يتم العثور على رمز التحقق",
+        "invalidcode": "رمز غير صحيح",
+        "codeexpired": "انتهت صلاحية الرمز",
+        "invalidtoken": "رمز غير صحيح",
+        "tokenexpired": "انتهت صلاحية الرمز"
     },
     "Settings": {
         "title": "الإعدادات",
         "username": "اسم المستخدم",
         "change username": "تغيير اسم المستخدم",
         "email": "البريد الإلكتروني",
+        "emailorusername": "البريد الإلكتروني أو اسم المستخدم",
         "change email": "تغيير البريد الإلكتروني",
         "password": "كلمة المرور",
         "change password": "تغيير كلمة المرور",
@@ -41,7 +66,9 @@
         "resetpassword": "إعادة تعيين كلمة المرور",
         "currentpassword": "كلمة المرور الحالية",
         "newpassword": "كلمة المرور الجديدة",
-        "confirmpassword": "تأكيد كلمة المرور"
+        "confirmpassword": "تأكيد كلمة المرور",
+        "codeverification" : "رمز التحقق",
+        "forgetpassword": "هل نسيت كلمة المرور ؟"
     },
     "Sessions": {
         "title": "الجلسات",
@@ -69,6 +96,7 @@
         "usernameexists": "اسم المستخدم موجود مسبقا",
         "usernameinvalid": "اسم المستخدم غير صالح",
         "username6": "اسم المستخدم يجب أن يحتوي على 6 أحرف على الأقل",
+        "username20": "اسم المستخدم يجب أن يحتوي على 20 أحرف على الأقل",
         "email": "البريد الإلكتروني مطلوب",
         "emailexists": "البريد الإلكتروني موجود مسبقا",
         "password": "كلمة المرور مطلوبة",
@@ -96,5 +124,33 @@
         "email maj": "تم تحديث البريد الإلكتروني",
         "username maj": "تم تحديث اسم المستخدم",
         "password maj": "تم تحديث كلمة المرور"
+    },
+    "Roles" : {
+        "title": "الادوار",
+        "name" : "الاسم",
+        "description" : "الوصف",
+        "addrole" : "اضافة دور",
+        "deleterole" : "حذف دور",
+        "totalusers" : "المستخدمين",
+        "searchroles" : "بحث عن أدوار",
+        "rolename" : "اسم الدور",
+        "rolenamerequired" : "الرجاء ادخال اسم دور",
+        "permissionrequired" : "يجب عليك تحديد صلاحية واحدة على الاقل"
+    },
+    "Users" : {
+        "title": "المستخدمين",
+        "username" : "اسم المستخدم",
+        "email" : "البريد الإلكتروني",
+        "roles" : "الصلاحيات",
+        "adduser" : "اضافة مستخدم",
+        "deleteuser" : "حذف مستخدم"
+    },
+    "Permissions" : {
+        "title": "الصلاحيات",
+        "dashboard_view": "عرض لوحة التحكم",
+        "users_view": "عرض المستخدمين",
+        "users_create": "اضافة مستخدم",
+        "users_update": "تحديث مستخدم",
+        "users_delete": "حذف مستخدم"
     }
 }

@@ -15,7 +15,7 @@ export async function getSession(): Promise<{ status: number, data: any }> {
         return { status: 500, data: { message: 'An error occurred in getSession' } };
     }
 }
-export async function getUserByid(id : string): Promise<{ status: number, data: any }> {
+export async function getUserByid(id: string): Promise<{ status: number, data: any }> {
     try {
         const user = await prisma.user.findUnique({ where: { id } });
         if (!user) {
@@ -28,9 +28,9 @@ export async function getUserByid(id : string): Promise<{ status: number, data: 
     }
 }
 
-export async function getUserByEmailOrUsername(emailOrUsername : string): Promise<{ status: number, data: any }> {
-    const e=await getTranslations('Error');
-    
+export async function getUserByEmailOrUsername(emailOrUsername: string): Promise<{ status: number, data: any }> {
+    const e = await getTranslations('Error');
+
     try {
         const user = await prisma.user.findFirst(
             { where: { OR: [{ email: emailOrUsername }, { username: emailOrUsername }] } }
@@ -44,3 +44,4 @@ export async function getUserByEmailOrUsername(emailOrUsername : string): Promis
         return { status: 500, data: { message: e("error") } };
     }
 }
+

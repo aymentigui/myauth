@@ -16,7 +16,7 @@ export default async function SettingsPage() {
 
 
   return <div className="px-4 md:px-16 mt-8">
-    <h1 className="text-2xl font-bold text-gray-800 mb-6">{t('title')}</h1>
+    <h1 className="text-2xl font-bold mb-6">{t('title')}</h1>
     <SettingsForm user={user.data} />
     <FooterFrom />
   </div>

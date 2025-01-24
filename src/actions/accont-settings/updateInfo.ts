@@ -32,7 +32,6 @@ export async function updateEmail( email: string) : Promise<{ status: number, da
         if(userExists){
             return { status: 400, data: { message: te("emailexists") } };
         }
-        console.log(session.data)
         const user = await prisma.user.update({
             where: { id:session.data.session.userId },
             data: { email },
@@ -41,7 +40,7 @@ export async function updateEmail( email: string) : Promise<{ status: number, da
         return { status: 200, data: { message: tv("email maj")} };
     } catch (error) {
         console.error("An error occurred in updateEmail");
-        return { status: 500, data: { message: s("Mise a jour echoue") } };  
+        return { status: 500, data: { message: s("updatefail") } };  
     }
 }
 export async function updateUsername(username: string) : Promise<{ status: number, data: { message: string} }> {
@@ -99,10 +98,10 @@ export async function updateTwoFactorConfermation(twoFactorConfermation: boolean
             data: { isTwoFactorEnabled: twoFactorConfermation },
         });
 
-        return { status: 200, data: { message: s("Mise a jour succes") } };
+        return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
         console.error("An error occurred in updateTwoFactorConfermation");
-        return { status: 500, data: { message: s("Mise a jour echoue") } };  
+        return { status: 500, data: { message: s("updatefail") } };  
     }
 }
 
@@ -146,10 +145,10 @@ export async function updatePassword(currentPassword: string, newPassword: strin
             data: { password: hashedPassword },
         });
 
-        return { status: 200, data: { message: s("Mise a jour succes") } };
+        return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
         console.error("An error occurred in updatePassword");
-        return { status: 500, data: { message: s("Mise a jour echoue") } };  
+        return { status: 500, data: { message: s("updatefail") } };  
     }
 }
 

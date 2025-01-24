@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/db"
-import { LoginSchema } from "@/lib/schema";
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
 import { getUserByid } from "./actions/user";
@@ -9,6 +8,8 @@ import { deleteTowFactorConfermationByUserId, getTowFactorConfermationByUserId }
 import { UAParser } from "ua-parser-js"
 import DeviceDetector from 'device-detector-js';
 import { v4 as uuidv4 } from 'uuid';
+import { getTranslations } from "next-intl/server"
+import { z } from "zod"
 
 /* eslint-disable */
 export const { handlers, auth, signIn, signOut } =
@@ -23,8 +24,9 @@ export const { handlers, auth, signIn, signOut } =
 
         if (user && user.id) {
           token.id = user.id
+          // @ts-ignore
+          token.isAdmin = user.isAdmin
           try {
-
             // @ts-ignore
             const userAgent = user.userAgent || "Unknown";
             const deviceInfo = UAParser(userAgent);;
@@ -79,7 +81,20 @@ export const { handlers, auth, signIn, signOut } =
         // @ts-ignore
         session.user.id = token.id
         // @ts-ignore
+        session.user.isAdmin = token.isAdmin
+        // @ts-ignore
         session.session = token.session
+        if (token?.id) {
+          const roles = await prisma.userRole.findMany({
+            where: { userId: token.id },
+            include: { role: true },
+          });
+          // @ts-ignore
+          session.user.roles = roles.map((role) => role.role.name);
+          // @ts-ignore
+          session.user.permissions = roles
+            .map((role) => role.role.permissions)
+        }
         return session
       },
       async signIn({ user, account }) {
@@ -106,6 +121,14 @@ export const { handlers, auth, signIn, signOut } =
     providers: [
       Credentials({
         authorize: async (credentials, req) => {
+
+          const te = await getTranslations("Settings error")
+
+          const LoginSchema = z.object({
+            email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
+            password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+            code: z.string().optional(),
+          });
 
           const userAgent = req?.headers.get("user-agent") || "Unknown";
           const deviceDetector = new DeviceDetector();

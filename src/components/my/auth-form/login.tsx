@@ -1,6 +1,5 @@
 "use client"
-import React, {  useState } from 'react'
-import { LoginSchema } from '@/lib/schema'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,11 +18,22 @@ import { loginUser } from '@/actions/auth/auth'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { getConfirmationCodePasswordChange } from '@/actions/auth/password-change'
+import { useTranslations } from 'next-intl'
 
 const LoginForm = () => {
     const [loading, setLoading] = useState(false)
     const [twoFactorConfermation, setTwoFactorConfermation] = useState(false)
     const router = useRouter()
+
+    const t = useTranslations("Settings")
+    const s = useTranslations("System")
+    const te = useTranslations("Settings error")
+
+    const LoginSchema = z.object({
+        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
+        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+        code: z.string().optional(),
+    });
 
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
@@ -39,7 +49,7 @@ const LoginForm = () => {
                 if (res.data.twoFactorConfermation) {
                     setTwoFactorConfermation(true)
                 } else {
-                    router.push('/admin')
+                    window.location.href = "/"
                 }
             } else {
                 toast.error(res.data.message);
@@ -48,7 +58,11 @@ const LoginForm = () => {
         setLoading(false)
     }
 
-    const  passwordForget= async()=> {
+    const passwordForget = async () => {
+        if (!form.getValues().email) {
+            toast.error(t("emailorusername"))
+            return
+        }
         getConfirmationCodePasswordChange(form.getValues().email).then((res) => {
             if (res.status === 200) {
                 router.push(`/auth/reset?email=${encodeURIComponent(form.getValues().email)}`)
@@ -67,9 +81,9 @@ const LoginForm = () => {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>{t("emailorusername")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="email or username" {...field} />
+                                    <Input placeholder={t("emailorusername")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -80,9 +94,9 @@ const LoginForm = () => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel>{t("password")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="password" {...field} />
+                                    <Input placeholder={t("password")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -95,19 +109,19 @@ const LoginForm = () => {
                         name="code"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Code</FormLabel>
+                                <FormLabel>{t("codeverification")} </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="code" {...field} />
+                                    <Input placeholder={t("codeverification")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
                         )}
                     />
                 </>}
-                <Button variant='link' type='button' onClick={passwordForget} className='p-0'>Mot de passe oublie?</Button>
+                <Button variant='link' type='button' onClick={passwordForget} className='p-0'>{t("forgetpassword")}</Button>
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? 'Confirmer' : 'Connecter'}</Button>
+                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? s("confirm") : s("login")}</Button>
                 </div>
             </form>
         </Form>

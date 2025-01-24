@@ -6,18 +6,36 @@
         "title": "Système",
         "Mise a jour succes" : "Mise à jour avec succès",
         "Mise a jour echoue" : "Mise à jour echoue",
-        "deletesuccess" : "Suppression avec succès",
-        "deletefail" : "Suppression echouée",
+        "createsuccess": "Création avec succès",
+        "createfail": "Création echoue",
+        "updatesuccess": "Mise à jour avec succès",
+        "updatefail": "Mise à jour echoue",
+        "deletesuccess": "Suppression avec succès",
+        "deletefail": "Suppression echoue",
+        "create": "Ajouter",
         "save" : "Enregistrer",
+        "update" : "Modifier",
+        "confirm" : "Confirmer",
         "cancel" : "Annuler",
         "delete" : "Supprimer",
         "loading" : "Chargement...",
-        "createdat" : "Créé le"
+        "createdat" : "Créé le",
+        "emailsent" : "Email envoyé",
+        "login" : "Connexion",
+        "loginsuccess" : "Connexion avec succès",
+        "register" : "Inscription",
+        "registersuccess" : "Inscription avec succès",
+        "next" : "Suivant",
+        "reset" : "Reinitialiser",
+        "options" : "Options",
+        "noresults" : "Aucun resultat"
     },
     "Menu" : {
         "title": "Menu",
         "home": "Accueil",
         "settings" : "Paramètres",
+        "roles" : "Roles",
+        "users" : "Utilisateurs",
         "logout" : "Se deconnecter",
         "footer" : "© 2025 Tous droits réservés"
     },
@@ -26,13 +44,20 @@
         "error" : "Erreur",
         "getInfo" : "Erreur dans getinfo",
         "unauthorized" : "Non autorisé",
-        "usernotfound" : "Utilisateur non trouvé"
+        "forbidden" : "Interdit",
+        "usernotfound" : "Utilisateur non trouvé",
+        "verificationtokennotfound" : "Le token de verification n'a pas été trouvé",
+        "invalidcode" : "Le code fourni est invalide",
+        "codeexpired" : "Le code fourni a expiré",
+        "invalidtoken" : "Le token fourni est invalide",
+        "tokenexpired" : "Le token fourni a expiré"
     },
     "Settings" : {
         "title": "Paramètres",
         "username" : "Nom d'utilisateur",
         "change username" : "Changer le nom d'utilisateur",
         "email" : "Email",
+        "emailorusername" : "Email ou Nom d'utilisateur",
         "change email" : "Changer l'email",
         "password" : "Mot de passe",
         "change password" : "Changer le mot de passe",
@@ -41,7 +66,9 @@
         "resetpassword" : "Réinitialiser le mot de passe",
         "currentpassword" : "Mot de passe actuel",
         "newpassword" : "Nouveau mot de passe",
-        "confirmpassword" : "Confirmer le mot de passe"
+        "confirmpassword" : "Confirmer le mot de passe",
+        "codeverification" : "Code de vérification",
+        "forgetpassword" : "Mot de passe oublié ?"
     },
     "Sessions" : {
         "title": "Sessions",
@@ -67,6 +94,7 @@
         "title": "Erreur",
         "username" : "Le nom d'utilisateur est requis",
         "username6" : "Le nom d'utilisateur doit contenir au moins 6 caractères",
+        "username20" : "Le nom d'utilisateur doit contenir au plus 20 caractères",
         "usernameexists" : "Le nom d'utilisateur existe deja",
         "usernameinvalid" : "Le nom d'utilisateur est invalide",
         "email" : "L'email est requis",
@@ -95,5 +123,33 @@
         "email maj" : "Email mis à jour",
         "username maj" : "Nom d'utilisateur mis à jour",
         "password maj" : "Mot de passe mis à jour"
+    },
+    "Roles" : {
+        "title": "Roles",
+        "name" : "Nom",
+        "description" : "Description",
+        "addrole" : "Ajouter un role",
+        "deleterole" : "Supprimer le role",
+        "totalusers" : "Total des utilisateurs",
+        "searchroles" : "Rechercher des roles",
+        "rolename" : "Nom du role",
+        "rolenamerequired" : "Veuillez saisir un nom de rôle",
+        "permissionrequired" : "Vous devez choisir au moins une permission"
+    },
+    "Users" : {
+        "title": "Utilisateurs",
+        "username" : "Nom d'utilisateur",
+        "email" : "Email",
+        "roles" : "Roles",
+        "adduser" : "Ajouter un utilisateur",
+        "deleteuser" : "Supprimer l'utilisateur"
+    },
+    "Permissions" : {
+        "title": "Permissions",
+        "dashboard_view": "Dashboard View",
+        "users_view": "Users View",
+        "users_create": "Users Create",
+        "users_update": "Users Update",
+        "users_delete": "Users Delete"
     }
 }

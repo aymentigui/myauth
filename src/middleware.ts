@@ -2,13 +2,18 @@ import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 import { apiAuthPrefix, authRoutes, privateRoutes } from "./route";
 import { NextResponse } from "next/server";
-
+import { getToken } from "next-auth/jwt";
 const { auth } = NextAuth(authConfig)
 
-
-export default auth((req) => {
+export default auth(async (req) => {
   const { cookies, nextUrl } = req;
   const isLogging = !!req.auth; // Vérifie si l'utilisateur est connecté
+
+  // const secret = process.env.AUTH_SECRET;
+  // const token = await getToken({ req, secret });
+  // if (token) {
+  //   console.log("Données du JWT : ", token); // Inclut `id` et `role`
+  // }
 
   let lang = cookies.get('lang')?.value || 'en';
   // Vérifiez si la langue est valide
