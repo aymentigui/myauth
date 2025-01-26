@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/db";
 
-export async function getUsers() {
+export async function getUsers() : Promise<{ status: number, data: any }> {
     try {
         const users = await prisma.user.findMany({
             select: {
@@ -12,6 +12,7 @@ export async function getUsers() {
                 username: true,
                 email: true,
                 image: true,
+                isAdmin: true,
                 roles: {
                     select: {
                         role: {

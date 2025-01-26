@@ -28,7 +28,8 @@
         "next" : "Suivant",
         "reset" : "Reinitialiser",
         "options" : "Options",
-        "noresults" : "Aucun resultat"
+        "noresults" : "Aucun resultat",
+        "search" : "Rechercher"
     },
     "Menu" : {
         "title": "Menu",
@@ -142,7 +143,23 @@
         "email" : "Email",
         "roles" : "Roles",
         "adduser" : "Ajouter un utilisateur",
-        "deleteuser" : "Supprimer l'utilisateur"
+        "deleteuser" : "Supprimer l'utilisateur",
+        "updateuser" : "Modifier l'utilisateur",
+        "firstname" : "Prénom",
+        "lastname" : "Nom de famille",
+        "password" : "Mot de passe",
+        "role" : "Role",
+        "isadmin" : "Admin",
+        "usernamerequired" : "Veuillez saisir un nom d'utilisateur",
+        "emailrequired" : "Veuillez saisir un email",
+        "firstnamerequired" : "Veuillez saisir un prénom",
+        "lastnamerequired" : "Veuillez saisir un nom de famille",
+        "passwordrequired" : "Veuillez saisir un mot de passe",
+        "emailinvalid" : "L'email est invalide",
+        "emailexists" : "L'email existe deja",
+        "usernameexists" : "Le nom d'utilisateur existe deja",
+        "password6" : "Le mot de passe doit contenir au moins 6 caractères",
+        "selectrole" : "Veuillez choisir un role"
     },
     "Permissions" : {
         "title": "Permissions",

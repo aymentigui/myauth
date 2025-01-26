@@ -1,5 +1,5 @@
 "use client"
-import { verifySessionFetch } from '@/actions/actions-client/auth';
+import { verifySessionFetch } from '@/actions-client/auth';
 import React, { useEffect } from 'react'
 
 const DivAdmin = () => {

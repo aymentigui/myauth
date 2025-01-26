@@ -28,7 +28,8 @@
         "next": "التالي",
         "reset": "إعادة تعيين",
         "options": "خيارات",
-        "noresults": "لم يتم العثور على نتائج"
+        "noresults": "لم يتم العثور على نتائج",
+        "search": "بحث"
     },
     "Menu": {
         "title": "القائمة",
@@ -141,9 +142,25 @@
         "title": "المستخدمين",
         "username" : "اسم المستخدم",
         "email" : "البريد الإلكتروني",
-        "roles" : "الصلاحيات",
+        "roles" : "الادوار",
         "adduser" : "اضافة مستخدم",
-        "deleteuser" : "حذف مستخدم"
+        "updateuser" : "تعديل مستخدم",
+        "deleteuser" : "حذف مستخدم",
+        "firstname" : "الاسم",
+        "lastname" : "اللقب",
+        "password" : "كلمة المرور",
+        "role" : "الدور",
+        "isadmin" : "ادمن",
+        "usernamerequired" : "الرجاء ادخال اسم المستخدم",
+        "emailrequired" : "الرجاء ادخال البريد الإلكتروني",
+        "firstnamerequired" : "الرجاء ادخال الاسم",
+        "lastnamerequired" : "الرجاء ادخال اللقب",
+        "passwordrequired" : "الرجاء ادخال كلمة المرور",
+        "emailinvalid" : "البريد الإلكتروني غير صالح",
+        "emailexists" : "البريد الإلكتروني موجود",
+        "usernameexists" : "اسم المستخدم موجود",
+        "password6" : "كلمة المرور يجب ان تحتوي على 6 حروف على الاقل",
+        "selectrole" : "الرجاء اختيار دور"
     },
     "Permissions" : {
         "title": "الصلاحيات",

@@ -45,9 +45,9 @@ model Role {
 
 model UserRole {
   id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  role   Role   @relation(fields: [roleId], references: [id])
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId String
 }
 
@@ -63,7 +63,7 @@ model twoFactorConfermation {
   id        String   @id @default(cuid())
   userId    String
   expiredAt DateTime
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
 }
@@ -72,7 +72,7 @@ model ResetPasswordConfermation {
   id        String   @id @default(cuid())
   userId    String
   expiredAt DateTime
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
 }

@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import SettingsForm from "./settingsForm";
 import { getUserByid } from "@/actions/user";
-import FooterFrom from "@/components/my/footer-from";
 import { getTranslations } from "next-intl/server";
 
 export default async function SettingsPage() {
@@ -18,7 +17,7 @@ export default async function SettingsPage() {
   return <div className="px-4 md:px-16 mt-8">
     <h1 className="text-2xl font-bold mb-6">{t('title')}</h1>
     <SettingsForm user={user.data} />
-    <FooterFrom />
+    <div className='w-full h-20'></div>
   </div>
 }
 

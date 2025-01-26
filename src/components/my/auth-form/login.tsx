@@ -49,7 +49,7 @@ const LoginForm = () => {
                 if (res.data.twoFactorConfermation) {
                     setTwoFactorConfermation(true)
                 } else {
-                    window.location.href = "/"
+                    router.push("/admin");
                 }
             } else {
                 toast.error(res.data.message);

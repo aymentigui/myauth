@@ -1,5 +1,6 @@
 "use client"
-import { logoutUser, verifySession } from "../auth/auth";
+
+import { logoutUser, verifySession } from "@/actions/auth/auth";
 
 export const verifySessionFetch = async () => {
     try {
