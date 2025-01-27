@@ -3,11 +3,23 @@ import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { verifySession } from "../auth/auth";
+import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
 
 export async function updateUser(id: string, data: any): Promise<{ status: number, data: any }> {
     const u = await getTranslations("Users");
     const s = await getTranslations("System");
+    const e=await getTranslations('Error');
     try {
+        const session = await verifySession()
+        if (!session || session.status != 200) {
+            return { status: 401, data: { message: e('unauthorized') } }
+        }
+        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_update']);
+
+        if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
+            return { status: 403, data: { message: e('forbidden') } };
+        }
         const userSchema = z.object({
             firstname: z.string().min(1, u("firstnamerequired")),
             lastname: z.string().min(1, u("lastnamerequired")),

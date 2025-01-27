@@ -15,7 +15,7 @@ type User = {
 
 type DialogContextType = {
   isOpen: boolean;
-  isAdd : boolean;
+  isAdd: boolean;
   user?: User;
   openDialog: (isAdd?: boolean, user?: User) => void;
   closeDialog: () => void;
@@ -25,8 +25,9 @@ const DialogContext = createContext<DialogContextType | undefined>(undefined);
 
 export const AddUpdateUserDialogProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAdd, setIsAdd] = useState(true); 
+  const [isAdd, setIsAdd] = useState(true);
   const [user, setUser] = useState<User>();
+
   const openDialog = (isAdd?: boolean, user?: User) => {
     if (isAdd !== undefined) setIsAdd(isAdd);
     if (user) setUser(user)
@@ -35,7 +36,7 @@ export const AddUpdateUserDialogProvider = ({ children }: { children: React.Reac
 
   const closeDialog = () => {
     setIsOpen(false);
-    setIsAdd(true); 
+    setIsAdd(true);
     setUser(undefined);
   };
 

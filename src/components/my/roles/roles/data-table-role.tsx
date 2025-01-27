@@ -20,6 +20,9 @@ import {
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
+import { withAuthorizationPermission2 } from "@/actions/permissions";
+import { usePermissions } from "@/hooks/use-permissions";
+import { useSession } from "@/hooks/use-session";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,13 +42,23 @@ export function DataTable<TData, TValue>({
   });
 
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const { hasPermissionUpdateRoles, hasPermissionDeleteRoles, setHasPermissionUpdateRoles, setHasPermissionDeleteRoles } = usePermissions();
+  const { session } = useSession()
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedLanguage(Cookies.get('lang') || 'en')
-  },[])
+    if (session && session.user && session.user.id) {
+      withAuthorizationPermission2(session.user.id,["roles_update"]).then((response) => {
+        setHasPermissionUpdateRoles(response.data.hasPermission ?? false)
+      });
+      withAuthorizationPermission2(session.user.id, ["roles_delete"]).then((response) => {
+        setHasPermissionDeleteRoles(response.data.hasPermission ?? false)
+      });
+    }
+  }, [session])
 
-  const r=useTranslations('Roles')
-  const s=useTranslations('System')
+  const r = useTranslations('Roles')
+  const s = useTranslations('System')
 
   return (
     <div>
@@ -62,10 +75,10 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead
+                (header.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableHead
                   key={header.id}
                   className={`
-                    ${selectedLanguage=="ar"?"text-right":""}
+                    ${selectedLanguage == "ar" ? "text-right" : ""}
                     ${header.id === "name" ? "w-3/6" : ""}
                     ${header.id === "userCount" ? "w-2/6" : ""}
                     ${header.id === "actions" ? "w-1/6" : ""}
@@ -85,7 +98,7 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
+                  (cell.column.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableCell
                     key={cell.id}
                     className={`
                       ${cell.column.id === "name" ? "w-4/6" : ""}

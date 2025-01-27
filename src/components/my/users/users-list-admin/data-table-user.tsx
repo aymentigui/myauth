@@ -20,6 +20,9 @@ import {
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
+import { useSession } from "@/hooks/use-session";
+import { withAuthorizationPermission2 } from "@/actions/permissions";
+import { usePermissions } from "@/hooks/use-permissions";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,11 +42,20 @@ export function DataTable<TData, TValue>({
   });
 
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const { hasPermissionUpdateUsers, hasPermissionDeleteUsers, setHasPermissionUpdateUsers, setHasPermissionDeleteUsers } = usePermissions();
+  const { session } = useSession()
 
   useEffect(() => {
     setSelectedLanguage(Cookies.get('lang') || 'en')
-  }, [])
-
+    if (session && session.user && session.user.id) {
+      withAuthorizationPermission2(session.user.id,["users_update"]).then((response) => {
+        setHasPermissionUpdateUsers(response.data.hasPermission ?? false)
+      });
+      withAuthorizationPermission2(session.user.id, ["users_delete"]).then((response) => {
+        setHasPermissionDeleteUsers(response.data.hasPermission ?? false)
+      });
+    }
+  }, [session])
   const u = useTranslations('Users')
   const s = useTranslations('System')
 
@@ -60,7 +72,7 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead
+                (header.id !== "actions" || (hasPermissionDeleteUsers || hasPermissionUpdateUsers)) && <TableHead
                   key={header.id}
                 // className={`
                 //   ${selectedLanguage=="ar"?"text-right":""}
@@ -83,7 +95,7 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
+                  (cell.column.id !== "actions" || (hasPermissionDeleteUsers || hasPermissionUpdateUsers)) && <TableCell
                     key={cell.id}
                   // className={`
                   //   ${cell.column.id === "name" ? "w-4/6" : ""}

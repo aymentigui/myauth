@@ -66,9 +66,9 @@ const RegisterForm = () => {
                     name="username"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>{t("username")}</FormLabel>
+                            <FormLabel className='text-black'>{t("username")}</FormLabel>
                             <FormControl>
-                                <Input placeholder={t("username")} {...field} />
+                                <Input className='border-gray-200 focus:border-black' placeholder={t("username")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -79,9 +79,9 @@ const RegisterForm = () => {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>{t("email")}</FormLabel>
+                            <FormLabel className='text-black'>{t("email")}</FormLabel>
                             <FormControl>
-                                <Input placeholder={t("email")} {...field} />
+                                <Input className='border-gray-200 focus:border-black' placeholder={t("email")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -92,9 +92,9 @@ const RegisterForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>{t("password")}</FormLabel>
+                            <FormLabel className='text-black'>{t("password")}</FormLabel>
                             <FormControl>
-                                <Input placeholder={t("password")} {...field} />
+                                <Input className='border-gray-200 focus:border-black' placeholder={t("password")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -105,9 +105,9 @@ const RegisterForm = () => {
                     name="passwordConfirm"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>{t("confirmpassword")}</FormLabel>
+                            <FormLabel className='text-black'>{t("confirmpassword")}</FormLabel>
                             <FormControl>
-                                <Input placeholder={t("confirmpassword")} {...field} />
+                                <Input className='border-gray-200 focus:border-black' placeholder={t("confirmpassword")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -115,7 +115,7 @@ const RegisterForm = () => {
                 />
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{s("register")}</Button>
+                        disabled={loading} className={cn('font-bold w-full bg-black hover:bg-gray-800', loading && 'cursor-wait')} type="submit">{s("register")}</Button>
                 </div>
             </form>
         </Form>

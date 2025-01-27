@@ -3,6 +3,7 @@
 import { getTranslations } from "next-intl/server";
 import { verifySession } from "../auth/auth"
 import { prisma } from "@/lib/db";
+import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
 
 export async function deleteUsers(ids: string[]) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
@@ -12,9 +13,10 @@ export async function deleteUsers(ids: string[]) : Promise<{ status: number, dat
         if(!session || session.status != 200) {
             return { status: 401, data: { message: e('unauthorized') } }
         }
-        const isAdmin=session.data.user.isAdmin
-        if(!isAdmin) {
-            return { status: 403, data: { message: e('forbidden') } }
+        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_delete']);
+
+        if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
+            return { status: 403, data: { message: e('forbidden') } };
         }
         const user = await prisma.user.deleteMany({
             where: {

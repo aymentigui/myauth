@@ -3,7 +3,7 @@ import { auth, signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { deleteVerificationTokenByEmail, generateVerificationToken, getVerificationTokenByEmail, getVerificationTokenByToken } from './verification-token';
+import { deleteVerificationTokenByEmail, generateVerificationToken, getVerificationTokenByEmail } from './verification-token';
 import { sendEmail } from '../email';
 import { createTowFactorConfermation } from './tow-factor-confermation';
 import { getTranslations } from 'next-intl/server';
@@ -174,13 +174,28 @@ export async function logoutUser() {
     }
 }
 
+export async function getSession(): Promise<{ status: number, data: any }> {
+    const e = await getTranslations('Error');
+    try {
+        const session = await auth();
+        if (!session) {
+            return { status: 401, data: { message: e("unauthorized") } };
+        }
+        return { status: 200, data: session };
+    } catch (error) {
+        console.error("An error occurred in getSession");
+        return { status: 500, data: { message: e("error") } };
+    }
+}
+
 
 export async function verifySession(): Promise<{ status: number, data: any }> {
+    const e=await getTranslations('Error');
     try {
         const session = await auth();
         // @ts-ignore
         if (!session || !session.user || !session.session) {
-            return { status: 401, data: { message: 'Not authenticated' } }
+            return { status: 401, data: { message: e("unauthorized") } }
         }
 
         const existingSession = await prisma.session.findFirst({
@@ -194,12 +209,12 @@ export async function verifySession(): Promise<{ status: number, data: any }> {
             }
         })
         if (!existingSession) {
-            return { status: 401, data: { message: 'Not authenticated' } }
+            return { status: 401, data: { message: e("unauthorized") } }
         }
 
         return { status: 200, data: session }
     } catch (error) {
         console.log("An error occurred in verifySession");
-        return { status: 500, data: { message: 'An error occurred in verifySession' } }
+        return { status: 500, data: { message: e("error") } }
     }
 }

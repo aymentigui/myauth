@@ -3,10 +3,13 @@ import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { verifySession } from "../auth/auth";
+import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
 
 export async function createUser(data: any) {
     const u = await getTranslations("Users");
     const s = await getTranslations("System");
+    const e = await getTranslations('Error');
 
     const userSchema = z.object({
         firstname: z.string().min(1, u("firstnamerequired")),
@@ -18,6 +21,15 @@ export async function createUser(data: any) {
         roles: z.array(z.string()).optional(),
     });
     try {
+        const session = await verifySession()
+        if (!session || session.status != 200) {
+            return { status: 401, data: { message: e('unauthorized') } }
+        }
+        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_create']);
+
+        if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
+            return { status: 403, data: { message: e('forbidden') } };
+        }
         const result = userSchema.safeParse(data);
 
         if (!result.success) {
@@ -44,7 +56,7 @@ export async function createUser(data: any) {
                 lastname,
                 username,
                 email,
-                password:hashedPassword,
+                password: hashedPassword,
                 isAdmin,
             },
         });

@@ -23,7 +23,7 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import { updateUser } from "@/actions/users/update";
 import { useRouter } from "next/navigation";
-import { getRoles } from "@/actions/permissions";
+import { getRoles } from "@/actions/roles/get";
 
 type Role = {
   id: string;
@@ -40,7 +40,7 @@ export const AddUpdateUserDialog = () => {
 
   useEffect(() => {
     getRoles().then((res) => {
-      if (res.status === 200) {
+      if (res && res.status === 200) {
         setRoles(res.data)
       }
     });

@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/db"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
-import { getUserByid } from "./actions/user";
+import { getUserByid } from "./actions/users/get";
 import { deleteTowFactorConfermationByUserId, getTowFactorConfermationByUserId } from "./actions/auth/tow-factor-confermation";
 import { UAParser } from "ua-parser-js"
 import DeviceDetector from 'device-detector-js';

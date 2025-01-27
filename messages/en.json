@@ -130,6 +130,7 @@
         "name" : "Name",
         "description" : "Description",
         "addrole" : "Add Role",
+        "updaterole" : "Update Role",
         "deleterole" : "Delete Role",
         "totalusers" : "Total Users",
         "searchroles": "Search Roles",
@@ -167,6 +168,10 @@
         "users_view": "Users View",
         "users_create": "Users Create",
         "users_update": "Users Update",
-        "users_delete": "Users Delete"
+        "users_delete": "Users Delete",
+        "roles_view": "Roles View",
+        "roles_create": "Roles Create",
+        "roles_update": "Roles Update",
+        "roles_delete": "Roles Delete"
     }
 }

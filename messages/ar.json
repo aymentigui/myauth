@@ -131,6 +131,7 @@
         "name" : "الاسم",
         "description" : "الوصف",
         "addrole" : "اضافة دور",
+        "updaterole" : "تعديل دور",
         "deleterole" : "حذف دور",
         "totalusers" : "المستخدمين",
         "searchroles" : "بحث عن أدوار",
@@ -168,6 +169,10 @@
         "users_view": "عرض المستخدمين",
         "users_create": "اضافة مستخدم",
         "users_update": "تحديث مستخدم",
-        "users_delete": "حذف مستخدم"
+        "users_delete": "حذف مستخدم",
+        "roles_view": "عرض الادوار",
+        "roles_create": "اضافة دور",
+        "roles_update": "تحديث دور",
+        "roles_delete": "حذف دور"
     }
 }

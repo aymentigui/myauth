@@ -3,7 +3,7 @@ import { generateVerificationToken, getVerificationTokenByEmail, getVerification
 import { prisma } from "@/lib/db";
 import bcrypt from "bcrypt";
 import { sendEmail } from "../email";
-import { getUserByEmailOrUsername } from "../user";
+import { getUserByEmailOrUsername } from "../users/get";
 import { getTranslations } from "next-intl/server";
 
 

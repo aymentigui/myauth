@@ -1,7 +1,7 @@
 import { DataTable } from "./data-table-role";
 import { columns } from "./columns-role";
 import { getTranslations } from "next-intl/server";
-import { getRoles } from "@/actions/permissions";
+import { getRoles } from "@/actions/roles/get";
 
 
 

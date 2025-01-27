@@ -74,7 +74,7 @@ const LoginForm = () => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 text-black">
                 {!twoFactorConfermation && <>
                     <FormField
                         control={form.control}
@@ -83,7 +83,7 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("emailorusername")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder={t("emailorusername")} {...field} />
+                                    <Input className='border-gray-200 focus:border-black' placeholder={t("emailorusername")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -96,7 +96,7 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("password")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder={t("password")} {...field} />
+                                    <Input className='border-gray-200 focus:border-black' placeholder={t("password")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -111,17 +111,17 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("codeverification")} </FormLabel>
                                 <FormControl>
-                                    <Input placeholder={t("codeverification")} {...field} />
+                                    <Input className='border-gray-200 focus:border-black' placeholder={t("codeverification")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
                         )}
                     />
                 </>}
-                <Button variant='link' type='button' onClick={passwordForget} className='p-0'>{t("forgetpassword")}</Button>
+                <Button variant='link' type='button' onClick={passwordForget} className='p-0 text-black'>{t("forgetpassword")}</Button>
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? s("confirm") : s("login")}</Button>
+                        disabled={loading} className={cn('font-bold w-full bg-black hover:bg-gray-800 text-white', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? s("confirm") : s("login")}</Button>
                 </div>
             </form>
         </Form>

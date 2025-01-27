@@ -1,16 +1,19 @@
 "use client"
-import { verifySessionFetch } from '@/actions-client/auth';
+import { haveSession } from '@/actions/permissions';
+import { useSession } from '@/hooks/use-session';
 import React, { useEffect } from 'react'
 
 const DivAdmin = () => {
+    const { setSession } = useSession()
     useEffect(() => {
-        verifySessionFetch();
+        haveSession().then((res)=>{
+            if(res)
+                setSession(res)
+            else 
+                setSession({})
+        });
     }, [])
-    return (
-        <div className='display-none'>
-            
-        </div>
-    )
+    return (<></>)
 }
 
 export default DivAdmin

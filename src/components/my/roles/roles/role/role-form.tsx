@@ -9,7 +9,8 @@ import { AlertCircle } from "lucide-react";
 import { Permission } from "./columns-permission";
 import { DataTable } from "./data-table-permission";
 import { useTranslations } from "next-intl";
-import { AddRole, UpdateRole } from "@/actions/permissions";
+import {  AddRole } from "@/actions/roles/set";
+import {  UpdateRole } from "@/actions/roles/update";
 import toast from "react-hot-toast";
 
 type AddRoleFormProps = {

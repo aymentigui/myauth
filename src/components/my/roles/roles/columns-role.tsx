@@ -7,7 +7,8 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { deleteRole } from "@/actions/permissions";
+import { deleteRole } from "@/actions/roles/delete";
+import { usePermissions } from "@/hooks/use-permissions";
 
 export type Role = {
   id: string;
@@ -16,7 +17,7 @@ export type Role = {
 };
 
 const nameHeader = (column: any) => {
-  const r=useTranslations("Roles")
+  const r = useTranslations("Roles")
   return (
     <Button
       variant="ghost"
@@ -30,18 +31,43 @@ const nameHeader = (column: any) => {
 };
 
 const totalusersHeader = () => {
-  const r=useTranslations("Roles")
+  const r = useTranslations("Roles")
   const [selectedLanguage, setSelectedLanguage] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedLanguage(Cookies.get('lang') || 'en')
-  },[])
+  }, [])
 
   return (
     <div className={selectedLanguage === "ar" ? "text-right" : ""}>{r("totalusers")}</div>
   )
 }
 
+const actionsCell = (row: any) => {
+  const role = row.original;
+  const router = useRouter();
+  const { hasPermissionUpdateRoles, hasPermissionDeleteRoles } = usePermissions();
+
+  useEffect(() => {
+  }, []);
+
+  return (
+    <div className="w-1/6 flex gap-2">
+      {hasPermissionUpdateRoles && <Button
+        onClick={() => router.push(`/admin/roles/role/${role.id}`)}
+        variant="outline"
+      >
+        <Settings2 />
+      </Button>}
+      { hasPermissionDeleteRoles && <Button
+        onClick={() => deleteRoleHandler(role.id, router)}
+        variant="destructive"
+      >
+        <Trash />
+      </Button>}
+    </div>
+  );
+}
 
 export const columns: ColumnDef<Role>[] = [
   {
@@ -52,7 +78,7 @@ export const columns: ColumnDef<Role>[] = [
         {row.getValue("name")}
       </div>
     ),
-    enableSorting: true, 
+    enableSorting: true,
   },
   {
     accessorKey: "userCount",
@@ -66,27 +92,7 @@ export const columns: ColumnDef<Role>[] = [
   {
     id: "actions",
     header: "",
-    cell: ({ row }) => {
-      const role = row.original;
-      const router = useRouter();
-
-      return (
-        <div className="w-1/6 flex gap-2">
-          <Button
-            onClick={() => router.push(`/admin/roles/role/${role.id}`)}
-            variant="outline"
-          >
-            <Settings2 />
-          </Button>
-          <Button
-            onClick={() => deleteRoleHandler(role.id,router)}
-            variant="destructive"
-          >
-            <Trash />
-          </Button>
-        </div>
-      );
-    },
+    cell: ({ row }) => { return actionsCell(row) },
   },
 ];
 
@@ -95,7 +101,7 @@ const deleteRoleHandler = async (roleId: string, router: any) => {
   if (response.status === 200) {
     toast.success(response.data.message);
     router.refresh();
-  }else{
+  } else {
     toast.error(response.data.message)
   }
 };

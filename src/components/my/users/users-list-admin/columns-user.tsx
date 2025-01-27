@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { deleteUsers } from "@/actions/users/delete";
 import AddUpdateUserButton from "../buttons/add-update-user";
 import { useAddUpdateUserDialog } from "@/context/add-update-dialog-context";
+import { usePermissions } from "@/hooks/use-permissions";
 
 export type User = {
   id: string;
@@ -106,6 +107,7 @@ const actionsCell = (row: any) => {
   const user = row.original;
   const router = useRouter();
   const { openDialog } = useAddUpdateUserDialog();
+  const { hasPermissionUpdateUsers, hasPermissionDeleteUsers } = usePermissions();
 
   const handleOpenDialogWithTitle = () => {
     openDialog(false,row.original)
@@ -113,15 +115,15 @@ const actionsCell = (row: any) => {
 
   return (
     <div className="w-1/6 flex gap-2">
-      <Button
+      {hasPermissionDeleteUsers && <Button
         onClick={() => deleteUserHandler(user.id, router)}
         variant="destructive"
       >
         <Trash />
-      </Button>
-      <Button variant={"outline"} onClick={handleOpenDialogWithTitle}>
+      </Button>}
+      {hasPermissionUpdateUsers && <Button variant={"outline"} onClick={handleOpenDialogWithTitle}>
         <Settings2 />
-      </Button>
+      </Button>}
     </div>
   );
 };
