@@ -1,0 +1,15 @@
+
+model Role {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  permissions String
+  users       UserRole[]
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId String
+}

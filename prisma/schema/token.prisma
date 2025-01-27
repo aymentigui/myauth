@@ -1,0 +1,24 @@
+model VerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String
+  expiredAt DateTime
+}
+
+model twoFactorConfermation {
+  id        String   @id @default(cuid())
+  userId    String
+  expiredAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model ResetPasswordConfermation {
+  id        String   @id @default(cuid())
+  userId    String
+  expiredAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
