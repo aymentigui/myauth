@@ -1,7 +1,54 @@
-export function generateToken4Chiffres(): string {
-    const min = 1000; // Le minimum à 4 chiffres
-    const max = 9999; // Le maximum à 4 chiffres
-    const token = Math.floor(Math.random() * (max - min + 1)) + min;
-    return token.toString();
+
+
+import sharp from "sharp";
+
+/**
+ * Compresse une image et retourne le buffer compressé.
+ * @param file - Le fichier sous forme de Buffer ou ArrayBuffer.
+ * @param compressRatio - Le ratio de compression (entre 0 et 1).
+ * @returns Le buffer de l'image compressée ou null si ce n'est pas une image.
+ */
+export async function compressImage(
+  file: Buffer | ArrayBuffer,
+  compressRatio: number
+): Promise<File | null> {
+  // Convertir ArrayBuffer en Buffer si nécessaire
+  const buffer = Buffer.isBuffer(file) ? file : Buffer.from(file);
+
+  // Vérifier si le fichier est une image
+  const isImage = await checkIfImage(buffer);
+  if (!isImage) {
+    return null; // Retourne null si ce n'est pas une image
   }
-  
+
+  // Valider le ratio de compression
+  if (compressRatio < 0 || compressRatio > 1) {
+    throw new Error("Le ratio de compression doit être entre 0 et 1.");
+  }
+
+  // Compresser l'image avec sharp
+  const compressedImageBuffer = await sharp(buffer)
+    .jpeg({ quality: Math.floor(compressRatio * 100) }) // Convertir le ratio en pourcentage de qualité
+    .toBuffer();
+
+  // Convertir le buffer en fichier (File)
+  const compressedImageFile = new File([compressedImageBuffer], "compressed-image.jpg", {
+    type: "image/jpeg",
+  });
+
+  return compressedImageFile;
+}
+
+/**
+ * Vérifie si un fichier est une image.
+ * @param buffer - Le fichier sous forme de Buffer.
+ * @returns true si c'est une image, sinon false.
+ */
+async function checkIfImage(buffer: Buffer): Promise<boolean> {
+  try {
+    const metadata = await sharp(buffer).metadata();
+    return !!metadata.format; // Retourne true si le format est détecté
+  } catch (error) {
+    return false; // Retourne false en cas d'erreur
+  }
+}

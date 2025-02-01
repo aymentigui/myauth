@@ -4,7 +4,7 @@ import AddRoleForm from "@/components/my/roles/roles/role/role-form";
 import { permissions } from "@/db/permissions";
 import { getTranslations } from "next-intl/server";
 
-export default async function AddRolePage({ params }: { params: { id: string } }) {
+export default async function AddRolePage({ params }: any) {
   const r = await getTranslations("Roles");
   const paramsID = await params;
 

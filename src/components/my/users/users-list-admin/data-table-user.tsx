@@ -19,10 +19,7 @@ import {
 } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import Cookies from 'js-cookie';
 import { useSession } from "@/hooks/use-session";
-import { withAuthorizationPermission2 } from "@/actions/permissions";
-import { usePermissions } from "@/hooks/use-permissions";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,24 +38,22 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const [selectedLanguage, setSelectedLanguage] = useState("");
-  const { hasPermissionUpdateUsers, hasPermissionDeleteUsers, setHasPermissionUpdateUsers, setHasPermissionDeleteUsers } = usePermissions();
   const { session } = useSession()
-
-  useEffect(() => {
-    setSelectedLanguage(Cookies.get('lang') || 'en')
-    if (session && session.user && session.user.id) {
-      withAuthorizationPermission2(session.user.id,["users_update"]).then((response) => {
-        setHasPermissionUpdateUsers(response.data.hasPermission ?? false)
-      });
-      withAuthorizationPermission2(session.user.id, ["users_delete"]).then((response) => {
-        setHasPermissionDeleteUsers(response.data.hasPermission ?? false)
-      });
-    }
-  }, [session])
-  const u = useTranslations('Users')
+  const [mounted, setMounted] = useState(false);
   const s = useTranslations('System')
 
+  useEffect(() => {
+    setMounted(true);
+  }, [session]);
+
+  if(!mounted){
+    return (<div>
+    </div>)
+  }
+
+  const hasPermissionAction = (session?.user?.permissions.find((permission: string) => permission === "updateUser") ?? false) || session?.user?.isAdmin;
+
+  
   return (
     <div>
       <Input
@@ -72,7 +67,7 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                (header.id !== "actions" || (hasPermissionDeleteUsers || hasPermissionUpdateUsers)) && <TableHead
+                (header.id !== "actions" || (hasPermissionAction)) && <TableHead
                   key={header.id}
                 // className={`
                 //   ${selectedLanguage=="ar"?"text-right":""}
@@ -95,7 +90,7 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  (cell.column.id !== "actions" || (hasPermissionDeleteUsers || hasPermissionUpdateUsers)) && <TableCell
+                  (cell.column.id !== "actions" || (hasPermissionAction)) && <TableCell
                     key={cell.id}
                   // className={`
                   //   ${cell.column.id === "name" ? "w-4/6" : ""}

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const cairo = Cairo({
@@ -26,21 +26,22 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
+    <html suppressHydrationWarning lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body
         className={`
           ${cairo.className}
           antialiased`}
-      > <NextIntlClientProvider messages={messages}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={messages}>
             {children}
-          </ThemeProvider>
-        </NextIntlClientProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
         <div><Toaster /></div>
       </body>
     </html>

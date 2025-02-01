@@ -160,7 +160,9 @@
         "emailexists" : "Email already exists",
         "usernameexists" : "Username already exists",
         "password6" : "Password must contain at least 6 characters",
-        "selectrole" : "Please select a role"
+        "selectrole" : "Please select a role",
+        "avatarinvalid" : "Avatar is invalid",
+        "onlyimagesallowed" : "Only images are allowed"
     },
     "Permissions" : {
         "title": "Permissions",

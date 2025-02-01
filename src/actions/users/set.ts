@@ -5,6 +5,10 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { uploadFile } from "../superbase/upload";
+import { compressImage } from "../util";
+import { addStringToFilename } from "../util-public";
+
 
 export async function createUser(data: any) {
     const u = await getTranslations("Users");
@@ -19,6 +23,9 @@ export async function createUser(data: any) {
         password: z.string().min(6, u("password6")),
         isAdmin: z.boolean().default(false),
         roles: z.array(z.string()).optional(),
+        image: z.instanceof(File, { message: u("avatarinvalid") }).optional().refine((file) => !file || file.type.startsWith("image/"), {
+            message: u("avatarinvalid")
+        })
     });
     try {
         const session = await verifySession()
@@ -36,7 +43,7 @@ export async function createUser(data: any) {
             console.log(result.error.errors);
             return { status: 400, data: { errors: result.error.errors } };
         }
-        const { firstname, lastname, username, email, password, isAdmin, roles } = result.data;
+        const { firstname, lastname, username, email, password, isAdmin, roles, image } = result.data;
 
         const usernameExists = await prisma.user.findUnique({ where: { username } });
         if (usernameExists) {
@@ -57,23 +64,49 @@ export async function createUser(data: any) {
                 username,
                 email,
                 password: hashedPassword,
-                isAdmin,
+                isAdmin: (isAdmin && session.data.user.isAdmin) ? true : false,
             },
         });
 
         if (!isAdmin) {
             const rolesFound = await prisma.role.findMany({ where: { id: { in: roles } } });
             await prisma.userRole.createMany({
-                data: rolesFound.map((role) => ({
+                data: rolesFound.map((role: any) => ({
                     userId: user.id,
                     roleId: role.id,
                 })),
             })
         }
 
+        let imageUrl = null
+        let imageCompressedUrl = null
+        if (image) {
+            if (image?.size > 1000000) {
+                return { status: 400, data: { message: u("avatarinvalid") } };
+            }
+
+            const arrayBuffer = await image.arrayBuffer();
+            // Appeler la Server Action pour compresser l'image
+            const result = await compressImage(arrayBuffer, 0.1);
+            if (result===null) return { status: 500, data: { message: e("error") } };
+
+            imageUrl = await uploadFile(image, `${user.id}`, "profile-images")
+            imageCompressedUrl = await uploadFile(result, `${addStringToFilename(user.id, "compressed")}`, "profile-images")
+            
+            if (imageUrl.status != 200 || !imageUrl.data.path) return { status: 500, data: { message: e("error") } };
+            if (imageCompressedUrl.status != 200 || !imageCompressedUrl.data.path) return { status: 500, data: { message: e("error") } };
+            
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    image: imageUrl.data.path,
+                }
+            })
+        }
+
         return { status: 200, data: { message: s("createsuccess") } };
     } catch (error) {
-        console.error("An error occurred in createUser");
+        console.error("An error occurred in createUser" + error);
         return { status: 500, data: { message: s("createfail") } };
     }
 }

@@ -72,7 +72,30 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%}
   .dark {
+    .css-13cymwt-control {
+      background-color: black;
+    }
+    .css-t3ipsp-control {
+      background-color: black;
+    }
+    .css-1nmdiq5-menu {
+      background-color: black;
+    }
+    .css-1nmdiq5-menu div div {
+      background-color: black;
+      color: white;
+    }
+    .css-1nmdiq5-menu div div:hover {
+      background-color: white;
+      color: #000;
+    } 
 
+    .css-1jqq78o-placeholder {
+      color: white;
+    }
+    .css-1cfo1cf {
+      color: white;
+    }
     --background: 0 0% 3.9%;
 
     --foreground: 0 0% 98%;

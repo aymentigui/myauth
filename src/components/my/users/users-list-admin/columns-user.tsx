@@ -2,13 +2,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Trash, ArrowUpDown, Settings2 } from "lucide-react";
+import { Trash, ArrowUpDown, Settings2, CircleUserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { deleteUsers } from "@/actions/users/delete";
-import AddUpdateUserButton from "../buttons/add-update-user";
 import { useAddUpdateUserDialog } from "@/context/add-update-dialog-context";
-import { usePermissions } from "@/hooks/use-permissions";
+import { useSession } from "@/hooks/use-session";
+import { addStringToFilename } from "@/actions/util-public";
 
 export type User = {
   id: string;
@@ -17,6 +17,7 @@ export type User = {
   username: string;
   email: string;
   image: string;
+  imageCompressed: string;
   roles: string[];
   isAdmin: boolean;
 };
@@ -103,14 +104,29 @@ const rolesCell = (row: any) => {
   );
 };
 
+const imageCell = (row: any) => {
+  const preview = row.getValue("imageCompressed")
+  return preview ? (
+    <img
+      src={preview}
+      alt="Avatar"
+      className="w-4 h-4 object-cover rounded-full"
+    />
+  ) : (
+    <CircleUserRound  className="w-4 h-4 text-gray-500" />
+  )
+}
+
 const actionsCell = (row: any) => {
   const user = row.original;
   const router = useRouter();
   const { openDialog } = useAddUpdateUserDialog();
-  const { hasPermissionUpdateUsers, hasPermissionDeleteUsers } = usePermissions();
-
+  const { session } = useSession()
+  const hasPermissionDeleteUsers = (session?.user?.permissions.find((permission: string) => permission === "deleteUser") ?? false) || session?.user?.isAdmin;
+  const hasPermissionUpdateUsers = (session?.user?.permissions.find((permission: string) => permission === "updateUser") ?? false) || session?.user?.isAdmin;
+  
   const handleOpenDialogWithTitle = () => {
-    openDialog(false,row.original)
+    openDialog(false, row.original)
   };
 
   return (
@@ -129,6 +145,12 @@ const actionsCell = (row: any) => {
 };
 
 export const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: "imageCompressed",
+    header: "image",
+    cell: ({ row }) => ( imageCell(row) ),
+    enableSorting: true,
+  },
   {
     accessorKey: "firstname",
     header: ({ column }) => fitstnameHeader(column),

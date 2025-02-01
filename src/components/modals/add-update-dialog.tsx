@@ -24,6 +24,8 @@ import { useEffect, useState } from "react";
 import { updateUser } from "@/actions/users/update";
 import { useRouter } from "next/navigation";
 import { getRoles } from "@/actions/roles/get";
+import AvatarUploader from "../myui/avata-uploader";
+import { Loader2 } from "lucide-react";
 
 type Role = {
   id: string;
@@ -36,7 +38,9 @@ export const AddUpdateUserDialog = () => {
   const u = useTranslations("Users");
   const { isOpen, closeDialog, isAdd, user } = useAddUpdateUserDialog();
   const [roles, setRoles] = useState<Role[]>([]);
+  const [image, setImage] = useState<string | null>(null);
   const router = useRouter()
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getRoles().then((res) => {
@@ -54,6 +58,12 @@ export const AddUpdateUserDialog = () => {
     password: z.string().optional(),
     isAdmin: z.boolean().default(false),
     roles: z.array(z.string()).optional(),
+    image: z
+      .instanceof(File, { message: u("avatarinvalid") })
+      .optional()
+      .refine((file) => !file || file.type.startsWith("image/"), {
+        message: u("onlyimagesallowed"),
+      }),
   }).refine((data) => {
     if (!isAdd && (!data.password || data.password === "" || data.password === null)) {
       return true;
@@ -90,11 +100,12 @@ export const AddUpdateUserDialog = () => {
       form.setValue("email", user.email ?? "");
       form.setValue("isAdmin", user.isAdmin ?? false);
       form.setValue("roles", roles.filter((role) => user.roles.includes(role.name)).map((role) => role.id));
+      setImage(user.image ?? null);
     }
   }, [user])
 
   const onSubmit = async (data: UserFormValues) => {
-    console.log("Form data submitted:", data);
+    setLoading(true);
     let res;
     if (isAdd) {
       res = await createUser(data);
@@ -105,8 +116,10 @@ export const AddUpdateUserDialog = () => {
       toast.success(res.data.message);
       closeDialog();
       form.reset();
+      setLoading(false);
       router.refresh();
     } else {
+      setLoading(false);
       if (res.data.errors) {
         res.data.errors.map((err: any) => {
           toast.error(err.message);
@@ -117,14 +130,20 @@ export const AddUpdateUserDialog = () => {
     }
   };
 
+  const handleClose = () => {
+    closeDialog();
+    form.reset();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={closeDialog}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="w-[70%] max-w-[70%] h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">{isAdd ? u("adduser") : u("updateuser")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <AvatarUploader name="image" image={image} />
             <div className="grid grid-cols-2 gap-4">
               {/* First Name */}
               <FormField
@@ -274,7 +293,8 @@ export const AddUpdateUserDialog = () => {
             )}
 
             {/* Submit Button */}
-            <Button type="submit" className="w-full">
+            <Button type="submit" className={`w-full`}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isAdd ? u("adduser") : u("updateuser")}
             </Button>
           </form>

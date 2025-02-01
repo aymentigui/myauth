@@ -15,7 +15,7 @@ const RolesPage = async () => {
   await accessPage2(session.user.id,['users_view']);
   const hasPermissionView = await withAuthorizationPermission2(session.user.id,['users_view']);
   const hasPermissionAdd = await withAuthorizationPermission2(session.user.id,['users_create']);
-
+  
   return (
     <div className='flex flex-col gap-2'>
       {hasPermissionAdd.data.hasPermission && <AddUpdateUserButton />}

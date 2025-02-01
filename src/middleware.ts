@@ -2,21 +2,13 @@ import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 import { apiAuthPrefix, authRoutes, privateRoutes } from "./route";
 import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 const { auth } = NextAuth(authConfig)
 
 export default auth(async (req) => {
   const { cookies, nextUrl } = req;
   const isLogging = !!req.auth; // Vérifie si l'utilisateur est connecté
 
-  // const secret = process.env.AUTH_SECRET;
-  // const token = await getToken({ req, secret });
-  // if (token) {
-  //   console.log("Données du JWT : ", token); // Inclut `id` et `role`
-  // }
-
   let lang = cookies.get('lang')?.value || 'en';
-  // Vérifiez si la langue est valide
   const supportedLanguages = ['en', 'fr', 'ar'];
   if (!supportedLanguages.includes(lang)) {
     lang = 'en'; // Langue par défaut si non valide
@@ -24,8 +16,6 @@ export default auth(async (req) => {
 
   const isPrivateRoutes = privateRoutes.some((route) => nextUrl.pathname.startsWith(route))
   const isApiAuthRoutes = nextUrl.pathname.startsWith(apiAuthPrefix);
-  //const isPublicRoutes = publicRoutes.some((route) => nextUrl.pathname.startsWith(route)) ||  nextUrl.pathname=="/";
-  //const isDynamicPublicRoute = dynamicPublicRoutes.some((regex) => regex.test(nextUrl.pathname));
   const isAuthRoutes = authRoutes.includes(nextUrl.pathname);
 
   const response = NextResponse.next();
@@ -50,16 +40,6 @@ export default auth(async (req) => {
     }
     return response;
   }
-
-  // if (!isPublicRoutes && !isDynamicPublicRoute && !isLogging) {
-  //   const domainUrl = process.env.DOMAIN_URL;
-
-  //   if (!domainUrl) {
-  //     throw new Error('DOMAIN_URL is not defined in the environment variables');
-  //   }
-
-  //   return NextResponse.redirect(`${domainUrl}/auth/login`);
-  // }
 
   if (isPrivateRoutes && !isLogging) {
     const domainUrl = process.env.DOMAIN_URL;

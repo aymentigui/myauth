@@ -16,12 +16,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-
+  
   return (
     <div>
       <SidebarProvider >
-        <AppSidebar />
         <DivAdmin />
+        <AppSidebar />
         <AddUpdateUserDialogProvider>
           <main className="flex min-h-screen flex-col w-full">
             <HeaderAdmin>

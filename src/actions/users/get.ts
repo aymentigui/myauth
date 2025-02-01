@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { verifySession } from "../auth/auth";
 import { getTranslations } from "next-intl/server";
 import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { getTemporaryUrl } from "../superbase/download";
+import {  addStringToFilenameWithNewExtension } from "../util-public";
 
 export async function getUsers(): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
@@ -38,9 +40,23 @@ export async function getUsers(): Promise<{ status: number, data: any }> {
             },
         });
 
+        for (const user of users) {
+            if (user.image) {
+                const urlImage = await getTemporaryUrl(user.image);
+                const urlImageCompressed = await getTemporaryUrl(addStringToFilenameWithNewExtension(user.image, "compressed", "jpg"));
+                if (urlImage && urlImage.status === 200 && urlImage.data.url && urlImageCompressed && urlImageCompressed.status === 200 && urlImageCompressed.data.url) {
+                    user.image = urlImage.data.url as string;
+                    (user as any).imageCompressed = urlImageCompressed.data.url
+                } else {
+                    user.image = null as never
+                    (user as any).imageCompressed = null
+                }
+            }
+        }
+
         const formattedUsers = users.map((user) => ({
             ...user,
-            roles: user.roles.map((userRole) => userRole.role.name),
+            roles: user.roles.map((role) => role.role.name),
         }));
         return { status: 200, data: formattedUsers };
     } catch (error) {

@@ -5,11 +5,15 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { compressImage } from "../util";
+import { uploadFile } from "../superbase/upload";
+import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util-public";
+import { deleteFile } from "../superbase/delete";
 
 export async function updateUser(id: string, data: any): Promise<{ status: number, data: any }> {
     const u = await getTranslations("Users");
     const s = await getTranslations("System");
-    const e=await getTranslations('Error');
+    const e = await getTranslations('Error');
     try {
         const session = await verifySession()
         if (!session || session.status != 200) {
@@ -28,6 +32,9 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             password: z.string().optional(),
             isAdmin: z.boolean().default(false),
             roles: z.array(z.string()).optional(),
+            image: z.instanceof(File, { message: u("avatarinvalid") }).optional().refine((file) => !file || file.type.startsWith("image/"), {
+                message: u("avatarinvalid")
+            })
         }).refine((data) => {
             if (!(!data.password || data.password === "" || data.password === null)) {
                 return true;
@@ -47,7 +54,7 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             return { status: 400, data: { errors: result.error.errors } };
         }
 
-        const { firstname, lastname, username, email, password, isAdmin, roles } = result.data;
+        const { firstname, lastname, username, email, password, isAdmin, roles, image } = result.data;
 
         const emailExists = await prisma.user.findUnique({ where: { email } });
         if (emailExists && emailExists.id !== id) {
@@ -59,18 +66,18 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             return { status: 400, data: { message: u("usernameexists") } };
         }
 
-        await prisma.user.update({
+        const user = await prisma.user.update({
             where: { id },
             data: {
                 firstname,
                 lastname,
                 username,
                 email,
-                isAdmin,
+                isAdmin: (isAdmin && session.data.user.isAdmin) ? true : false,
             },
         })
 
-        if(password){
+        if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
             await prisma.user.update({
                 where: { id },
@@ -81,12 +88,50 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
         }
 
         await prisma.userRole.deleteMany({ where: { userId: id } })
-        if (roles && roles.length > 0) {
-            await prisma.userRole.createMany({
-                data: roles.map((role: string) => ({
-                    userId: id,
-                    roleId: role,
-                })),
+        if (isAdmin) {
+            if (roles && roles.length > 0) {
+                await prisma.userRole.createMany({
+                    data: roles.map((role: string) => ({
+                        userId: id,
+                        roleId: role,
+                    })),
+                })
+            }
+        }
+
+        let imageUrl = null
+        let imageCompressedUrl = null
+        if (image) {
+            if (user.image){
+                const success1 = await deleteFile(user.image)
+                if(success1.status != 200) return { status: 500, data: { message: e("error") } };
+                const success2 = await deleteFile(addStringToFilenameWithNewExtension(user.image, "compressed","jpg"))
+                if(success2.status != 200) return { status: 500, data: { message: e("error") } };
+            }
+            
+            if (image?.size > 1000000) {
+                return { status: 400, data: { message: u("avatarinvalid") } };
+            }
+
+            const arrayBuffer = await image.arrayBuffer();
+
+            // Appeler la Server Action pour compresser l'image
+            const result = await compressImage(arrayBuffer, 0.1);
+            if (result === null) return { status: 500, data: { message: e("error") } };
+            
+
+            imageUrl = await uploadFile(image, `${id}`, "profile-images")
+
+            imageCompressedUrl = await uploadFile(result, `${addStringToFilename(id, "compressed")}`, "profile-images")
+
+            if (imageUrl.status != 200 || !imageUrl.data.path) return { status: 500, data: { message: e("error") } };
+            if (imageCompressedUrl.status != 200 || !imageCompressedUrl.data.path) return { status: 500, data: { message: e("error") } };
+
+            await prisma.user.update({
+                where: { id: id },
+                data: {
+                    image: imageUrl.data.path,
+                }
             })
         }
         return { status: 200, data: { message: s("updatesuccess") } }

@@ -161,7 +161,9 @@
         "emailexists" : "البريد الإلكتروني موجود",
         "usernameexists" : "اسم المستخدم موجود",
         "password6" : "كلمة المرور يجب ان تحتوي على 6 حروف على الاقل",
-        "selectrole" : "الرجاء اختيار دور"
+        "selectrole" : "الرجاء اختيار دور",
+        "avatarinvalid" : "الصورة غير صالحة",
+        "onlyimagesallowed" : "الصورة يجب ان تكون صورة"
     },
     "Permissions" : {
         "title": "الصلاحيات",
