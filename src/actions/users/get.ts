@@ -7,7 +7,7 @@ import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
 import { getTemporaryUrl } from "../superbase/download";
 import {  addStringToFilenameWithNewExtension } from "../util-public";
 
-export async function getUsers(): Promise<{ status: number, data: any }> {
+export async function getUsers(page: number = 1, pageSize: number = 10): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
     try {
         const session = await verifySession()
@@ -19,7 +19,13 @@ export async function getUsers(): Promise<{ status: number, data: any }> {
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };
         }
+
+        // Calculer le nombre d'éléments à sauter
+        const skip = (page - 1) * pageSize;
+
         const users = await prisma.user.findMany({
+            skip: skip, // Nombre d'éléments à sauter
+            take: pageSize, // Nombre d'éléments à prendre
             select: {
                 id: true,
                 firstname: true,
@@ -58,9 +64,21 @@ export async function getUsers(): Promise<{ status: number, data: any }> {
             ...user,
             roles: user.roles.map((role) => role.role.name),
         }));
+
         return { status: 200, data: formattedUsers };
     } catch (error) {
         console.error("Error fetching users:", error);
+        return { status: 500, data: null };
+    }
+}
+
+export async function getCountUsers(): Promise<{ status: number, data: any }> {
+    const e = await getTranslations('Error');
+    try {
+        const count = await prisma.user.count();
+        return { status: 200, data: count };
+    } catch (error) {
+        console.error("Error fetching count users:", error);
         return { status: 500, data: null };
     }
 }
