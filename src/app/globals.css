@@ -160,6 +160,68 @@
     --sidebar-border: 240 3.7% 15.9%;
 
     --sidebar-ring: 217.2 91.2% 59.8%}
+
+    .theme-ocean {
+      --background: 210 35% 20%;
+      --foreground: 210 20% 90%;
+      --card: 210 20% 30%;
+      --card-foreground: 210 20% 85%;
+      --popover: 210 25% 15%;
+      --popover-foreground: 210 25% 90%;
+      --primary: 210 50% 40%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 210 30% 55%;
+      --secondary-foreground: 0 0% 98%;
+      --muted: 210 40% 60%;
+      --muted-foreground: 0 0% 80%;
+      --accent: 210 60% 50%;
+      --accent-foreground: 0 0% 98%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 210 30% 40%;
+      --input: 210 30% 45%;
+      --ring: 210 50% 45%;
+      --chart-1: 210 80% 50%;
+      --chart-2: 180 60% 50%;
+      --chart-3: 240 70% 50%;
+      --chart-4: 120 60% 50%;
+      --chart-5: 300 60% 50%;
+      --radius: 0.5rem;
+      --sidebar-background: 210 30% 20%;
+      --sidebar-foreground: 210 20% 90%;
+      --sidebar-primary: 210 40% 30%;
+      --sidebar-primary-foreground: 0 0% 98%;
+      --sidebar-accent: 210 45% 50%;
+      --sidebar-accent-foreground: 0 0% 98%;
+      --sidebar-border: 210 20% 50%;
+      --sidebar-ring: 217.2 91.2% 59.8%;
+
+      .css-13cymwt-control {
+        background-color: hsl(var(--card));
+      }
+      .css-t3ipsp-control {
+        background-color: hsl(var(--card));
+      }
+      .css-1nmdiq5-menu {
+        background-color: hsl(var(--card));
+      }
+      .css-1nmdiq5-menu div div {
+        background-color: hsl(var(--card));
+        color: white;
+      }
+      .css-1nmdiq5-menu div div:hover {
+        background-color: white;
+        color: hsl(var(--card));
+      } 
+  
+      .css-1jqq78o-placeholder {
+        color: white;
+      }
+      .css-1cfo1cf {
+        color: white;
+      }
+    }
+  
 }
 
 @layer base {

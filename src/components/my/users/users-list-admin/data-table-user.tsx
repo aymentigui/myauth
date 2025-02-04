@@ -4,7 +4,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -22,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { getCountUsers, getUsers } from "@/actions/users/get";
+import Loading from "@/components/myui/loading";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,16 +38,30 @@ export function DataTable<TData, TValue>({
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [count, setCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState(""); // État pour la recherche
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(""); // État pour la recherche avec debounce
 
   const { session } = useSession();
   const s = useTranslations("System");
 
-  // Fetch users when the page changes
+  // Débounce la recherche
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500); // Délai de 500 ms
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
+  // Fetch users when the page or search query changes
   useEffect(() => {
     const fetchUsers = async () => {
       setIsLoading(true);
+      setData([]);
       try {
-        const response = await getUsers(page, pageSize);
+        const response = await getUsers(page, pageSize, debouncedSearchQuery); // Passer searchQuery à getUsers
         if (response.status === 200) {
           setData(response.data);
         }
@@ -63,7 +77,7 @@ export function DataTable<TData, TValue>({
     };
 
     fetchUsers();
-  }, [page]);
+  }, [page, debouncedSearchQuery]); // Ajouter debouncedSearchQuery comme dépendance
 
   // Mark the component as mounted
   useEffect(() => {
@@ -74,69 +88,75 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getSortedRowModel: getSortedRowModel(), // Supprimer getFilteredRowModel
   });
 
   const hasPermissionAction =
     (session?.user?.permissions.find((permission: string) => permission === "updateUser") ?? false) ||
     session?.user?.isAdmin;
 
-  if (!mounted || isLoading) {
+  if (!mounted) {
     return (
       <div className="h-[300px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-foreground"></div>
+        <Loading />
       </div>
-    )
+    );
   }
 
   return (
     <div>
       <Input
         placeholder={s("search")}
-        value={(table.getState().globalFilter as string) ?? ""}
-        onChange={(event) => table.setGlobalFilter(event.target.value)}
+        value={searchQuery} // Utiliser searchQuery au lieu de globalFilter
+        onChange={(event) => setSearchQuery(event.target.value)} // Mettre à jour searchQuery
         className="max-w-sm mb-4"
       />
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) =>
-                header.id !== "actions" || hasPermissionAction ? (
-                  <TableHead key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ) : null
-              )}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) =>
-                  cell.column.id !== "actions" || hasPermissionAction ? (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      {
+        isLoading
+          ? (<div className="h-[300px] flex items-center justify-center">
+            <Loading />
+          </div>)
+          : <div className="rounded-md border p-2">
+            <Table className="border">
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) =>
+                      header.id !== "actions" || hasPermissionAction ? (
+                        <TableHead key={header.id}>
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                        </TableHead>
+                      ) : null
+                    )}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map((cell) =>
+                        cell.column.id !== "actions" || hasPermissionAction ? (
+                          <TableCell key={cell.id}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        ) : null
+                      )}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      {s("noresults")}
                     </TableCell>
-                  ) : null
+                  </TableRow>
                 )}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                {s("noresults")}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+              </TableBody>
+            </Table>
+          </div>}
 
       {/* Pagination */}
-      <div className="flex items-center justify-end space-x-2 py-4">
+      {!isLoading && <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
@@ -153,7 +173,7 @@ export function DataTable<TData, TValue>({
         >
           Suivant
         </Button>
-      </div>
+      </div>}
     </div>
   );
 }

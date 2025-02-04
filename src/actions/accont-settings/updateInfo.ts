@@ -5,16 +5,20 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { getTranslations } from "next-intl/server";
+import { deleteFile } from "../superbase/delete";
+import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util/util-public";
+import { compressImage } from "../util/util";
+import { uploadFile } from "../superbase/upload";
 
-export async function updateEmail( email: string) : Promise<{ status: number, data: { message: string} }> {
+export async function updateEmail(email: string): Promise<{ status: number, data: { message: string } }> {
     const EmailSchema = z.string().email({ message: "Adresse e-mail invalide" });
-    const e=await getTranslations('Error');
-    const te=await getTranslations('Settings error');
-    const tv=await getTranslations('Settings validation');
-    const s=await getTranslations('System');
+    const e = await getTranslations('Error');
+    const te = await getTranslations('Settings error');
+    const tv = await getTranslations('Settings validation');
+    const s = await getTranslations('System');
 
-    const session=await verifySession()
-    if(!session || session.status!=200){
+    const session = await verifySession()
+    if (!session || session.status != 200) {
         return { status: 401, data: { message: e("unauthorized") } };
     }
 
@@ -29,33 +33,33 @@ export async function updateEmail( email: string) : Promise<{ status: number, da
         const userExists = await prisma.user.findUnique({
             where: { email },
         })
-        if(userExists){
+        if (userExists) {
             return { status: 400, data: { message: te("emailexists") } };
         }
         const user = await prisma.user.update({
-            where: { id:session.data.session.userId },
+            where: { id: session.data.session.userId },
             data: { email },
         });
 
-        return { status: 200, data: { message: tv("email maj")} };
+        return { status: 200, data: { message: tv("email maj") } };
     } catch (error) {
         console.error("An error occurred in updateEmail");
-        return { status: 500, data: { message: s("updatefail") } };  
+        return { status: 500, data: { message: s("updatefail") } };
     }
 }
-export async function updateUsername(username: string) : Promise<{ status: number, data: { message: string} }> {
-    const e=await getTranslations('Error');
-    const te=await getTranslations('Settings error');
-    const tv=await getTranslations('Settings validation');
-    const s=await getTranslations('System');
+export async function updateUsername(username: string): Promise<{ status: number, data: { message: string } }> {
+    const e = await getTranslations('Error');
+    const te = await getTranslations('Settings error');
+    const tv = await getTranslations('Settings validation');
+    const s = await getTranslations('System');
 
     const UsernameSchema = z.string().min(6, { message: te("username6") })
 
-    const session=await verifySession()
-    if(!session || session.status!=200){
+    const session = await verifySession()
+    if (!session || session.status != 200) {
         return { status: 401, data: { message: e("unauthorized") } };
     }
-    
+
     try {
         if (!username) {
             return { status: 400, data: { message: te("username") } };
@@ -67,68 +71,68 @@ export async function updateUsername(username: string) : Promise<{ status: numbe
         const userExists = await prisma.user.findUnique({
             where: { username },
         })
-        if(userExists){
+        if (userExists) {
             return { status: 400, data: { message: te("usernameexists") } };
         }
         await prisma.user.update({
-            where: { id:session.data.session.userId },
+            where: { id: session.data.session.userId },
             data: { username },
         });
 
         return { status: 200, data: { message: tv("username maj") } };
     } catch (error) {
         console.error(s("Mise a jour echoue"));
-        return { status: 500, data: { message: 'An error occurred in updateUsername' } };  
+        return { status: 500, data: { message: 'An error occurred in updateUsername' } };
     }
 }
 
-export async function updateTwoFactorConfermation(twoFactorConfermation: boolean) : Promise<{ status: number, data: { message: string} }> {
+export async function updateTwoFactorConfermation(twoFactorConfermation: boolean): Promise<{ status: number, data: { message: string } }> {
 
-    const e=await getTranslations('Error');
-    const s=await getTranslations('System');
+    const e = await getTranslations('Error');
+    const s = await getTranslations('System');
 
-    const session=await verifySession()
-    if(!session || session.status!=200){
+    const session = await verifySession()
+    if (!session || session.status != 200) {
         return { status: 401, data: { message: e("unauthorized") } };
     }
-    
+
     try {
         await prisma.user.update({
-            where: { id:session.data.session.userId },
+            where: { id: session.data.session.userId },
             data: { isTwoFactorEnabled: twoFactorConfermation },
         });
 
         return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
         console.error("An error occurred in updateTwoFactorConfermation");
-        return { status: 500, data: { message: s("updatefail") } };  
+        return { status: 500, data: { message: s("updatefail") } };
     }
 }
 
-export async function updatePassword(currentPassword: string, newPassword: string) : Promise<{ status: number, data: { message: string} }> {
+export async function updatePassword(currentPassword: string, newPassword: string): Promise<{ status: number, data: { message: string } }> {
 
-    const e=await getTranslations('Error');
-    const s=await getTranslations('System');
-    const tv=await getTranslations('Settings validation');
-    const te=await getTranslations('Settings error');
-    const t=await getTranslations('Settings');
+    const e = await getTranslations('Error');
+    const s = await getTranslations('System');
+    const tv = await getTranslations('Settings validation');
+    const te = await getTranslations('Settings error');
+    const t = await getTranslations('Settings');
 
     const ResetPasswordSchema = z.string().min(6, { message: te("password6") });
 
-    const session=await verifySession()
-    if(!session || session.status!=200){
+    const session = await verifySession()
+    if (!session || session.status != 200) {
         return { status: 401, data: { message: e("unauthorized") } };
     }
-    
+
     try {
 
         const user = await prisma.user.findUnique({
-            where: { id:session.data.session.userId },
+            where: { id: session.data.session.userId },
         })
-        if(!user){
+        if (!user) {
             return { status: 400, data: { message: e("usernotfound") } };
         }
-        
+
         const passwordMatch = await bcrypt.compare(currentPassword, user.password);
         if (!passwordMatch) {
             return { status: 400, data: { message: te("currentpasswordinvalid") } };
@@ -141,70 +145,143 @@ export async function updatePassword(currentPassword: string, newPassword: strin
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         await prisma.user.update({
-            where: { id:session.data.session.userId },
+            where: { id: session.data.session.userId },
             data: { password: hashedPassword },
         });
 
         return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
         console.error("An error occurred in updatePassword");
-        return { status: 500, data: { message: s("updatefail") } };  
+        return { status: 500, data: { message: s("updatefail") } };
     }
 }
 
-export async function deleteSession(id:string){
-    const session=await verifySession()
-    const e=await getTranslations('Error');
-    const ss=await getTranslations('Sessions');
-    const s=await getTranslations('System');
+export async function deleteSession(id: string) {
+    const session = await verifySession()
+    const e = await getTranslations('Error');
+    const ss = await getTranslations('Sessions');
+    const s = await getTranslations('System');
 
-    if(!session || session.status!=200){
+    if (!session || session.status != 200) {
         return { status: 401, data: { message: e("unauthorized") } };
     }
 
-    const sessionExisting=await prisma.session.findFirst({
-        where : {
-            id : id,
-            userId : session.data.session.userId
+    const sessionExisting = await prisma.session.findFirst({
+        where: {
+            id: id,
+            userId: session.data.session.userId
         }
     })
 
-    if(!sessionExisting){
+    if (!sessionExisting) {
         return { status: 400, data: { message: ss("sessionnotfound") } };
     }
     await prisma.session.deleteMany({
-        where : {
-            id : id,
-            userId : session.data.session.userId
+        where: {
+            id: id,
+            userId: session.data.session.userId
         }
     })
     return { status: 200, data: { message: s("deletesuccess") } };
 }
 
-export async function deleteAllSessions(){
-    const session=await verifySession()
-    const s=await getTranslations('System');
-    const e=await getTranslations('Error');
-    const ss=await getTranslations('Sessions');
+export async function deleteAllSessions() {
+    const session = await verifySession()
+    const s = await getTranslations('System');
+    const e = await getTranslations('Error');
+    const ss = await getTranslations('Sessions');
 
-    if(!session || session.status!=200){
+    if (!session || session.status != 200) {
         return { status: 401, data: { message: e("unauthorized") } };
     }
 
-    const sessionExisting=await prisma.session.findFirst({
-        where : {
-            userId : session.data.session.userId
+    const sessionExisting = await prisma.session.findFirst({
+        where: {
+            userId: session.data.session.userId
         }
     })
 
-    if(!sessionExisting){
+    if (!sessionExisting) {
         return { status: 400, data: { message: ss("sessionnotfound") } };
     }
     await prisma.session.deleteMany({
-        where : {
-            userId : session.data.session.userId
+        where: {
+            userId: session.data.session.userId
         }
     })
 
     return { status: 200, data: { message: s("deletesuccess") } };
+}
+
+export async function updateImage(image: File): Promise<{ status: number, data: { message: string } }> {
+    const e = await getTranslations('Error');
+    const te = await getTranslations('Settings error');
+    const tv = await getTranslations('Settings validation');
+    const s = await getTranslations('System');
+    const u = await getTranslations('Users');
+
+    const ImageScema = z.object({
+        image: z
+            .instanceof(File, { message: u("avatarinvalid") })
+            .optional()
+            .refine((file) => !file || file.type.startsWith("image/"), {
+                message: u("onlyimagesallowed"),
+            }),
+    })
+
+    const session = await verifySession()
+    if (!session || session.status != 200) {
+        return { status: 401, data: { message: e("unauthorized") } };
+    }
+
+    try {
+        if (!image) {
+            return { status: 400, data: { message: te("image") } };
+        }
+
+        if (!ImageScema.safeParse(image).success) {
+            return { status: 400, data: { message: u("onlyimagesallowed") } };
+        }
+        const userExists = await prisma.user.findUnique({
+            where: { id: session.data.session.userId },
+        })
+
+        if (userExists?.image) {
+            const success1 = await deleteFile(userExists.image)
+            if (success1.status != 200) return { status: 500, data: { message: e("error") } };
+            const success2 = await deleteFile(addStringToFilenameWithNewExtension(userExists.image, "compressed", "jpg"))
+            if (success2.status != 200) return { status: 500, data: { message: e("error") } };
+        }
+
+        if (image?.size > 1000000) {
+            return { status: 400, data: { message: u("avatarinvalid") } };
+        }
+
+        const arrayBuffer = await image.arrayBuffer();
+
+        // Appeler la Server Action pour compresser l'image
+        const result = await compressImage(arrayBuffer, 0.1);
+        if (result === null) return { status: 500, data: { message: e("error") } };
+
+
+        const imageUrl = await uploadFile(image, `${userExists?.id}`, "profile-images")
+
+        const imageCompressedUrl = await uploadFile(result, `${addStringToFilename(session.data.session.userId, "compressed")}`, "profile-images")
+
+        if (imageUrl.status != 200 || !imageUrl.data.path) return { status: 500, data: { message: e("error") } };
+        if (imageCompressedUrl.status != 200 || !imageCompressedUrl.data.path) return { status: 500, data: { message: e("error") } };
+
+        await prisma.user.update({
+            where: { id: userExists?.id },
+            data: {
+                image: imageUrl.data.path,
+            }
+        })
+
+
+        return { status: 200, data: { message: tv("username maj") } };
+    } catch (error) {
+        console.error(s("Mise a jour echoue"));
+        return { status: 500, data: { message: 'An error occurred in updateUsername' } };
+    }
 }

@@ -36,6 +36,13 @@ const itemsMenu = async () =>{
             admin: false,
             permissions: [],
         },
+        {
+            title: "test",
+            url: "/admin/testimport",
+            icon: Settings,
+            admin: false,
+            permissions: [],
+        },
     ]
     return items
 }

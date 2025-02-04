@@ -100,6 +100,7 @@
         "usernameinvalid" : "Le nom d'utilisateur est invalide",
         "email" : "L'email est requis",
         "emailexists" : "L'email existe deja",
+        "image" : "L'image est requise",
         "password" : "Le mot de passe est requis",
         "twofactor" : "La confirmation de deux facteurs est requise",
         "currentpassword" : "Le mot de passe actuel est requis",        

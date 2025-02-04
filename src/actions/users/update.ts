@@ -5,9 +5,9 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
-import { compressImage } from "../util";
+import { compressImage } from "../util/util";
 import { uploadFile } from "../superbase/upload";
-import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util-public";
+import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util/util-public";
 import { deleteFile } from "../superbase/delete";
 
 export async function updateUser(id: string, data: any): Promise<{ status: number, data: any }> {

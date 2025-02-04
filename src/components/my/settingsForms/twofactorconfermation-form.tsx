@@ -13,19 +13,20 @@ const TwoFactorConfermationForm = ({ twoFactorConfermation }: { twoFactorConferm
 
     const twoFactorConfermationRef = useRef<HTMLButtonElement>(null)
 
+    const handlerUpdateTwoFactorConfermation = async () => {
+        const res = await updateTwoFactorConfermation(!twoFacotorConfermationState)
+        if (res.status === 200) {
+            toast.success(res.data.message)
+            setTwoFacotorConfermationState(!twoFacotorConfermationState)
+        } else {
+            toast.error(res.data.message)
+        }
+
+    }
+
     const onChanged = async () => {
         setLoading(true)
-        setTwoFacotorConfermationState((prev) => {
-            updateTwoFactorConfermation(!twoFacotorConfermationState).then((res) => {
-                if (res.status === 200) {
-                    toast.success(res.data.message)
-                    return setTwoFacotorConfermationState(!twoFacotorConfermationState)
-                } else {
-                    toast.error(res.data.message)
-                }
-            })
-            return prev
-        })
+        await handlerUpdateTwoFactorConfermation()
         setLoading(false)
     }
 

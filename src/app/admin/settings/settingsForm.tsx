@@ -2,6 +2,7 @@
 
 import { getSessions } from '@/actions/accont-settings/getInfo';
 import EmailForm from '@/components/my/settingsForms/email-form';
+import ImageForm from '@/components/my/settingsForms/image-form';
 import ListSessionsForm from '@/components/my/settingsForms/listsessions-form/listsessions-form';
 import ResetPasswordForm from '@/components/my/settingsForms/resetpassword-form';
 import TwoFactorConfermationForm from '@/components/my/settingsForms/twofactorconfermation-form';
@@ -22,17 +23,19 @@ export default async function SettingsForm({ user }: SettingsFormProps) {
 
     const sessions = await getSessions(user);
 
-    if(sessions.status!=200){
+    if (sessions.status != 200) {
         return null
     }
 
     return (
         <div>
-            {user.email && <EmailForm email={user.email} />}     
+            <ImageForm image={user.image ?? ""} />
             <Separator />
-            {user.username && <UsernameForm username={user.username} />}    
+            {user.email && <EmailForm email={user.email} />}
             <Separator />
-            <TwoFactorConfermationForm twoFactorConfermation={user.isTwoFactorEnabled??false} /> 
+            {user.username && <UsernameForm username={user.username} />}
+            <Separator />
+            <TwoFactorConfermationForm twoFactorConfermation={user.isTwoFactorEnabled ?? false} />
             <Separator />
             <ResetPasswordForm />
             <Separator />

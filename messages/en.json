@@ -100,6 +100,7 @@
         "username20" : "Username must be at most 20 characters",
         "email" : "Email is required",
         "emailexists" : "Email already exists",
+        "image" : "Image is required",
         "password" : "Password is required",
         "twofactor" : "Two Factor Confermation is required",
         "resetpassword" : "Reset Password is required",

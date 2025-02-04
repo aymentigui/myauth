@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { deleteUsers } from "@/actions/users/delete";
 import { useAddUpdateUserDialog } from "@/context/add-update-dialog-context";
 import { useSession } from "@/hooks/use-session";
-import { addStringToFilename } from "@/actions/util-public";
+import { addStringToFilename } from "@/actions/util/util-public";
 
 export type User = {
   id: string;

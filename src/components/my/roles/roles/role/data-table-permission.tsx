@@ -46,18 +46,18 @@ export function DataTable({
         getCoreRowModel: getCoreRowModel(),
         state: {
             rowSelection: selectedPermissionNames
-            ? selectedPermissionNames.reduce((acc, name) => {
-                const index=permissions.findIndex((permission) => permission.name === name);
-                if(index === -1) {
+                ? selectedPermissionNames.reduce((acc, name) => {
+                    const index = permissions.findIndex((permission) => permission.name === name);
+                    if (index === -1) {
+                        return acc;
+                    }
+                    acc[index] = true;
                     return acc;
-                }
-                acc[index] = true;
-                return acc;
-            }, {} as Record<string, boolean>) 
-            : selectedPermissions.reduce((acc, id) => {
-                acc[id] = true;
-                return acc;
-            }, {} as Record<string, boolean>) ,
+                }, {} as Record<string, boolean>)
+                : selectedPermissions.reduce((acc, id) => {
+                    acc[id] = true;
+                    return acc;
+                }, {} as Record<string, boolean>),
         },
         onRowSelectionChange: (updaterOrValue) => {
             const newRowSelection =
@@ -74,43 +74,45 @@ export function DataTable({
     });
 
     return (
-        <Table>
-            <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => (
-                            <TableHead key={header.id}
-                                className={`
+        <div className="rounded-md border p-2">
+            <Table className="border">
+                <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
+                                <TableHead key={header.id}
+                                    className={`
                                         ${selectedLanguage == "ar" ? "text-right" : ""}
                                         `}>
-                                {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                )}
-                            </TableHead>
-                        ))}
-                    </TableRow>
-                ))}
-            </TableHeader>
-            <TableBody>
-                {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </TableCell>
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
+                                </TableHead>
                             ))}
                         </TableRow>
-                    ))
-                ) : (
-                    <TableRow>
-                        <TableCell colSpan={columns.length} className="h-24 text-center">
-                            Aucune permission disponible.
-                        </TableCell>
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table>
+                    ))}
+                </TableHeader>
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={columns.length} className="h-24 text-center">
+                                Aucune permission disponible.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </div>
     );
 }

@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     setSelectedLanguage(Cookies.get('lang') || 'en')
     if (session && session.user && session.user.id) {
-      withAuthorizationPermission2(session.user.id,["roles_update"]).then((response) => {
+      withAuthorizationPermission2(session.user.id, ["roles_update"]).then((response) => {
         setHasPermissionUpdateRoles(response.data.hasPermission ?? false)
       });
       withAuthorizationPermission2(session.user.id, ["roles_delete"]).then((response) => {
@@ -70,56 +70,58 @@ export function DataTable<TData, TValue>({
         }
         className="max-w-sm mb-4"
       />
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                (header.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableHead
-                  key={header.id}
-                  className={`
+      <div className="rounded-md border p-2">
+        <Table className="border">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  (header.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableHead
+                    key={header.id}
+                    className={`
                     ${selectedLanguage == "ar" ? "text-right" : ""}
                     ${header.id === "name" ? "w-3/6" : ""}
                     ${header.id === "userCount" ? "w-2/6" : ""}
                     ${header.id === "actions" ? "w-1/6" : ""}
                   `}
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  (cell.column.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableCell
-                    key={cell.id}
-                    className={`
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    (cell.column.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableCell
+                      key={cell.id}
+                      className={`
                       ${cell.column.id === "name" ? "w-4/6" : ""}
                       ${cell.column.id === "userCount" ? "w-1/6" : ""}
                       ${cell.column.id === "actions" ? "w-1/6" : ""}
                     `}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  {s("noresults")}
+                </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                {s("noresults")}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

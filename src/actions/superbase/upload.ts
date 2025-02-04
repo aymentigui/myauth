@@ -1,7 +1,7 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { getFileExtension } from "../util-public";
+import { getFileExtension } from "../util/util-public";
 
 export async function uploadFile(file: File, filename: string, filePath: string, bucketName = "private") : Promise<{ status: number, data: { message?: string, succes?: boolean, path?: string } }> {
     if (!file)

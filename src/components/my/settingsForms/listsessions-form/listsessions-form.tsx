@@ -63,8 +63,8 @@ const ListSessionsForm: NextPage<Props> = async({ sessions }) => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">{tss('os')} : {session.os || "Unknown OS"}</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-400">{tss('os')} : {session.os || "Unknown OS"}</p>
+              <p className="text-sm text-gray-400">
                 {ts("createdat")}: {format(new Date(session.createdAt), "PPpp")}
               </p>
             </CardContent>

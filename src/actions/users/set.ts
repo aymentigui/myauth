@@ -6,8 +6,8 @@ import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
 import { uploadFile } from "../superbase/upload";
-import { compressImage } from "../util";
-import { addStringToFilename } from "../util-public";
+import { compressImage } from "../util/util";
+import { addStringToFilename } from "../util/util-public";
 
 
 export async function createUser(data: any) {

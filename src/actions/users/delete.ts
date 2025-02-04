@@ -5,7 +5,7 @@ import { verifySession } from "../auth/auth"
 import { prisma } from "@/lib/db";
 import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
 import { deleteFile } from "../superbase/delete";
-import { addStringToFilenameWithNewExtension } from "../util-public";
+import { addStringToFilenameWithNewExtension } from "../util/util-public";
 
 export async function deleteUsers(ids: string[]): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
