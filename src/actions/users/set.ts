@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
-import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission2 } from "../permissions";
 import { uploadFile } from "../superbase/upload";
 import { compressImage } from "../util/util";
 import { addStringToFilename } from "../util/util-public";

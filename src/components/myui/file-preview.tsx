@@ -146,10 +146,10 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", com
                 <Button
                     type="button"
                     variant={"link"}
-                    className="absolute p-2 bg-red-500 z-50 bottom-2 right-2 text-white rounded-md hover:bg-red-600 shadow-md"
+                    className={"absolute p-2 bg-red-500 z-50 bottom-2 right-2 text-white rounded-md hover:bg-red-600 shadow-md"+" "+(compact ? 'w-8 h-8' : 'w-3 h-3')}
                     onClick={(e) => onRemove(e, file)}
                 >
-                    <Trash2 size={20} />
+                    <Trash2 className={compact? '!w-8 !h-8' : '!w-3 !h-3'   } />
                 </Button>
             )}
             {!(type.startsWith("image") || type === "application/pdf" || (type.startsWith("video") && preview)) && (

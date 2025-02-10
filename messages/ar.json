@@ -16,6 +16,7 @@
         "save": "حفظ",
         "update" : "تحديث",
         "confirm": "تأكيد",
+        "check" : "تحقق",
         "cancel": "إلغاء",
         "delete": "حذف",
         "loading": "تحميل...",
@@ -29,7 +30,9 @@
         "reset": "إعادة تعيين",
         "options": "خيارات",
         "noresults": "لم يتم العثور على نتائج",
-        "search": "بحث"
+        "search": "بحث",
+        "import" : "استيراد",
+        "import_data" : "استيراد البيانات"
     },
     "Menu": {
         "title": "القائمة",
@@ -37,12 +40,15 @@
         "settings": "الإعدادات",
         "roles": "الادوار",
         "users": "المستخدمين",
+        "testimportcsv": "استيراد بيانات CSV",
+        "fileslocalstorage" : "الملفات المخزنة المحليا",
         "logout": "تسجيل الخروج",
         "footer": "© 2025 جميع الحقوق محفوظة"
     },
     "Error": {
         "title": "خطأ",
         "error": "خطأ",
+        "errors" : "الأخطاء",
         "getInfo": "خطأ في الحصول على المعلومات",
         "unauthorized": "غير مصرح",
         "forbidden": "ممنوع",
@@ -51,7 +57,8 @@
         "invalidcode": "رمز غير صحيح",
         "codeexpired": "انتهت صلاحية الرمز",
         "invalidtoken": "رمز غير صحيح",
-        "tokenexpired": "انتهت صلاحية الرمز"
+        "tokenexpired": "انتهت صلاحية الرمز",
+        "badrequest": "طلب غير صالح"
     },
     "Settings": {
         "title": "الإعدادات",
@@ -177,5 +184,20 @@
         "roles_create": "اضافة دور",
         "roles_update": "تحديث دور",
         "roles_delete": "حذف دور"
+    },
+    "Files": {
+        "title": "الملفات",
+        "uploadfile" : "رفع ملف",
+        "deletefile" : "حذف ملف",
+        "deleteallfiles" : "حذف كل الملفات",
+        "filename" : "اسم الملف",
+        "filesize" : "حجم الملف",
+        "filetype" : "نوع الملف",
+        "filedate" : "تاريخ الملف",
+        "fileextension" : "امتداد الملف",
+        "fileurl" : "رابط الملف",
+        "fileexists" : "الملف موجود",
+        "onlyimagesallowed" : "الصورة فقط هي المسموح بها",
+        "filedoesnotexist" : "الملف غير موجود"
     }
 }

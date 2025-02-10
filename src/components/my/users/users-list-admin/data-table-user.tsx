@@ -104,7 +104,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div>
+    <div className="w-full">
       <Input
         placeholder={s("search")}
         value={searchQuery} // Utiliser searchQuery au lieu de globalFilter

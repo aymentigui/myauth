@@ -203,6 +203,16 @@ export async function verifySession(): Promise<{ status: number, data: any }> {
                 // @ts-ignore
                 id: session.session.id,
                 userId: session.user.id,
+                // @ts-ignore
+                browser: session.session.browser,
+                // @ts-ignore
+                os: session.session.os,
+                // @ts-ignore
+                deviceType: session.session.deviceType,
+                // @ts-ignore
+                deviceName: session.session.deviceName,
+                // @ts-ignore
+                userAgent: session.session.userAgent,
                 expires: {
                     gt: new Date()
                 }

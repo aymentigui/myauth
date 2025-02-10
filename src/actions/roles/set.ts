@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { verifySession } from "../auth/auth";
-import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission2 } from "../permissions";
 
 export async function AddRole(name: string, permission: string) {
     const e = await getTranslations('Error');

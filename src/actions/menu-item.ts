@@ -1,5 +1,5 @@
 "use server"
-import { Home, Settings, UserRoundCog, Users } from "lucide-react";
+import { FileSpreadsheet, Home, Settings, UserRoundCog, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { verifySession } from "./auth/auth";
 import { getUserPermissions, ISADMIN } from "./permissions";
@@ -37,9 +37,16 @@ const itemsMenu = async () =>{
             permissions: [],
         },
         {
-            title: "test",
+            title: Menu("testimportcsv"),
             url: "/admin/testimport",
-            icon: Settings,
+            icon: FileSpreadsheet,
+            admin: false,
+            permissions: [],
+        },
+        {
+            title: Menu("fileslocalstorage"),
+            url: "/admin/fileslocalstorage",
+            icon: FileSpreadsheet,
             admin: false,
             permissions: [],
         },

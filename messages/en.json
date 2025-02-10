@@ -16,6 +16,7 @@
         "save" : "Save",
         "update" : "Update",
         "confirm" : "Confirm",
+        "check" : "Check",
         "cancel" : "Cancel",
         "delete" : "Delete",
         "loading" : "Loading...",
@@ -29,7 +30,9 @@
         "reset" : "Reset",
         "options" : "Options",
         "noresults" : "No results",
-        "search" : "Search"
+        "search" : "Search",
+        "import" : "Import",
+        "import_data" : "Import data"
     },
     "Menu" : {
         "title": "Menu",
@@ -37,12 +40,15 @@
         "settings" : "Settings",
         "roles" : "Roles",
         "users" : "Users",
+        "testimportcsv" : "Import data from CSV",
+        "fileslocalstorage" : "Files local storage",
         "logout" : "Logout",
         "footer" : "© 2025 All rights reserved"
     },
     "Error" : {
         "title": "Error",
         "error" : "Error",
+        "errors" : "Errors",
         "getInfo" : "Error in getinfo",
         "unauthorized" : "Unauthorized",
         "forbidden" : "Forbidden",
@@ -51,7 +57,8 @@
         "invalidcode" : "Invalid code",
         "codeexpired" : "Code expired",
         "invalidtoken" : "Invalid token",
-        "tokenexpired" : "Token expired"
+        "tokenexpired" : "Token expired",
+        "badrequest" : "Bad request"
     },
     "Settings" : {
         "title": "Settings",
@@ -176,5 +183,20 @@
         "roles_create": "Roles Create",
         "roles_update": "Roles Update",
         "roles_delete": "Roles Delete"
+    },
+    "Files": {
+        "title": "Files",
+        "uploadfile" : "Upload File",
+        "deletefile" : "Delete File",
+        "deleteallfiles" : "Delete All Files",
+        "filename" : "File Name",
+        "filesize" : "File Size",
+        "filetype" : "File Type",
+        "filedate" : "File Date",
+        "fileextension" : "File Extension",
+        "fileurl" : "File URL",
+        "fileexists" : "File already exists",
+        "onlyimagesallowed" : "Only images are allowed",
+        "filedoesnotexist" : "File does not exist"
     }
 }

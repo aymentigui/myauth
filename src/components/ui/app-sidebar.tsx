@@ -14,14 +14,15 @@ import LogoutButton from "../my/button/logout-button"
 import { getLocale } from "next-intl/server";
 import { getMenuItems } from "@/actions/menu-item";
 import { getTranslations } from "next-intl/server";
-
+import { TooltipProvider } from "@/components/ui//tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui//tooltip";
 export async function AppSidebar() {
   const locale = await getLocale();
   const items = await getMenuItems();
   const t = await getTranslations('Menu');
 
   return (
-    <Sidebar side={locale=="ar"?"right":"left"}>
+    <Sidebar side={locale == "ar" ? "right" : "left"}>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>{t('title')}</SidebarGroupLabel>
@@ -32,7 +33,16 @@ export async function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>{item.title}</TooltipTrigger>
+                            <TooltipContent>
+                              {item.title}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -3,7 +3,7 @@
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/db";
 import { verifySession } from "../auth/auth";
-import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission2 } from "../permissions";
 
 export async function getRoles(): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');

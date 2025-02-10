@@ -16,6 +16,7 @@
         "save" : "Enregistrer",
         "update" : "Modifier",
         "confirm" : "Confirmer",
+        "check" : "Verifier",
         "cancel" : "Annuler",
         "delete" : "Supprimer",
         "loading" : "Chargement...",
@@ -29,7 +30,9 @@
         "reset" : "Reinitialiser",
         "options" : "Options",
         "noresults" : "Aucun resultat",
-        "search" : "Rechercher"
+        "search" : "Rechercher",
+        "import" : "Importer",
+        "import_data" : "Importer des données"
     },
     "Menu" : {
         "title": "Menu",
@@ -37,12 +40,15 @@
         "settings" : "Paramètres",
         "roles" : "Roles",
         "users" : "Utilisateurs",
+        "testimportcsv" : "Importer des données depuis un fichier CSV",
+        "fileslocalstorage" : "Fichiers de stockage local",
         "logout" : "Se deconnecter",
         "footer" : "© 2025 Tous droits réservés"
     },
     "Error" : {
         "title": "Erreur",
         "error" : "Erreur",
+        "errors" : "Erreurs",
         "getInfo" : "Erreur dans getinfo",
         "unauthorized" : "Non autorisé",
         "forbidden" : "Interdit",
@@ -51,7 +57,8 @@
         "invalidcode" : "Le code fourni est invalide",
         "codeexpired" : "Le code fourni a expiré",
         "invalidtoken" : "Le token fourni est invalide",
-        "tokenexpired" : "Le token fourni a expiré"
+        "tokenexpired" : "Le token fourni a expiré",
+        "badrequest" : "Mauvaise requête"
     },
     "Settings" : {
         "title": "Paramètres",
@@ -176,5 +183,20 @@
         "roles_create": "Roles Create",
         "roles_update": "Roles Update",
         "roles_delete": "Roles Delete"
+    },
+    "Files": {
+        "title": "Fichiers",
+        "uploadfile" : "Télécharger un fichier",
+        "deletefile" : "Supprimer un fichier",
+        "deleteallfiles" : "Supprimer tous les fichiers",
+        "filename" : "Nom du fichier",
+        "filesize" : "Taille du fichier",
+        "filetype" : "Type du fichier",
+        "filedate" : "Date du fichier",
+        "fileextension" : "Extension du fichier",
+        "fileurl" : "URL du fichier",
+        "fileexists" : "Le fichier existe deja",
+        "onlyimagesallowed" : "Seuls les images sont autorisées",
+        "filedoesnotexist" : "Le fichier n'existe pas"
     }
 }

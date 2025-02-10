@@ -12,7 +12,7 @@ const LogoutButton = ({title}:{title:string}) => {
   };
 
   return (
-    <div onClick={logout} className="flex items-center p-2 gap-2 hover:bg-gray-100 cursor-pointer">
+    <div onClick={logout} className="flex rounded-lg items-center mx-2 p-2 gap-2 hover:bg-sidebar-accent cursor-pointer">
       <LogOut className='w-4 h-4' />
       <span>{title}</span>
     </div>

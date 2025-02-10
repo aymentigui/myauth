@@ -18,16 +18,16 @@ export default async function RootLayout({
 
   
   return (
-    <div className="bg-border">
+    <div>
       <SidebarProvider >
         <DivAdmin />
         <AppSidebar />
         <AddUpdateUserDialogProvider>
-          <main className="flex min-h-screen flex-col w-full">
+          <main className="flex min-h-screen flex-col w-full overflow-auto bg-border">
             <HeaderAdmin>
               <SidebarTrigger />
             </HeaderAdmin>
-            <div className="w-full p-4">
+            <div className="w-full p-4 flex-grow">
               {children}
               <AddUpdateUserDialog />
             </div>

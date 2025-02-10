@@ -1,29 +1,41 @@
 import { FC } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { ColumnCvcImport } from "@/actions/util/importCVC";
+import { ColumnCvcImport } from "@/actions/util/importSheets";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircle } from "lucide-react";
 
 
-interface ImportCsvStructureProps {
+interface ImportSheetsStructureProps {
   columns: ColumnCvcImport[];
+  data ?: any
 }
 
-const ImportCsvStructure: FC<ImportCsvStructureProps> = ({ columns }) => {
+const ImportSheetsStructure: FC<ImportSheetsStructureProps> = ({ columns, data }) => {
   return (
     <div className="space-y-6 m-2">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {columns.map((col, index) => (
-              <TableHead key={index}>{col.title}  {col.require?.req && <span style={{ color: "red", fontWeight: "bold" }}> *</span>} </TableHead>
+      <div className="border rounded-lg p-2">
+        <Table className="border">
+          <TableHeader>
+            <TableRow>
+              {columns.map((col, index) => (
+                <TableHead key={index}>{col.title}  {col.require?.req && <span style={{ color: "red", fontWeight: "bold" }}> *</span>} </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data?.map((row : any, index : number) => (
+              <TableRow key={index}>
+                {columns.map((col, colIndex) => (
+                  <TableCell key={colIndex}>{row[col.title]}</TableCell>
+                ))}
+              </TableRow>
             ))}
-          </TableRow>
-        </TableHeader>
-      </Table>
+          </TableBody>
+        </Table>
+      </div>
 
-      {columns.some(col => col.require?.message || col.type?.message || col.condition?.length) && (
+      {!(data.length>0) && columns.some(col => col.require?.message || col.type?.message || col.condition?.length) && (
         <Card className="p-4">
           {columns.map((col, index) => (
             (col.require?.message || col.type?.message || col.condition?.length) && (
@@ -46,4 +58,4 @@ const ImportCsvStructure: FC<ImportCsvStructureProps> = ({ columns }) => {
   );
 };
 
-export default ImportCsvStructure;
+export default ImportSheetsStructure;

@@ -196,6 +196,10 @@
       --sidebar-border: 210 20% 50%;
       --sidebar-ring: 217.2 91.2% 59.8%;
 
+      body {
+        scrollbar-color: hsl(var(--card)) hsl(var(--border));
+      }
+
       .css-13cymwt-control {
         background-color: hsl(var(--card));
       }

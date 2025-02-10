@@ -17,6 +17,7 @@ import { Permission } from "./columns-permission";
 import { columns } from "./columns-permission"; // Importez les colonnes
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
+import { useTranslations } from "next-intl";
 
 interface DataTableProps {
     permissions: Permission[];
@@ -35,7 +36,7 @@ export function DataTable({
 }: DataTableProps) {
 
     const [selectedLanguage, setSelectedLanguage] = useState("");
-
+    const s = useTranslations('System')
     useEffect(() => {
         setSelectedLanguage(Cookies.get('lang') || 'en')
     }, [])
@@ -107,7 +108,7 @@ export function DataTable({
                     ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                Aucune permission disponible.
+                                {s("noresults")}
                             </TableCell>
                         </TableRow>
                     )}

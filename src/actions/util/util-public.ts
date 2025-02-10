@@ -1,6 +1,6 @@
-export const getFileExtension = (filename: string): string | null => {
+export const getFileExtension = (filename: string): string => {
     const parts = filename.split(".");
-    return parts.length > 1 ? parts.pop() || null : null;
+    return parts.length > 1 ? parts.pop() || "" : "";
 };
 
 export const addStringToFilename = (filePath: string, str: string): string => {
@@ -34,3 +34,31 @@ export function generateToken4Chiffres(): string {
     return token.toString();
 }
 
+const mimeTypes: { [key: string]: string } = {
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    gif: "image/gif",
+    pdf: "application/pdf",
+    txt: "text/plain",
+    csv: "text/csv",
+    json: "application/json",
+    zip: "application/zip",
+    mp4: "video/mp4",
+    mp3: "audio/mpeg",
+    doc: "application/msword",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    xls: "application/vnd.ms-excel",
+    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+};
+
+export function getMimeType(extension: string): string {
+    return mimeTypes[extension.toLowerCase()] || "application/octet-stream";
+}
+
+export function generateRandomFilename() {
+    const timestamp = Date.now(); // Obtenir un timestamp unique
+    const randomString = Math.random().toString(36).substring(2, 10); // Chaîne aléatoire
+    return `file_${timestamp}_${randomString}`;
+  }
+  
