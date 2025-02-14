@@ -4,16 +4,17 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
-import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission2 } from "../permissions";
 import { compressImage } from "../util/util";
-import { uploadFile } from "../superbase/upload";
-import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util/util-public";
-import { deleteFile } from "../superbase/delete";
+import { uploadFileDB } from "../localstorage/upload-db";
+import { deleteFileDb } from "../localstorage/delete-db";
 
 export async function updateUser(id: string, data: any): Promise<{ status: number, data: any }> {
     const u = await getTranslations("Users");
     const s = await getTranslations("System");
     const e = await getTranslations('Error');
+    const f = await getTranslations("Files")
+
     try {
         const session = await verifySession()
         if (!session || session.status != 200) {
@@ -99,44 +100,43 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             }
         }
 
-        let imageUrl = null
-        let imageCompressedUrl = null
-        if (image) {
-            if (user.image){
-                const success1 = await deleteFile(user.image)
-                if(success1.status != 200) return { status: 500, data: { message: e("error") } };
-                const success2 = await deleteFile(addStringToFilenameWithNewExtension(user.image, "compressed","jpg"))
-                if(success2.status != 200) return { status: 500, data: { message: e("error") } };
-            }
-            
-            if (image?.size > 1000000) {
-                return { status: 400, data: { message: u("avatarinvalid") } };
+        if (image && image.size > 0) {
+
+            if (user.image)
+                await deleteFileDb(user.image)
+            if (user.imageCompressed)
+                await deleteFileDb(user.imageCompressed)
+
+
+            let imageId = null
+            let imageCompressedUrl = null
+            if (image?.size > 10000000) {
+                return { status: 400, data: { message: f("filesizemax") + "10 mo" } };
             }
 
             const arrayBuffer = await image.arrayBuffer();
 
-            // Appeler la Server Action pour compresser l'image
             const result = await compressImage(arrayBuffer, 0.1);
             if (result === null) return { status: 500, data: { message: e("error") } };
-            
 
-            imageUrl = await uploadFile(image, `${id}`, "profile-images")
+            const res = await uploadFileDB(image, session.data.user.id)
+            const resCompressed = await uploadFileDB(result, session.data.user.id)
 
-            imageCompressedUrl = await uploadFile(result, `${addStringToFilename(id, "compressed")}`, "profile-images")
-
-            if (imageUrl.status != 200 || !imageUrl.data.path) return { status: 500, data: { message: e("error") } };
-            if (imageCompressedUrl.status != 200 || !imageCompressedUrl.data.path) return { status: 500, data: { message: e("error") } };
+            if (res.status === 200 || res.data.file) imageId = res.data.file.id;
+            if (resCompressed.status === 200 || resCompressed.data.file) imageCompressedUrl = resCompressed.data.file.id;
 
             await prisma.user.update({
-                where: { id: id },
+                where: { id },
                 data: {
-                    image: imageUrl.data.path,
-                }
+                    image: imageId,
+                    imageCompressed: imageCompressedUrl,
+                },
             })
         }
+
         return { status: 200, data: { message: s("updatesuccess") } }
     } catch (error) {
         console.error("An error occurred in updateUser")
-        return { status: 500, data: { message: s("error") } }
+        return { status: 500, data: { message: e("error") } }
     }
 }

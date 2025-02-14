@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Upload } from 'lucide-react'
 import FilePreview from './file-preview'
-import toast from 'react-hot-toast'
+import { useTranslations } from 'next-intl'
 
 interface FileDropzoneProps {
     onFilesSelected: (files: File[]) => void
@@ -17,6 +17,8 @@ export function FileDropzone({ onFilesSelected, value, accept, multiple = true, 
         onFilesSelected(multiple ? acceptedFiles : [acceptedFiles[0]])
     }, [onFilesSelected, multiple])
 
+    const f= useTranslations("Files")
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept,
@@ -30,20 +32,20 @@ export function FileDropzone({ onFilesSelected, value, accept, multiple = true, 
         >
             <input {...getInputProps()} />
             {isDragActive ? (
-                <p>Déposez les fichiers ici ...</p>
+                <p>{multiple ? f("drop"): f("drop1") }</p>
             ) : (
                 <div>
                     {value && value.length > 0 ? (
                         <div className="flex gap-2 flex-wrap">
                             {value.map((file) => (
-                            <FilePreview key={file.name} file={file} onRemove={onRemove} />
+                            <FilePreview size='w-20 h-24' key={file.name} file={file} onRemove={onRemove} />
                             ))}
                         </div>
                     ) : (
                         <div>
 
                             <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                            <p>Glissez et déposez {multiple ? 'des fichiers' : 'un fichier'} ici, ou cliquez pour sélectionner</p>
+                            <p>{multiple ? f("draganddrop"): f("draganddrop1") }</p>
                         </div>
                     )}
                 </div>

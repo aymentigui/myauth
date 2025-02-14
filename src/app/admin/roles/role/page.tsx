@@ -1,4 +1,4 @@
-import AddRoleForm from "@/components/my/roles/roles/role/role-form";
+import AddRoleForm from "@/app/admin/roles/role/_component/forms/role-form";
 import { Card } from "@/components/ui/card";
 import { permissions } from "@/db/permissions";
 import { getTranslations } from "next-intl/server";

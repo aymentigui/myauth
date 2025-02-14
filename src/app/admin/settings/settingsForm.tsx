@@ -1,14 +1,13 @@
 
 
 import { getSessions } from '@/actions/accont-settings/getInfo';
-import EmailForm from '@/components/my/settingsForms/email-form';
-import ImageForm from '@/components/my/settingsForms/image-form';
-import ListSessionsForm from '@/components/my/settingsForms/listsessions-form/listsessions-form';
-import ResetPasswordForm from '@/components/my/settingsForms/resetpassword-form';
-import TwoFactorConfermationForm from '@/components/my/settingsForms/twofactorconfermation-form';
-import UsernameForm from '@/components/my/settingsForms/username-form';
+import EmailForm from '@/app/admin/settings/_component/forms/email-form';
+import ImageForm from '@/app/admin/settings/_component/forms/image-form';
+import ListSessionsForm from '@/app/admin/settings/_component/list-sessions/listsessions-form';
+import ResetPasswordForm from '@/app/admin/settings/_component/forms/resetpassword-form';
+import TwoFactorConfermationForm from '@/app/admin/settings/_component/forms/twofactorconfermation-form';
+import UsernameForm from '@/app/admin/settings/_component/forms/username-form';
 import { Separator } from '@/components/ui/separator';
-import { prisma } from '@/lib/db';
 import { User } from '@prisma/client';
 
 interface SettingsFormProps {
@@ -29,7 +28,7 @@ export default async function SettingsForm({ user }: SettingsFormProps) {
 
     return (
         <div>
-            <ImageForm image={user.image ?? ""} />
+            <ImageForm image={user.image ?? ""} userId={user.id} />
             <Separator />
             {user.email && <EmailForm email={user.email} />}
             <Separator />

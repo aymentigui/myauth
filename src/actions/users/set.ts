@@ -5,15 +5,15 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { withAuthorizationPermission2 } from "../permissions";
-import { uploadFile } from "../superbase/upload";
 import { compressImage } from "../util/util";
-import { addStringToFilename } from "../util/util-public";
+import { uploadFileDB } from "../localstorage/upload-db";
 
 
 export async function createUser(data: any) {
     const u = await getTranslations("Users");
     const s = await getTranslations("System");
     const e = await getTranslations('Error');
+    const f = await getTranslations('Files');
 
     const userSchema = z.object({
         firstname: z.string().min(1, u("firstnamerequired")),
@@ -55,6 +55,25 @@ export async function createUser(data: any) {
             return { status: 400, data: { message: u("emailexists") } };
         }
 
+        let imageId = null
+        let imageCompressedUrl = null
+        if (image && image.size > 0) {
+            if (image?.size > 10000000) {
+                return { status: 400, data: { message: f("filesizemax")+"10 mo" } };
+            }
+
+            const arrayBuffer = await image.arrayBuffer();
+
+            const result = await compressImage(arrayBuffer, 0.1);
+            if (result===null) return { status: 500, data: { message: e("error") } };
+
+            const res = await uploadFileDB(image,session.data.user.id)
+            const resCompressed = await uploadFileDB(result,session.data.user.id)
+            
+            if (res.status === 200 || res.data.file) imageId = res.data.file.id;
+            if (resCompressed.status === 200 || resCompressed.data.file) imageCompressedUrl = resCompressed.data.file.id;            
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await prisma.user.create({
@@ -63,6 +82,8 @@ export async function createUser(data: any) {
                 lastname,
                 username,
                 email,
+                image:imageId,
+                imageCompressed:imageCompressedUrl,
                 password: hashedPassword,
                 isAdmin: (isAdmin && session.data.user.isAdmin) ? true : false,
             },
@@ -78,31 +99,7 @@ export async function createUser(data: any) {
             })
         }
 
-        let imageUrl = null
-        let imageCompressedUrl = null
-        if (image) {
-            if (image?.size > 1000000) {
-                return { status: 400, data: { message: u("avatarinvalid") } };
-            }
-
-            const arrayBuffer = await image.arrayBuffer();
-            // Appeler la Server Action pour compresser l'image
-            const result = await compressImage(arrayBuffer, 0.1);
-            if (result===null) return { status: 500, data: { message: e("error") } };
-
-            imageUrl = await uploadFile(image, `${user.id}`, "profile-images")
-            imageCompressedUrl = await uploadFile(result, `${addStringToFilename(user.id, "compressed")}`, "profile-images")
-            
-            if (imageUrl.status != 200 || !imageUrl.data.path) return { status: 500, data: { message: e("error") } };
-            if (imageCompressedUrl.status != 200 || !imageCompressedUrl.data.path) return { status: 500, data: { message: e("error") } };
-            
-            await prisma.user.update({
-                where: { id: user.id },
-                data: {
-                    image: imageUrl.data.path,
-                }
-            })
-        }
+        
 
         return { status: 200, data: { message: s("createsuccess") } };
     } catch (error) {

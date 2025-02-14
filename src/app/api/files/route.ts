@@ -85,5 +85,5 @@ export async function POST(request: NextRequest) {
         uploadedFiles.push({ data: newFile.data, status: newFile.status });
     }
 
-    return NextResponse.json({ uploadedFiles }, { status: 200 });
+    return NextResponse.json(uploadedFiles);
 }

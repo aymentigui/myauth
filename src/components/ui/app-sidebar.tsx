@@ -16,6 +16,10 @@ import { getMenuItems } from "@/actions/menu-item";
 import { getTranslations } from "next-intl/server";
 import { TooltipProvider } from "@/components/ui//tooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui//tooltip";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+
 export async function AppSidebar() {
   const locale = await getLocale();
   const items = await getMenuItems();
@@ -28,24 +32,68 @@ export async function AppSidebar() {
           <SidebarGroupLabel>{t('title')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>{item.title}</TooltipTrigger>
-                            <TooltipContent>
-                              {item.title}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              {items.map((item: any) => (
+                item.subItems ?
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton>
+                        <div className="flex w-full justify-between">
+                          {item.url && item.url !== ""
+                            ? <Link href={item.url}>
+                              {item.icon && <item.icon />}
+                              <span>{item.title}</span>
+                            </Link>
+                            : <div>
+                              {item.icon && <item.icon />}
+                              <span>{item.title}</span>
+                            </div>}
+                          <div>
+                            <ChevronDown width={15} />
+                          </div>
+                        </div>
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenu>
+                        {item.subItems.map((subItem: any) => (
+                          <SidebarMenuItem key={subItem.title} className="pl-8" >
+                            <SidebarMenuButton asChild>
+                              <Link href={subItem.url}>
+                                {subItem.icon && <subItem.icon />}
+                                <span>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger>{subItem.title}</TooltipTrigger>
+                                      <TooltipContent>
+                                        {subItem.title}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  : <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={item.url}>
+                        <item.icon />
+                        <span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>{item.title}</TooltipTrigger>
+                              <TooltipContent>
+                                {item.title}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

@@ -40,6 +40,7 @@
         "settings" : "Paramètres",
         "roles" : "Roles",
         "users" : "Utilisateurs",
+        "more" : "Plus",
         "testimportcsv" : "Importer des données depuis un fichier CSV",
         "fileslocalstorage" : "Fichiers de stockage local",
         "logout" : "Se deconnecter",
@@ -197,6 +198,13 @@
         "fileurl" : "URL du fichier",
         "fileexists" : "Le fichier existe deja",
         "onlyimagesallowed" : "Seuls les images sont autorisées",
-        "filedoesnotexist" : "Le fichier n'existe pas"
+        "filedoesnotexist" : "Le fichier n'existe pas",
+        "filesizemax" : "La taille du fichier ne doit pas depasser ",
+        "draganddrop" : "Glisser et lacher les fichiers ici",
+        "draganddrop1" : "Glisser et lacher le fichier ici",
+        "drop" : "Lacher le fichier ici...",
+        "drop1" : "Lacher le fichier ici...",
+        "selectoneormorefiles" : "Sélectionnez un ou plusieurs fichiers à télécharger.",
+        "selectonefile" : "Sélectionnez un fichier à télécharger."
     }
 }

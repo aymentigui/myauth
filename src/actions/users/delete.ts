@@ -3,9 +3,8 @@
 import { getTranslations } from "next-intl/server";
 import { verifySession } from "../auth/auth"
 import { prisma } from "@/lib/db";
-import { ISADMIN, withAuthorizationPermission2 } from "../permissions";
-import { deleteFile } from "../superbase/delete";
-import { addStringToFilenameWithNewExtension } from "../util/util-public";
+import { withAuthorizationPermission2 } from "../permissions";
+import { deleteFileDb } from "../localstorage/delete-db";
 
 export async function deleteUsers(ids: string[]): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
@@ -30,12 +29,8 @@ export async function deleteUsers(ids: string[]): Promise<{ status: number, data
         })
 
         users.map(async (user) => {
-            if (user.image) {
-                const success1 = await deleteFile(user.image)
-                if (success1.status != 200) return { status: 500, data: { message: e("error") } };
-                const success2 = await deleteFile(addStringToFilenameWithNewExtension(user.image, "compressed", "jpg"))
-                if (success2.status != 200) return { status: 500, data: { message: e("error") } };
-            }
+            user.image && await deleteFileDb(user.image)
+            user.imageCompressed && await deleteFileDb(user.imageCompressed)
         })
 
         await prisma.user.deleteMany({

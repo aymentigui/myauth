@@ -40,6 +40,7 @@
         "settings" : "Settings",
         "roles" : "Roles",
         "users" : "Users",
+        "more" : "More",
         "testimportcsv" : "Import data from CSV",
         "fileslocalstorage" : "Files local storage",
         "logout" : "Logout",
@@ -197,6 +198,13 @@
         "fileurl" : "File URL",
         "fileexists" : "File already exists",
         "onlyimagesallowed" : "Only images are allowed",
-        "filedoesnotexist" : "File does not exist"
+        "filedoesnotexist" : "File does not exist",
+        "filesizemax" : "File size max is ",
+        "draganddrop" : "Drag and drop files here",
+        "draganddrop1" : "Drag and drop file here",
+        "drop" : "Drop file here...",
+        "drop1" : "Drop file here...",
+        "selectoneormorefiles" : "Select one or more files to upload.",
+        "selectonefile" : "Select one file to upload."
     }
 }

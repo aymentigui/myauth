@@ -26,6 +26,8 @@ import { useRouter } from "next/navigation";
 import { getRoles } from "@/actions/roles/get";
 import AvatarUploader from "../myui/avata-uploader";
 import { Loader2 } from "lucide-react";
+import axios from "axios";
+import { useOrigin } from "@/hooks/use-origin";
 
 type Role = {
   id: string;
@@ -41,6 +43,7 @@ export const AddUpdateUserDialog = () => {
   const [image, setImage] = useState<string | null>(null);
   const router = useRouter()
   const [loading, setLoading] = useState(false);
+  const origin = useOrigin()
 
   useEffect(() => {
     getRoles().then((res) => {
@@ -105,33 +108,58 @@ export const AddUpdateUserDialog = () => {
   }, [user])
 
   const onSubmit = async (data: UserFormValues) => {
+    if (!origin) return
     setLoading(true);
     let res;
-    if (isAdd) {
-      res = await createUser(data);
-    } else {
-      res = await updateUser(user?.id ?? "", (data));
+    let message;
+    let status;
+    let errors;
+
+
+    const formData = new FormData();
+    if (data.image) {
+      formData.append("file", data.image);
     }
-    if (res.status === 200) {
-      toast.success(res.data.message);
+
+    formData.append("firstname", data.firstname);
+    formData.append("lastname", data.lastname);
+    formData.append("username", data.username);
+    formData.append("password", data.password ?? "");
+    formData.append("email", data.email);
+    formData.append("isAdmin", String(data.isAdmin));
+    formData.append("roles", JSON.stringify(data.roles));
+
+    if (isAdd) {
+      res = await axios.post(origin + "/api/admin/users", formData);      
+    } else {
+      res = await axios.put(origin + "/api/admin/users/"+user?.id, formData); 
+    }
+
+    status = res.data.status
+    message = res.data.data.message
+    errors = res.data.data.errors
+
+    if (status === 200) {
+      toast.success(message);
       closeDialog();
       form.reset();
       setLoading(false);
-      router.refresh();
+      window.location.reload()
     } else {
       setLoading(false);
-      if (res.data.errors) {
-        res.data.errors.map((err: any) => {
+      if (errors) {
+        errors.map((err: any) => {
           toast.error(err.message);
         })
       } else {
-        toast.error(res.data.message);
+        toast.error(message);
       }
     }
   };
 
   const handleClose = () => {
     closeDialog();
+    setLoading(false);
     form.reset();
   };
 

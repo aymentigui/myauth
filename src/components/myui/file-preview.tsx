@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, FileImage, FileVideo, Paperclip, FileX, File, X, Trash2, Archive, Type } from "lucide-react";
+import { FileText, FileImage, FileVideo, Paperclip, FileX, File, X, Trash2, Archive, Type, Download, SquareArrowOutUpRight } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/build/pdf.worker";
 import { Button } from "../ui/button";
@@ -10,10 +10,14 @@ interface FilePreviewProps {
     file: File;
     size?: string;
     compact?: boolean;
+    fileId?: string;
     onRemove?: (e: React.MouseEvent, file: File) => void;
+    onRemove2?: (fileid: string) => void;
+    onDownload?: (fileid: string) => void;
+    onView?: (fileid: string) => void
 }
 
-const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", compact = false, onRemove }) => {
+const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", compact = false, fileId, onRemove, onRemove2, onDownload, onView }) => {
     const [preview, setPreview] = useState<string | null>(null);
     const [type, setType] = useState<string>("file");
     const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -105,22 +109,22 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", com
         reader.onload = async (event) => {
             if (!event.target) return;
             const data = event.target.result as ArrayBuffer;
-    
+
             const workbook = new ExcelJS.Workbook();
             await workbook.xlsx.load(data);
-    
+
             const sheet = workbook.worksheets[0]; // Première feuille
             const json: string[][] = [];
-    
+
             sheet.eachRow((row, rowNumber) => {
                 if (rowNumber >= (compact ? 2 : 5)) { // Appliquer le range selon `compact`
                     json.push(row.values as string[]);
                 }
             });
-    
+
             setPreview(json.slice(0, compact ? 2 : 3).map(row => row.join(", ")).join("\n"));
         };
-    
+
         reader.readAsArrayBuffer(file);
     };
 
@@ -142,16 +146,48 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", com
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {onRemove && (
-                <Button
-                    type="button"
-                    variant={"link"}
-                    className={"absolute p-2 bg-red-500 z-50 bottom-2 right-2 text-white rounded-md hover:bg-red-600 shadow-md"+" "+(compact ? 'w-8 h-8' : 'w-3 h-3')}
-                    onClick={(e) => onRemove(e, file)}
-                >
-                    <Trash2 className={compact? '!w-8 !h-8' : '!w-3 !h-3'   } />
-                </Button>
-            )}
+            <div className={"absolute bottom-2 right-2  flex-col gap-2" + " " + (isHovered ? 'flex' : 'hidden')}>
+                {onRemove && (
+                    <Button
+                        type="button"
+                        variant={"link"}
+                        className={"p-2 bg-red-500 z-50 text-white rounded-md hover:bg-red-600 shadow-md" + " " + (compact ? 'w-8 h-8' : 'w-3 h-3')}
+                        onClick={(e) => onRemove(e, file)}
+                    >
+                        <Trash2 className={compact ? '!w-8 !h-8' : '!w-3 !h-3'} />
+                    </Button>
+                )}
+                {onRemove2 && fileId && (
+                    <Button
+                        type="button"
+                        variant={"link"}
+                        className={"p-2 bg-red-500 z-50 text-white rounded-md hover:bg-red-600 shadow-md" + " " + (compact ? 'w-8 h-8' : 'w-3 h-3')}
+                        onClick={() => onRemove2(fileId)}
+                    >
+                        <Trash2 className={compact ? '!w-8 !h-8' : '!w-3 !h-3'} />
+                    </Button>
+                )}
+                {onDownload && fileId && (
+                    <Button
+                        type="button"
+                        variant={"link"}
+                        className={"p-2 bg-green-500 z-50 text-white rounded-md hover:bg-green-600 shadow-md" + " " + (compact ? 'w-8 h-8' : 'w-3 h-3')}
+                        onClick={() => onDownload(fileId)}
+                    >
+                        <Download className={compact ? '!w-8 !h-8' : '!w-3 !h-3'} />
+                    </Button>
+                )}
+                {onView && fileId && (
+                    <Button
+                        type="button"
+                        variant={"link"}
+                        className={"p-2 bg-gray-500 z-50 text-white rounded-md hover:bg-gray-600 shadow-md" + " " + (compact ? 'w-8 h-8' : 'w-3 h-3')}
+                        onClick={() => onView(fileId)}
+                    >
+                        <SquareArrowOutUpRight className={compact ? '!w-8 !h-8' : '!w-3 !h-3'} />
+                    </Button>
+                )}
+            </div>
             {!(type.startsWith("image") || type === "application/pdf" || (type.startsWith("video") && preview)) && (
                 <p className={`${compact ? 'text-xs' : 'text-sm'} font-semibold mb-1 truncate max-w-full`}>
                     {file.name}
@@ -177,7 +213,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", com
                 )}
             </CardContent>
             {isHovered && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white text-center p-1">
+                <div className={"absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white text-center p-1 overflow-hidden " + (compact ? 'text-sm' : 'text-[8px]')} >
                     {file.name}
                 </div>
             )}

@@ -19,7 +19,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const fileexists = await prisma.files.findFirst({ where: { id: paramsID.id } });
 
     if (!fileexists) {
-        return NextResponse.json({ message: f("filedoesnotexist") }, { status: 404 });
+        return NextResponse.json(fileexists);
     }
 
     if (fileexists?.canViewUsers || fileexists?.adminViewOnly || fileexists?.canViewPermissions) {
@@ -88,7 +88,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
             // Vérifier si le fichier existe
             if (!fs.existsSync(filePath)) {
-                return NextResponse.json({ error: "File not found in storage" }, { status: 404 });
+                return NextResponse.json({ error: "File not found in storage" }, { status: 200 });
             }
 
             // Création du stream de lecture

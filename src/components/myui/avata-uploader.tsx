@@ -1,19 +1,27 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Camera, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import GetImage from "@/hooks/use-getImage";
+import { LzyImage } from "./pdf/lazy-image";
+import { getImageFromLocalHost } from "@/actions/localstorage/util-client";
 
 interface AvatarUploaderProps {
   name: string;
   image?: string | null;
 }
 
-export default function AvatarUploader({ name,image }: AvatarUploaderProps) {
+export default function AvatarUploader({ name, image }: AvatarUploaderProps) {
   const { control, setValue } = useFormContext();
-  const [preview, setPreview] = useState<string | null>(image || null);
+  const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(()=>{
+    if(image)
+      getImageFromLocalHost(image).then((val)=>setPreview(val&&val!=="null"?val:null))
+  },[])
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,15 +57,15 @@ export default function AvatarUploader({ name,image }: AvatarUploaderProps) {
                 )}
                 onClick={() => fileInputRef.current?.click()}
               >
-                {preview ? (
-                  <img
+                {preview ? 
+                  <LzyImage
                     src={preview}
                     alt="Avatar"
                     className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <Upload className="w-10 h-10 text-gray-500" />
-                )}
+                  /> 
+                  : (
+                    <Upload className="w-10 h-10 text-gray-500" />
+                  )}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
                   <Camera className="w-8 h-8 text-white" />
                 </div>

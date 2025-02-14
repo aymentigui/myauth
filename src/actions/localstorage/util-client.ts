@@ -8,6 +8,8 @@
  * @param {string} fileName - The name to be used for the downloaded file.
  */
 
+import axios from "axios";
+
 export const downloadFile = async (url : string,filename:string) => {
     //window.open("/api/files/cm6wn8z1m0001v8h87h9s05ve", "_blank");
     const link = document.createElement("a");
@@ -37,29 +39,20 @@ export const ViewFileFromLocalHost = async (idFile : string, origin="/api/files/
     window.open(origin+idFile+"?allFile=true", "_blank");
 }
 
-export const getBlobUrlFileFromLocalHost = async (idFile : string) => {
-    const blob = await getFileBlobFromLocalHost(idFile, "true");
-    if(!blob) return null;
-    const url = URL.createObjectURL(blob.blob);
-    return {url, metadata:blob.metadata};
+export const deleteFileFromLocalHost = async (idFile : string, origin = "/api/files/") => {
+    const response = await axios.delete(origin+idFile);
+    if (response.status !== 200 ) {
+        console.log("Erreur lors du suppression de l'image");
+        return;
+    }
+    return response
 };
 
-export const getImageFromLocalHost = async (idFile : string) => {
-    const blob = await getFileBlobFromLocalHost(idFile, "true");
-    if(!blob) return "null";
-    const url = URL.createObjectURL(blob.blob);
-    return url ?? "null"
-};
 
-export const getFileFromLocalHost = async (idFile : string) => {
-    const blob = await getFileBlobFromLocalHost(idFile, "true");
-    if(!blob) return null;
-    const file = new File([blob?.blob], blob.metadata.name, { type: blob.metadata.mimeType });
-    return file;
-};
+// --------------------------------------------------------
 
-export const getFileBlobFromLocalHost = async (idFile : string, allFile = "false") => {
-    const response = await fetch("/api/files/"+idFile+"?allFile="+allFile);
+export const getFileBlobFromLocalHost = async (idFile : string, allFile = "false",origin="/api/files/") => {
+    const response = await fetch(origin+idFile+"?allFile="+allFile);
     if (!response.ok) {
         console.log("Erreur lors du téléchargement de l'image");
         return;
@@ -68,9 +61,22 @@ export const getFileBlobFromLocalHost = async (idFile : string, allFile = "false
     if(response.headers.get("X-File-Metadata")){
         metadata = JSON.parse(response.headers.get("X-File-Metadata") || '{}')
     }
+    if(!metadata) return
     const blob = await response.blob();
     return  {blob, metadata};
 };
 
+export const getImageFromLocalHost = async (idFile : string, origin="/api/files/") => {
+    const blob = await getFileBlobFromLocalHost(idFile, "true", origin);
+    if(!blob) return "null";
+    const url = URL.createObjectURL(blob.blob);
+    return url ?? "null"
+};
 
+export const getFileFromLocalHost = async (idFile : string, origin="/api/files/") => {
+    const blob = await getFileBlobFromLocalHost(idFile, "true");
+    if(!blob) return null;
+    const file = new File([blob?.blob], blob.metadata.name??"file", { type: blob.metadata.mimeType });
+    return file;
+};
 

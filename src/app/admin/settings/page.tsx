@@ -1,15 +1,15 @@
-import { auth } from "@/auth";
 import SettingsForm from "./settingsForm";
-import { getUserSettingsByid } from "@/actions/users/get";
+import { getUser } from "@/actions/users/get";
 import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/card";
+import { verifySession } from "@/actions/auth/auth";
 
 export default async function SettingsPage() {
-  const session = await auth();
+  const session = await verifySession();
   const t = await getTranslations('Settings');
-  if (!session || !session.user) return null
+  if (!session || session.status !== 200 || !session.data || !session.data.user) return null
 
-  const user = await getUserSettingsByid(session.user?.id as string);
+  const user = await getUser(session.data.user?.id as string);
   if (user.status !== 200 || !user.data) return null
 
   return <Card className='p-4'>

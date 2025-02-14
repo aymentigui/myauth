@@ -1,21 +1,20 @@
 import { verifySession } from '@/actions/auth/auth';
 import { accessPage2, withAuthorizationPermission2 } from '@/actions/permissions';
-import { auth } from '@/auth';
-import AddRoleButton from '@/components/my/roles/buttons/add-role'
-import ListRoles from '@/components/my/roles/roles/list-roles'
+import AddRoleButton from '@/app/admin/roles/_component/buttons/add-role'
+import ListRoles from '@/app/admin/roles/_component/list-roles'
 import { Card } from '@/components/ui/card';
 import React from 'react'
 
 const RolesPage = async () => {
 
-  const session = await auth()
+  const session = await verifySession()
 
-  if (!session || !session.user || !session.user.id) {
+  if (session.status !== 200 || !session || !session.data.user || !session.data.user.id) {
     return null;
   }
-  await accessPage2(session.user.id, ['roles_view']);
-  const hasPermissionView = await withAuthorizationPermission2(session.user.id, ['roles_view']);
-  const hasPermissionAdd = await withAuthorizationPermission2(session.user.id, ['roles_create']);
+  await accessPage2(session.data.user.id, ['roles_view']);
+  const hasPermissionView = await withAuthorizationPermission2(session.data.user.id, ['roles_view']);
+  const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['roles_create']);
 
   return (
     <Card className='p-4'>

@@ -16,6 +16,10 @@ export async function uploadFileDB(file:File, userId : string) : Promise<{ statu
 
         const filename= generateRandomFilename()
 
+        if(file.size>1000000){
+            return { status: 400, data: { message: f('filesizemax')+"1 mo" } }
+        }
+
         const fileUploaded = await uploadFile("uploads/"+filename+"."+getFileExtension(file.name), file)
         if (fileUploaded.status !== 200 || !fileUploaded.data?.path) {
             if(fileUploaded.status === 409){
@@ -31,7 +35,10 @@ export async function uploadFileDB(file:File, userId : string) : Promise<{ statu
                 size: file.size,
                 extention : getFileExtension(file.name),
                 path: fileUploaded.data.path,
-                addedFrom: userId
+                addedFrom: userId,
+                canViewUsers: userId,
+                canDownloadUsers: userId,
+                canDeleteUsers: userId
             },
         })
 

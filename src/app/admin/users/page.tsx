@@ -1,21 +1,21 @@
 
 import { accessPage2, withAuthorizationPermission2 } from '@/actions/permissions'
-import { auth } from '@/auth'
-import AddUpdateUserButton from '@/components/my/users/buttons/add-update-user'
-import UsersAdminPage from '@/components/my/users/users-list-admin/list-users'
+import AddUpdateUserButton from '@/app/admin/users/_component/buttons/add-update-user'
+import UsersAdminPage from '@/app/admin/users/_component/list-users'
 import { Card } from '@/components/ui/card'
 import React from 'react'
+import { verifySession } from '@/actions/auth/auth'
 
 const RolesPage = async () => {
 
-  const session = await auth()
+  const session = await verifySession()
 
-  if (!session || !session.user || !session.user.id) {
+  if (!session || session.status !== 200 || !session.data.user || !session.data.user.id) {
     return null;
   }
-  await accessPage2(session.user.id, ['users_view']);
-  const hasPermissionView = await withAuthorizationPermission2(session.user.id, ['users_view']);
-  const hasPermissionAdd = await withAuthorizationPermission2(session.user.id, ['users_create']);
+  await accessPage2(session.data.user.id, ['users_view']);
+  const hasPermissionView = await withAuthorizationPermission2(session.data.user.id, ['users_view']);
+  const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_create']);
 
   return (
     <Card className='p-4 w-full'>

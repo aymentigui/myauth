@@ -6,14 +6,14 @@ export async function GET(request: Request) {
 
     const res=await getRoles()
 
-    return NextResponse.json({ data: res.data }, { status: res.status });
+    return NextResponse.json( res.data);
 }
 
 export async function POST(request: Request) {
 
-    const { name, permission } = await request.json();
+    const { name, permissions } = await request.json();
 
-    const res=await AddRole(name, permission)
+    const res=await AddRole(name, permissions)
 
-    return NextResponse.json({ data: res.data }, { status: res.status });
+    return NextResponse.json(res);
 }

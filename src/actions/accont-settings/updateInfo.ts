@@ -1,14 +1,12 @@
 "use server"
-import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { verifySession } from "../auth/auth";
 import { getTranslations } from "next-intl/server";
-import { deleteFile } from "../superbase/delete";
-import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util/util-public";
 import { compressImage } from "../util/util";
-import { uploadFile } from "../superbase/upload";
+import { deleteFileDb } from "../localstorage/delete-db";
+import { uploadFileDB } from "../localstorage/upload-db";
 
 export async function updateEmail(email: string): Promise<{ status: number, data: { message: string } }> {
     const EmailSchema = z.string().email({ message: "Adresse e-mail invalide" });
@@ -219,6 +217,7 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
     const tv = await getTranslations('Settings validation');
     const s = await getTranslations('System');
     const u = await getTranslations('Users');
+    const f = await getTranslations('Files');
 
     const ImageScema = z.object({
         image: z
@@ -235,27 +234,24 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
     }
 
     try {
-        if (!image) {
+        if (!image || image.size === 0) {
             return { status: 400, data: { message: te("image") } };
         }
 
         if (!ImageScema.safeParse(image).success) {
             return { status: 400, data: { message: u("onlyimagesallowed") } };
         }
+
+        if(image.size > 10000000) {
+            return { status: 400, data: { message: f("filesizemax")+" 10Mo" } };
+        }
         const userExists = await prisma.user.findUnique({
             where: { id: session.data.session.userId },
         })
 
-        if (userExists?.image) {
-            const success1 = await deleteFile(userExists.image)
-            if (success1.status != 200) return { status: 500, data: { message: e("error") } };
-            const success2 = await deleteFile(addStringToFilenameWithNewExtension(userExists.image, "compressed", "jpg"))
-            if (success2.status != 200) return { status: 500, data: { message: e("error") } };
-        }
 
-        if (image?.size > 1000000) {
-            return { status: 400, data: { message: u("avatarinvalid") } };
-        }
+        userExists?.image && await deleteFileDb(userExists.image)
+        userExists?.imageCompressed && await deleteFileDb(userExists.imageCompressed)
 
         const arrayBuffer = await image.arrayBuffer();
 
@@ -264,20 +260,21 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
         if (result === null) return { status: 500, data: { message: e("error") } };
 
 
-        const imageUrl = await uploadFile(image, `${userExists?.id}`, "profile-images")
+        const res1 = await uploadFileDB(image,session.data.user.id)
+        const res2 = await uploadFileDB(result,session.data.user.id)
 
-        const imageCompressedUrl = await uploadFile(result, `${addStringToFilename(session.data.session.userId, "compressed")}`, "profile-images")
+        let imageId,imageCompressedId;
 
-        if (imageUrl.status != 200 || !imageUrl.data.path) return { status: 500, data: { message: e("error") } };
-        if (imageCompressedUrl.status != 200 || !imageCompressedUrl.data.path) return { status: 500, data: { message: e("error") } };
+        if (res1.status === 200 || res1.data.file.id) imageId=res1.data.file.id
+        if (res2.status === 200 || res2.data.file.id) imageCompressedId=res2.data.file.id
 
         await prisma.user.update({
             where: { id: userExists?.id },
             data: {
-                image: imageUrl.data.path,
+                image: imageId,
+                imageCompressed : imageCompressedId
             }
         })
-
 
         return { status: 200, data: { message: tv("username maj") } };
     } catch (error) {

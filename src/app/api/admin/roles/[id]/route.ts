@@ -8,9 +8,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const paramsID = await params
 
     const role = await getRole(paramsID.id)
-   
 
-    return NextResponse.json({ data: role.data }, { status: role.status });
+    return NextResponse.json(role);
 }
 
 
@@ -18,11 +17,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
     const paramsID = await params
 
-    const {name, permission} = await request.json();
+    const {name, permissions} = await request.json();
+    console.log(permissions)
 
-    const role = await UpdateRole(paramsID.id, name, permission)
+    const role = await UpdateRole(paramsID.id, name, permissions)
 
-    return NextResponse.json({ data: role.data }, { status: role.status });
+    return NextResponse.json(role);
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
@@ -32,5 +32,5 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     const role = await deleteRole(paramsID.id)
    
 
-    return NextResponse.json({ data: role.data }, { status: role.status });
+    return NextResponse.json(role);
 }
