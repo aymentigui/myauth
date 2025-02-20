@@ -88,10 +88,10 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             })
         }
 
-        await prisma.userRole.deleteMany({ where: { userId: id } })
+        await prisma.userrole.deleteMany({ where: { userId: id } })
         if (isAdmin) {
             if (roles && roles.length > 0) {
-                await prisma.userRole.createMany({
+                await prisma.userrole.createMany({
                     data: roles.map((role: string) => ({
                         userId: id,
                         roleId: role,

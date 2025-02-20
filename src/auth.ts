@@ -85,7 +85,7 @@ export const { handlers, auth, signIn, signOut } =
         // @ts-ignore
         session.session = token.session
         if (token?.id) {
-          const roles = await prisma.userRole.findMany({
+          const roles = await prisma.userrole.findMany({
             where: { userId: token.id },
             include: { role: true },
           });
@@ -122,11 +122,11 @@ export const { handlers, auth, signIn, signOut } =
       Credentials({
         authorize: async (credentials, req) => {
 
-          const te = await getTranslations("Settings error")
+          const u = await getTranslations("Users")
 
           const LoginSchema = z.object({
-            email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
-            password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+            email: z.string({ required_error: u("emailrequired") }).email({ message: u("emailinvalid") }),
+            password: z.string({ required_error: u("passwordrequired") }).min(6, { message: u("password6") }),
             code: z.string().optional(),
           });
 

@@ -16,13 +16,12 @@ const UsernameForm = ({ username }: { username: string }) => {
     const [showForm, setShowForm] = useState(false)
     const [loading, setLoading] = useState(false)
     const router=useRouter()
-    const te=useTranslations("Settings error")
-    const tv=useTranslations("Settings validation")
+    const u=useTranslations("Users")
     const t=useTranslations("Settings")
     const ts = useTranslations('System');
 
     const EmailScema = z.object({
-        username: z.string({message:te("username")}).min(6,{ message: te("username6") }),
+        username: z.string({message:u("usernamerequired")}).min(6,{ message: u("username6") }),
     })
     
 
@@ -42,7 +41,7 @@ const UsernameForm = ({ username }: { username: string }) => {
         }
         updateUsername(data.username).then((res) => {
             if (res.status === 200) {
-                toast.success(tv("username maj"))
+                toast.success(ts("updatesuccess"))
                 setShowForm(false)
                 router.refresh()
             } else {

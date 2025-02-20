@@ -1,9 +1,9 @@
-model Session {
+model session {
   id           String   @id @default(cuid())
   sessionToken String
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   deviceName   String?
   deviceType   String?
   browser      String?

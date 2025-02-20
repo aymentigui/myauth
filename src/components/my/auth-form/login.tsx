@@ -27,11 +27,11 @@ const LoginForm = () => {
 
     const t = useTranslations("Settings")
     const s = useTranslations("System")
-    const te = useTranslations("Settings error")
+    const u = useTranslations("Users")
 
     const LoginSchema = z.object({
-        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
-        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+        email: z.string({ required_error: u("emailrequired") }).email({ message: u("emailinvalid") }),
+        password: z.string({ required_error: u("passwordrequired") }).min(6, { message: u("password6") }),
         code: z.string().optional(),
     });
 

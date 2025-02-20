@@ -11,8 +11,7 @@ import { uploadFileDB } from "../localstorage/upload-db";
 export async function updateEmail(email: string): Promise<{ status: number, data: { message: string } }> {
     const EmailSchema = z.string().email({ message: "Adresse e-mail invalide" });
     const e = await getTranslations('Error');
-    const te = await getTranslations('Settings error');
-    const tv = await getTranslations('Settings validation');
+    const u = await getTranslations('Users');
     const s = await getTranslations('System');
 
     const session = await verifySession()
@@ -22,24 +21,24 @@ export async function updateEmail(email: string): Promise<{ status: number, data
 
     try {
         if (!email) {
-            return { status: 400, data: { message: te("email") } };
+            return { status: 400, data: { message: u("emailrequired") } };
         }
 
         if (!EmailSchema.safeParse(email).success) {
-            return { status: 400, data: { message: te("emailinvalid") } };
+            return { status: 400, data: { message: u("emailinvalid") } };
         }
         const userExists = await prisma.user.findUnique({
             where: { email },
         })
         if (userExists) {
-            return { status: 400, data: { message: te("emailexists") } };
+            return { status: 400, data: { message: u("emailexists") } };
         }
         const user = await prisma.user.update({
             where: { id: session.data.session.userId },
             data: { email },
         });
 
-        return { status: 200, data: { message: tv("email maj") } };
+        return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
         console.error("An error occurred in updateEmail");
         return { status: 500, data: { message: s("updatefail") } };
@@ -47,11 +46,10 @@ export async function updateEmail(email: string): Promise<{ status: number, data
 }
 export async function updateUsername(username: string): Promise<{ status: number, data: { message: string } }> {
     const e = await getTranslations('Error');
-    const te = await getTranslations('Settings error');
-    const tv = await getTranslations('Settings validation');
+    const u = await getTranslations('Users');
     const s = await getTranslations('System');
 
-    const UsernameSchema = z.string().min(6, { message: te("username6") })
+    const UsernameSchema = z.string().min(6, { message: u("username6") })
 
     const session = await verifySession()
     if (!session || session.status != 200) {
@@ -60,26 +58,26 @@ export async function updateUsername(username: string): Promise<{ status: number
 
     try {
         if (!username) {
-            return { status: 400, data: { message: te("username") } };
+            return { status: 400, data: { message: u("usernamerequired") } };
         }
 
         if (!UsernameSchema.safeParse(username).success) {
-            return { status: 400, data: { message: te("usernameinvalid") } };
+            return { status: 400, data: { message: u("usernameinvalid") } };
         }
         const userExists = await prisma.user.findUnique({
             where: { username },
         })
         if (userExists) {
-            return { status: 400, data: { message: te("usernameexists") } };
+            return { status: 400, data: { message: u("usernameexists") } };
         }
         await prisma.user.update({
             where: { id: session.data.session.userId },
             data: { username },
         });
 
-        return { status: 200, data: { message: tv("username maj") } };
+        return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
-        console.error(s("Mise a jour echoue"));
+        console.error(s("updatefail"));
         return { status: 500, data: { message: 'An error occurred in updateUsername' } };
     }
 }
@@ -111,11 +109,10 @@ export async function updatePassword(currentPassword: string, newPassword: strin
 
     const e = await getTranslations('Error');
     const s = await getTranslations('System');
-    const tv = await getTranslations('Settings validation');
-    const te = await getTranslations('Settings error');
+    const u = await getTranslations('Users');
     const t = await getTranslations('Settings');
 
-    const ResetPasswordSchema = z.string().min(6, { message: te("password6") });
+    const ResetPasswordSchema = z.string().min(6, { message: u("password6") });
 
     const session = await verifySession()
     if (!session || session.status != 200) {
@@ -133,7 +130,7 @@ export async function updatePassword(currentPassword: string, newPassword: strin
 
         const passwordMatch = await bcrypt.compare(currentPassword, user.password);
         if (!passwordMatch) {
-            return { status: 400, data: { message: te("currentpasswordinvalid") } };
+            return { status: 400, data: { message: u("currentpasswordinvalid") } };
         }
 
         if (!ResetPasswordSchema.safeParse(newPassword).success) {
@@ -213,8 +210,6 @@ export async function deleteAllSessions() {
 
 export async function updateImage(image: File): Promise<{ status: number, data: { message: string } }> {
     const e = await getTranslations('Error');
-    const te = await getTranslations('Settings error');
-    const tv = await getTranslations('Settings validation');
     const s = await getTranslations('System');
     const u = await getTranslations('Users');
     const f = await getTranslations('Files');
@@ -235,7 +230,7 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
 
     try {
         if (!image || image.size === 0) {
-            return { status: 400, data: { message: te("image") } };
+            return { status: 400, data: { message: u("imagerequired") } };
         }
 
         if (!ImageScema.safeParse(image).success) {
@@ -276,9 +271,9 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
             }
         })
 
-        return { status: 200, data: { message: tv("username maj") } };
+        return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
-        console.error(s("Mise a jour echoue"));
+        console.error(s("updatefail"));
         return { status: 500, data: { message: 'An error occurred in updateUsername' } };
     }
 }

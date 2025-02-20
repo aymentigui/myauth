@@ -19,11 +19,10 @@ const EmailForm = ({ email }: { email: string }) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
     const t = useTranslations('Settings');
-    const te = useTranslations('Settings error');
-    const tv = useTranslations('Settings validation');
+    const u = useTranslations('Users');
     const ts = useTranslations('System');
     const EmailScema = z.object({
-        email: z.string().email({ message: te('email') }),
+        email: z.string().email({ message: u('emailrequired') }),
     })
 
     const form = useForm<z.infer<typeof EmailScema>>({
@@ -42,7 +41,7 @@ const EmailForm = ({ email }: { email: string }) => {
         }
         updateEmail(data.email).then((res) => {
             if (res.status === 200) {
-                toast.success(tv("email maj"))
+                toast.success(ts("updatesuccess"))
                 router.refresh()
                 setShowForm(false)
             } else {

@@ -1,9 +1,9 @@
 "use server"
 import { prisma } from "@/lib/db";
-import { User } from "@prisma/client";
+import { user } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 
-export async function getSessions(user:User): Promise<{ status: number, data: any }> {
+export async function getSessions(user:user): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
     try {
         const sessions = await prisma.session.findMany(

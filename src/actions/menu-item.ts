@@ -1,5 +1,5 @@
 "use server"
-import { FileSpreadsheet, Home, Settings, UserRoundCog, Users } from "lucide-react";
+import { CircleEllipsis, FileSpreadsheet, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { verifySession } from "./auth/auth";
 import { getUserPermissions, ISADMIN } from "./permissions";
@@ -37,22 +37,15 @@ const itemsMenu = async () =>{
             permissions: [],
         },
         {
-            title: Menu("testimportcsv"),
-            url: "/admin/testimport",
-            icon: FileSpreadsheet,
-            admin: false,
-            permissions: [],
-        },
-        {
             title: Menu("more"),
             url: null,
-            icon: null,
+            icon: CircleEllipsis,
             admin: false,
             permissions: [],
             subItems: [
                 {
-                    title: Menu("testimportcsv"),
-                    url: "/admin/more/testimport",
+                    title: Menu("testimportsheet"),
+                    url: "/admin/more/import-sheet",
                     icon: FileSpreadsheet,
                     admin: false,
                     permissions: [],
@@ -64,7 +57,21 @@ const itemsMenu = async () =>{
                     admin: false,
                     permissions: [],
                 },
+                {
+                    title: Menu("pdfutil"),
+                    url: "/admin/more/pdf-util",
+                    icon: FileSpreadsheet,
+                    admin: false,
+                    permissions: [],
+                },
             ],
+        },
+        {
+            title: Menu("blog"),
+            url: "/admin/blogs",
+            icon: Newspaper,
+            admin: false,
+            permissions: [],
         },
     ]
     return items

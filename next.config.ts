@@ -1,4 +1,5 @@
 import createNextIntlPlugin from "next-intl/plugin";
+import { webpack } from "next/dist/compiled/webpack/webpack";
 
 const withNextIntl = createNextIntlPlugin();
 

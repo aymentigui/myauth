@@ -9,7 +9,7 @@ export async function createTowFactorConfermation(id: string) : Promise<{ status
         if(existingTwoFactorConfermation.status===200 && existingTwoFactorConfermation.data){
             await deleteTowFactorConfermationByUserId(id);
         }
-        const verificationToken=await prisma.twoFactorConfermation.create({
+        const verificationToken=await prisma.twofactorconfermation.create({
             data : {
                 userId: id,
                 expiredAt: new Date(new Date().getTime() + 1000 * 60 * 5)
@@ -26,7 +26,7 @@ export async function getTowFactorConfermationByUserId(id: string) : Promise<{ s
     const e=await getTranslations('Error');
 
     try {
-        const verificationToken=await prisma.twoFactorConfermation.findFirst({
+        const verificationToken=await prisma.twofactorconfermation.findFirst({
             where : {
                 userId: id
             }
@@ -44,7 +44,7 @@ export async function getTowFactorConfermationByUserId(id: string) : Promise<{ s
 export async function deleteTowFactorConfermationByUserId(id: string) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
     try {
-        const verificationToken=await prisma.twoFactorConfermation.deleteMany({
+        const verificationToken=await prisma.twofactorconfermation.deleteMany({
             where : {
                 userId: id
             }

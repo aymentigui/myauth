@@ -4,8 +4,6 @@
     },
     "System": {
         "title": "Système",
-        "Mise a jour succes" : "Mise à jour avec succès",
-        "Mise a jour echoue" : "Mise à jour echoue",
         "createsuccess": "Création avec succès",
         "createfail": "Création echoue",
         "updatesuccess": "Mise à jour avec succès",
@@ -32,7 +30,9 @@
         "noresults" : "Aucun resultat",
         "search" : "Rechercher",
         "import" : "Importer",
-        "import_data" : "Importer des données"
+        "import_data" : "Importer des données",
+        "tabledata" : "table de données",
+        "back" : "Retour"
     },
     "Menu" : {
         "title": "Menu",
@@ -41,8 +41,10 @@
         "roles" : "Roles",
         "users" : "Utilisateurs",
         "more" : "Plus",
-        "testimportcsv" : "Importer des données depuis un fichier CSV",
+        "testimportsheet" : "Importer des données depuis un fichier de données",
         "fileslocalstorage" : "Fichiers de stockage local",
+        "pdfutil": "Utilitaire PDF",
+        "blog": "Blog",
         "logout" : "Se deconnecter",
         "footer" : "© 2025 Tous droits réservés"
     },
@@ -99,41 +101,6 @@
         "deleteallsessions" : "Supprimer toutes les sessions",
         "sessionnotfound" : "Session introuvable"
     },
-    "Settings error" : {
-        "title": "Erreur",
-        "username" : "Le nom d'utilisateur est requis",
-        "username6" : "Le nom d'utilisateur doit contenir au moins 6 caractères",
-        "username20" : "Le nom d'utilisateur doit contenir au plus 20 caractères",
-        "usernameexists" : "Le nom d'utilisateur existe deja",
-        "usernameinvalid" : "Le nom d'utilisateur est invalide",
-        "email" : "L'email est requis",
-        "emailexists" : "L'email existe deja",
-        "image" : "L'image est requise",
-        "password" : "Le mot de passe est requis",
-        "twofactor" : "La confirmation de deux facteurs est requise",
-        "currentpassword" : "Le mot de passe actuel est requis",        
-        "newpassword" : "Le nouveau mot de passe est requis",
-        "confirmpassword" : "La confirmation du mot de passe est requise",
-        "emailinvalid" : "L'email est invalide",
-        "passwordinvalid" : "Le mot de passe est invalide",
-        "twofactorinvalid" : "La confirmation de deux facteurs est invalide",
-        "resetpasswordinvalid" : "La réinitialisation du mot de passe est invalide",
-        "currentpasswordinvalid" : "Le mot de passe actuel est invalide",
-        "newpasswordinvalid" : "Le nouveau mot de passe est invalide",
-        "confirmpasswordinvalid" : "La confirmation du mot de passe est invalide",
-        "passwordnotmatch" : "Les mots de passe ne correspondent pas",
-        "emailnotmatch" : "Les emails ne correspondent pas",
-        "currentpasswordnotmatch" : "Le mot de passe actuel ne correspond pas",
-        "newpasswordnotmatch" : "Le nouveau mot de passe ne correspond pas",
-        "confirmpasswordnotmatch" : "La confirmation du mot de passe ne correspond pas",
-        "password6" : "Le mot de passe doit contenir au moins 6 caractères"
-    },
-    "Settings validation" : {
-        "title" : "Validation",
-        "email maj" : "Email mis à jour",
-        "username maj" : "Nom d'utilisateur mis à jour",
-        "password maj" : "Mot de passe mis à jour"
-    },
     "Roles" : {
         "title": "Roles",
         "name" : "Nom",
@@ -161,6 +128,9 @@
         "role" : "Role",
         "isadmin" : "Admin",
         "usernamerequired" : "Veuillez saisir un nom d'utilisateur",
+        "username6": "Le nom d'utilisateur doit contenir au moins 6 caractères",
+        "username20": "Le nom d'utilisateur doit contenir au plus 20 caractères",
+        "usernameinvalid": "Le nom d'utilisateur est invalide",
         "emailrequired" : "Veuillez saisir un email",
         "firstnamerequired" : "Veuillez saisir un prénom",
         "lastnamerequired" : "Veuillez saisir un nom de famille",
@@ -169,8 +139,14 @@
         "emailexists" : "L'email existe deja",
         "usernameexists" : "Le nom d'utilisateur existe deja",
         "password6" : "Le mot de passe doit contenir au moins 6 caractères",
+        "confirmpasswordnotmatch": "La confirmation du mot de passe ne correspond pas",
+        "confirmpasswordrequired": "La confirmation du mot de passe est requise",
+        "currentpasswordrequired": "Le mot de passe actuel est requis",
+        "newpasswordrequired": "Le nouveau mot de passe est requis",
+        "currentpasswordinvalid": "Le mot de passe actuel est invalide",
         "selectrole" : "Veuillez choisir un role",
         "avatarinvalid" : "L'avatar est invalide",
+        "imagerequired": "L'image est requise",
         "onlyimagesallowed" : "Seuls les images sont autorisées"
     },
     "Permissions" : {
@@ -205,6 +181,22 @@
         "drop" : "Lacher le fichier ici...",
         "drop1" : "Lacher le fichier ici...",
         "selectoneormorefiles" : "Sélectionnez un ou plusieurs fichiers à télécharger.",
-        "selectonefile" : "Sélectionnez un fichier à télécharger."
+        "selectonefile" : "Sélectionnez un fichier à télécharger.",
+        "selectfilesheet" : "Sélectionnez une feuille de données"
+    },
+    "Blogs":{
+        "title": "Blogs",
+        "addblog": "Ajouter un blog",
+        "updateblog": "Mettre à jour le blog",
+        "deleteblog": "Supprimer le blog",
+        "titlerequired": "Veuillez saisir un titre",
+        "contentrequired": "Veuillez saisir un contenu",
+        "statusrequired": "Veuillez choisir un statut",
+        "publish": "Publier",
+        "draft": "Brouillon",
+        "blognotfound": "Blog introuvable"
+    },
+    "TextEditor":{
+        "placeholder": "Écrivez quelque chose..."
     }
 }

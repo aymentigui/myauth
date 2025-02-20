@@ -1,15 +1,15 @@
 
-model Role {
+model role {
   id          String     @id @default(cuid())
   name        String     @unique
   permissions String
-  users       UserRole[]
+  users       userrole[]
 }
 
-model UserRole {
+model userrole {
   id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  role   role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId String
 }

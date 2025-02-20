@@ -5,7 +5,7 @@ import { getUser } from "@/actions/users/get";
 import { updateUser } from "@/actions/users/update";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
 
@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: any }) {
 
     const paramsID = await params
 
@@ -47,7 +47,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(res);
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
 

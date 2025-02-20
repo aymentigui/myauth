@@ -4,8 +4,6 @@
     },
     "System": {
         "title": "النظام",
-        "Mise a jour succes": "تحديث نجاح",
-        "Mise a jour echoue": "فشل التحديث",
         "createsuccess": "إنشاء ناجح",
         "createfail": "فشل الإنشاء",
         "updatesuccess": "تحديث ناجح",
@@ -32,7 +30,9 @@
         "noresults": "لم يتم العثور على نتائج",
         "search": "بحث",
         "import": "استيراد",
-        "import_data": "استيراد البيانات"
+        "import_data": "استيراد البيانات",
+        "tabledata" : "جدول البيانات",
+        "back" : "رجوع"
     },
     "Menu": {
         "title": "القائمة",
@@ -41,8 +41,10 @@
         "roles": "الادوار",
         "users": "المستخدمين",
         "more" : "المزيد",
-        "testimportcsv": "استيراد بيانات CSV",
+        "testimportsheet": "استيراد بيانات من جدول",
         "fileslocalstorage": "الملفات المخزنة المحليا",
+        "pdfutil": "أداة PDF",
+        "blog": "المدونة",
         "logout": "تسجيل الخروج",
         "footer": "© 2025 جميع الحقوق محفوظة"
     },
@@ -99,42 +101,6 @@
         "deleteallsessions": "حذف جميع الجلسات",
         "sessionnotfound": "الجلسة غير موجودة"
     },
-    "Settings error": {
-        "title": "خطأ",
-        "username": "اسم المستخدم مطلوب",
-        "usernameexists": "اسم المستخدم موجود مسبقا",
-        "usernameinvalid": "اسم المستخدم غير صالح",
-        "username6": "اسم المستخدم يجب أن يحتوي على 6 أحرف على الأقل",
-        "username20": "اسم المستخدم يجب أن يحتوي على 20 أحرف على الأقل",
-        "email": "البريد الإلكتروني مطلوب",
-        "emailexists": "البريد الإلكتروني موجود مسبقا",
-        "image": "الصورة مطلوبة",
-        "password": "كلمة المرور مطلوبة",
-        "twofactor": "تأكيد البطاقة الثنائية مطلوب",
-        "resetpassword": "إعادة تعيين كلمة المرور مطلوب",
-        "currentpassword": "كلمة المرور الحالية مطلوبة",
-        "newpassword": "كلمة المرور الجديدة مطلوبة",
-        "confirmpassword": "تأكيد كلمة المرور مطلوب",
-        "emailinvalid": "البريد الإلكتروني غير صالح",
-        "passwordinvalid": "كلمة المرور غير صالحة",
-        "twofactorinvalid": "تأكيد البطاقة الثنائية غير صالح",
-        "resetpasswordinvalid": "إعادة تعيين كلمة المرور غير صالح",
-        "currentpasswordinvalid": "كلمة المرور الحالية غير صالحة",
-        "newpasswordinvalid": "كلمة المرور الجديدة غير صالحة",
-        "confirmpasswordinvalid": "تأكيد كلمة المرور غير صالح",
-        "passwordnotmatch": "كلمات المرور غير متطابقة",
-        "emailnotmatch": "البريد الإلكتروني غير متطابق",
-        "currentpasswordnotmatch": "كلمة المرور الحالية غير متطابقة",
-        "newpasswordnotmatch": "كلمة المرور الجديدة غير متطابقة",
-        "confirmpasswordnotmatch": "تأكيد كلمة المرور غير متطابق",
-        "password6": "كلمة المرور يجب ان تحتوي على 6 حروف على الاقل"
-    },
-    "Settings validation": {
-        "title": "تصديق",
-        "email maj": "تم تحديث البريد الإلكتروني",
-        "username maj": "تم تحديث اسم المستخدم",
-        "password maj": "تم تحديث كلمة المرور"
-    },
     "Roles": {
         "title": "الادوار",
         "name": "الاسم",
@@ -162,6 +128,9 @@
         "role": "الدور",
         "isadmin": "ادمن",
         "usernamerequired": "الرجاء ادخال اسم المستخدم",
+        "username6": "اسم المستخدم يجب ان يحتوي على 6 حروف على الاقل",
+        "username20": "اسم المستخدم يجب ان يحتوي على 20 حرف على الاقل",
+        "usernameinvalid": "اسم المستخدم غير صالح",
         "emailrequired": "الرجاء ادخال البريد الإلكتروني",
         "firstnamerequired": "الرجاء ادخال الاسم",
         "lastnamerequired": "الرجاء ادخال اللقب",
@@ -170,8 +139,14 @@
         "emailexists": "البريد الإلكتروني موجود",
         "usernameexists": "اسم المستخدم موجود",
         "password6": "كلمة المرور يجب ان تحتوي على 6 حروف على الاقل",
+        "confirmpasswordnotmatch": "تأكيد كلمة المرور غير متطابق",
+        "confirmpasswordrequired": "تأكيد كلمة المرور مطلوب",
+        "currentpasswordrequired": "كلمة المرور الحالية مطلوب",
+        "newpasswordrequired": "كلمة المرور الجديدة مطلوب",
+        "currentpasswordinvalid": "كلمة المرور الحالية غير صالحة",
         "selectrole": "الرجاء اختيار دور",
         "avatarinvalid": "الصورة غير صالحة",
+        "imagerequired": "الصورة مطلوبة",
         "onlyimagesallowed": "الصورة يجب ان تكون صورة"
     },
     "Permissions": {
@@ -206,6 +181,22 @@
         "drop": "...أسقط الملفات هنا",
         "drop1": "...أسقط الملف هنا",
         "selectoneormorefiles" : "اختر ملف واحد او اكثر للتحميل.",
-        "selectonefile" : "اختر ملف واحد للتحميل."
+        "selectonefile" : "اختر ملف واحد للتحميل.",
+        "selectfilesheet" : "اختر ملف واحد للتحميل"
+    },
+    "Blogs":{
+        "title": "المدونات",
+        "addblog": "اضافة مدونة",
+        "updateblog": "تحديث مدونة",
+        "deleteblog": "حذف مدونة",
+        "titlerequired": "الرجاء ادخال عنوان",
+        "contentrequired": "الرجاء ادخال المحتوى",
+        "statusrequired": "الرجاء اختيار حالة المدونة",
+        "publish": "نشر",
+        "draft": "مسودة",
+        "blognotfound": "المدونة غير موجودة"
+    },
+    "TextEditor":{
+        "placeholder": "اكتب شيئا..."
     }
 }

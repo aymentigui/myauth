@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server";
 
 
 export async function resetPasswordWithoutConnection(data: { email: string, password?: string, code?: string }): Promise<{ status: number, data: any }> {
-    const te=await getTranslations('Settings error');
+    const u=await getTranslations('Users');
     const t=await getTranslations('Settings');
     const e=await getTranslations('Error');
     const s=await getTranslations('System');
@@ -45,7 +45,7 @@ export async function resetPasswordWithoutConnection(data: { email: string, pass
         }
 
         if (!password) {
-            return { status: 400, data: { message: te("password") } };
+            return { status: 400, data: { message: u("passwordrequired") } };
         }
 
         const existingResetPassword=await getResetPasswordConfermation(user.data.id)
@@ -98,7 +98,7 @@ export async function createResetPasswordConfermation(id: string) : Promise<{ st
         if(existingResetPassword){
             await deleteResetPasswordConfermation(id)
         }
-        const verificationToken=await prisma.resetPasswordConfermation.create({
+        const verificationToken=await prisma.resetpasswordconfermation.create({
             data : {
                 userId: id,
                 expiredAt: new Date(new Date().getTime() + 1000 * 60 * 5)
@@ -114,7 +114,7 @@ export async function createResetPasswordConfermation(id: string) : Promise<{ st
 export async function getResetPasswordConfermation(id: string) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
     try {
-        const verificationToken=await prisma.resetPasswordConfermation.findFirst({
+        const verificationToken=await prisma.resetpasswordconfermation.findFirst({
             where : {
                 userId: id
             }
@@ -132,7 +132,7 @@ export async function getResetPasswordConfermation(id: string) : Promise<{ statu
 export async function deleteResetPasswordConfermation(id: string) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');    
     try {
-        const verificationToken=await prisma.resetPasswordConfermation.deleteMany({
+        const verificationToken=await prisma.resetpasswordconfermation.deleteMany({
             where : {
                 userId: id
             }

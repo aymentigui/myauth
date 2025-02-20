@@ -26,7 +26,7 @@ const ResetForm = () => {
     const params = useSearchParams()
     const email= params.get('email')
 
-    const te=useTranslations('Settings error');
+    const u=useTranslations('Users');
     const s=useTranslations('System');
     const t=useTranslations('Settings');
 
@@ -41,11 +41,11 @@ const ResetForm = () => {
       })
       .refine((data) => data.password !=="" || data.password !==null || String(data.password).length < 6, {
         path: ["password"],
-        message: te("password6"),
+        message: u("password6"),
       })
       .refine((data) => data.password === data.passwordConfermation, {
         path: ["passwordConfermation"],
-        message: te("confirmpasswordnotmatch"),
+        message: u("confirmpasswordnotmatch"),
       });
 
     const form = useForm<z.infer<typeof ResetSchema>>({

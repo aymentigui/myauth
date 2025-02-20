@@ -9,13 +9,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from "@/components/ui/sidebar"
-import LogoutButton from "../my/button/logout-button"
+} from "@/components/ui/sidebar";
+import LogoutButton from "../my/button/logout-button";
 import { getLocale } from "next-intl/server";
 import { getMenuItems } from "@/actions/menu-item";
 import { getTranslations } from "next-intl/server";
-import { TooltipProvider } from "@/components/ui//tooltip";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui//tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
@@ -34,24 +34,34 @@ export async function AppSidebar() {
             <SidebarMenu>
               {items.map((item: any) => (
                 item.subItems ?
-                  <Collapsible>
+                  <Collapsible key={item.title}>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton>
-                        <div className="flex w-full justify-between">
+                      <div className="px-0">
+                        <div className="flex w-full justify-between items-center hover:bg-sidebar-accent py-1 rounded">
                           {item.url && item.url !== ""
                             ? <Link href={item.url}>
                               {item.icon && <item.icon />}
                               <span>{item.title}</span>
                             </Link>
-                            : <div>
-                              {item.icon && <item.icon />}
-                              <span>{item.title}</span>
-                            </div>}
-                          <div>
+                            : <div className="flex items-center gap-2 px-2">
+                              {item.icon && <item.icon size={18} />}
+                              <span>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger>{item.title}</TooltipTrigger>
+                                    <TooltipContent>
+                                      {item.title}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </span>
+                            </div>
+                          }
+                          <div className="px-2">
                             <ChevronDown width={15} />
                           </div>
                         </div>
-                      </SidebarMenuButton>
+                      </div>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenu>
@@ -79,7 +89,7 @@ export async function AppSidebar() {
                   </Collapsible>
                   : <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>
+                      <Link href={item.url}>
                         <item.icon />
                         <span>
                           <TooltipProvider>
@@ -91,7 +101,7 @@ export async function AppSidebar() {
                             </Tooltip>
                           </TooltipProvider>
                         </span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
               ))}

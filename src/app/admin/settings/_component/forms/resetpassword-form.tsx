@@ -16,18 +16,17 @@ import { useTranslations } from 'next-intl'
 const ResetPasswordForm = () => {
     const [showForm, setShowForm] = useState(false)
     const [loading, setLoading] = useState(false)
-    const te=useTranslations("Settings error")
-    const tv=useTranslations("Settings validation")
+    const u=useTranslations("Users")
     const t=useTranslations("Settings")
     const ts = useTranslations('System');
 
     const ResetPasswordScema = z.object({
-        currentPassword: z.string({ required_error: te("currentpassword")}).min(6, { message: te("password6") }),
-        password: z.string({ required_error: te("newpassword")}).min(6, { message: te("password6") }),
-        passwordConfermation: z.string({ required_error: te("confirmpassword")}).min(6, { message: te("password6")}),
+        currentPassword: z.string({ required_error: u("currentpasswordrequired")}).min(6, { message: u("password6") }),
+        password: z.string({ required_error: u("newpasswordrequired")}).min(6, { message: u("password6") }),
+        passwordConfermation: z.string({ required_error: u("confirmpasswordrequired")}).min(6, { message: u("password6")}),
     }).refine((data) => data.password === data.passwordConfermation, {
         path: ["passwordConfermation"],
-        message: te("confirmpasswordnotmatch"),
+        message: u("confirmpasswordnotmatch"),
     })
     
 
@@ -43,13 +42,13 @@ const ResetPasswordForm = () => {
     const onSubmit = async (data: z.infer<typeof ResetPasswordScema>) => {
         setLoading(true)
         if (form.getValues().password === form.getValues().currentPassword) {
-            toast.error(te("currentpasswordinvalid"))
+            toast.error(u("currentpasswordinvalid"))
             setLoading(false)
             return
         }
         updatePassword(form.getValues().currentPassword, form.getValues().password).then((res) => {
             if (res.status === 200) {
-                toast.success(tv("password maj"))
+                toast.success(ts("updatesuccess"))
                 setShowForm(false)
                 form.reset()
             }else{

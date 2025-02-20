@@ -15,7 +15,7 @@ generator client {
   previewFeatures = ["prismaSchemaFolder"]
 }
 
-model User {
+model user {
   id                            String                     @id @default(cuid())
   firstname                     String?
   lastname                      String?
@@ -26,11 +26,11 @@ model User {
   image                         String?
   imageCompressed               String?
   isTwoFactorEnabled            Boolean?                   @default(false)
-  twoFactorConfermationCode     twoFactorConfermation?
-  resetPasswordConfermationCode ResetPasswordConfermation?
+  twoFactorConfermationCode     twofactorconfermation?
+  resetPasswordConfermationCode resetpasswordconfermation?
   // accounts                      Account[]
-  sessions                      Session[]
-  roles                         UserRole[]
+  sessions                      session[]
+  roles                         userrole[]
   isAdmin                       Boolean                    @default(false)
   // Optional for WebAuthn support
   // Authenticator                 Authenticator[]

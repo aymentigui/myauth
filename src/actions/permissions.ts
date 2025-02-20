@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export async function getUserPermissions(id: string): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
     try {
-        const userPermissions = await prisma.userRole.findMany({
+        const userPermissions = await prisma.userrole.findMany({
             where: { userId: id },
             include: { role: true },
         })
@@ -26,7 +26,7 @@ export async function getUserPermissions(id: string): Promise<{ status: number, 
 export async function getUserRolesNames(id: string): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
     try {
-        const userRoles = await prisma.userRole.findMany({
+        const userRoles = await prisma.userrole.findMany({
             where: { userId: id },
             include: { role: true },
         });
@@ -43,7 +43,7 @@ export async function getUserRolesNames(id: string): Promise<{ status: number, d
 export async function getUserRolesId(id: string): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
     try {
-        const userRoles = await prisma.userRole.findMany({
+        const userRoles = await prisma.userrole.findMany({
             where: { userId: id }
         });
 

@@ -8,10 +8,10 @@ import ResetPasswordForm from '@/app/admin/settings/_component/forms/resetpasswo
 import TwoFactorConfermationForm from '@/app/admin/settings/_component/forms/twofactorconfermation-form';
 import UsernameForm from '@/app/admin/settings/_component/forms/username-form';
 import { Separator } from '@/components/ui/separator';
-import { User } from '@prisma/client';
+import { user } from '@prisma/client';
 
 interface SettingsFormProps {
-    user: User
+    user: user
 }
 
 export default async function SettingsForm({ user }: SettingsFormProps) {

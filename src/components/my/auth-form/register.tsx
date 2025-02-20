@@ -20,21 +20,21 @@ import { useTranslations } from 'next-intl'
 
 const RegisterForm = () => {
     const [loading, setLoading] = useState(false)
-    const te=useTranslations('Settings error');
+    const u=useTranslations('Users');
     const s=useTranslations('System');
     const t=useTranslations('Settings');
 
     const RegisterSchema = z.object({
         username: z
-            .string({ required_error: te("username") })
-            .min(3, { message: te("username6") })
-            .max(20, { message: te("username20") }),
-        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
-        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
-        passwordConfirm: z.string({ required_error: te("confirmpassword") }).min(6, { message: te("password6") }),
+            .string({ required_error: u("usernamerequired") })
+            .min(3, { message: u("username6") })
+            .max(20, { message: u("username20") }),
+        email: z.string({ required_error: u("emailrequired") }).email({ message: u("emailinvalid") }),
+        password: z.string({ required_error: u("passwordrequired") }).min(6, { message: u("password6") }),
+        passwordConfirm: z.string({ required_error: u("confirmpasswordrequired") }).min(6, { message: u("password6") }),
     }).refine((data) => data.password === data.passwordConfirm, {
         path: ["passwordConfirm"],
-        message: te("confirmpasswordnotmatch"),
+        message: u("confirmpasswordnotmatch"),
     });
 
     const form = useForm<z.infer<typeof RegisterSchema>>({

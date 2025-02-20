@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 export async function getVerificationTokenByEmail(email: string) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
     try {
-        const verificationToken=await prisma.verificationToken.findFirst({
+        const verificationToken=await prisma.verificationtoken.findFirst({
             where : {
                 email
             }
@@ -25,7 +25,7 @@ export async function getVerificationTokenByEmail(email: string) : Promise<{ sta
 export async function getVerificationTokenByToken(token:string) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
     try {
-        const verificationToken=await prisma.verificationToken.findFirst(
+        const verificationToken=await prisma.verificationtoken.findFirst(
             {
                 where : {
                     token,
@@ -49,7 +49,7 @@ export async function getVerificationTokenByToken(token:string) : Promise<{ stat
 export async function deleteVerificationTokenByEmail(email:string) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
     try {
-        await prisma.verificationToken.deleteMany(
+        await prisma.verificationtoken.deleteMany(
             {
                 where : {
                     email
@@ -71,13 +71,13 @@ export async function generateVerificationToken(email: string) : Promise<{ statu
         const existingToken=await getVerificationTokenByEmail(email);
 
         if(existingToken.status===200 && existingToken.data){
-            await prisma.verificationToken.delete({
+            await prisma.verificationtoken.delete({
                 where : {
                     id: existingToken.data.id
                 }
             })
         }
-        const verificationToken=await prisma.verificationToken.create({
+        const verificationToken=await prisma.verificationtoken.create({
             data : {
                 email:email,
                 token:token,

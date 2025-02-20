@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   :root {
 
+    .tox-statusbar{
+      display: none !important;
+    }
     --background: 0 0% 100%;
 
     --foreground: 0 0% 3.9%;

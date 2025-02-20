@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import { deleteFile } from "@/actions/localstorage/delete";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
     const url = new URL(request.url);
@@ -121,7 +121,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
 
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
     const f = await getTranslations('Files');

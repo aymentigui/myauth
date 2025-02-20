@@ -8,4 +8,8 @@ export const permissions = [
     { name: "roles_create" },
     { name: "roles_update" },
     { name: "roles_delete" },
+    { name: "blogs_view" },
+    { name: "blogs_create" },
+    { name: "blogs_update" },
+    { name: "blogs_delete" },    
   ];

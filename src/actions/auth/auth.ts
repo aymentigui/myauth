@@ -11,18 +11,18 @@ import { getTranslations } from 'next-intl/server';
 
 
 export async function registerUser(data: any): Promise<{ status: number, data: any }> {
-    const te=await getTranslations('Settings error');
+    const u=await getTranslations('Users');
     const registerSchema = z.object({
         username: z
-            .string({ required_error: te("username") })
-            .min(3, { message: te("username6") })
-            .max(20, { message: te("username20") }),
-        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
-        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
-        passwordConfirm: z.string({ required_error: te("confirmpassword") }).min(6, { message: te("password6") }),
+            .string({ required_error: u("usernamerequired") })
+            .min(3, { message: u("username6") })
+            .max(20, { message: u("username20") }),
+        email: z.string({ required_error: u("emailrequired") }).email({ message: u("emailinvalid") }),
+        password: z.string({ required_error: u("passwordrequired") }).min(6, { message: u("password6") }),
+        passwordConfirm: z.string({ required_error: u("confirmpasswordrequired") }).min(6, { message: u("password6") }),
     }).refine((data) => data.password === data.passwordConfirm, {
         path: ["passwordConfirm"],
-        message: te("confirmpasswordnotmatch"),
+        message: u("confirmpasswordnotmatch"),
     });
 
     const result = registerSchema.safeParse(data);
@@ -76,11 +76,11 @@ export async function registerUser(data: any): Promise<{ status: number, data: a
 
 export async function loginUser(data: any): Promise<{ status: number, data: any }> {
 
-    const te = await getTranslations("Settings error")
+    const u = await getTranslations("Users")
 
     const LoginSchema = z.object({
-        email: z.string({ required_error: te("email") }).email({ message: te("emailinvalid") }),
-        password: z.string({ required_error: te("password") }).min(6, { message: te("password6") }),
+        email: z.string({ required_error: u("emailrequired") }).email({ message: u("emailinvalid") }),
+        password: z.string({ required_error: u("passwordrequired") }).min(6, { message: u("password6") }),
         code: z.string().optional(),
     });
 

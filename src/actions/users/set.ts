@@ -91,7 +91,7 @@ export async function createUser(data: any) {
 
         if (!isAdmin) {
             const rolesFound = await prisma.role.findMany({ where: { id: { in: roles } } });
-            await prisma.userRole.createMany({
+            await prisma.userrole.createMany({
                 data: rolesFound.map((role: any) => ({
                     userId: user.id,
                     roleId: role.id,

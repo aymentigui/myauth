@@ -3,7 +3,7 @@ import { getRole } from "@/actions/roles/get";
 import { UpdateRole } from "@/actions/roles/update";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
 
@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
 
@@ -25,7 +25,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     return NextResponse.json(role);
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: any }) {
 
     const paramsID = await params
 

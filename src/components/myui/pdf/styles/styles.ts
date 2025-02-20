@@ -6,15 +6,6 @@ export const styles = StyleSheet.create({
       paddingBottom: 40,
       paddingHorizontal: 30,
     },
-    header: {
-      position: "absolute",
-      top: 20,
-      left: 30,
-      right: 30,
-      textAlign: "center",
-      fontSize: 14,
-      fontWeight: "bold",
-    },
     footer: {
       position: "absolute",
       bottom: 20,
