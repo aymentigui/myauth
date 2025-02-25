@@ -125,8 +125,8 @@ const actionsCell = (row: any) => {
   const origin= useOrigin()
   const { openDialog } = useAddUpdateUserDialog();
   const { session } = useSession()
-  const hasPermissionDeleteUsers = (session?.user?.permissions.find((permission: string) => permission === "deleteUser") ?? false) || session?.user?.isAdmin;
-  const hasPermissionUpdateUsers = (session?.user?.permissions.find((permission: string) => permission === "updateUser") ?? false) || session?.user?.isAdmin;
+  const hasPermissionDeleteUsers = (session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.isAdmin;
+  const hasPermissionUpdateUsers = (session?.user?.permissions.find((permission: string) => permission === "users_update") ?? false) || session?.user?.isAdmin;
   
   const handleOpenDialogWithTitle = () => {
     openDialog(false, row.original)

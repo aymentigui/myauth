@@ -1,5 +1,4 @@
-import { verifySession } from '@/actions/auth/auth';
-import { accessPage2 } from '@/actions/permissions';
+import { accessPage, verifySession } from '@/actions/permissions';
 import { Card } from '@/components/ui/card';
 import React from 'react'
 import TextEditor from '../../../../components/myui/text-editor-quill';
@@ -13,7 +12,7 @@ const AddBlog = async () => {
   if (session.status !== 200 || !session || !session.data.user || !session.data.user.id) {
     return null;
   }
-  await accessPage2(session.data.user.id, ['blogs_create']);
+  await accessPage(['blogs_create'], session.data.user.id);
 
   return (
     <Card className='p-4'>

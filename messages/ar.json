@@ -159,7 +159,11 @@
         "roles_view": "عرض الادوار",
         "roles_create": "اضافة دور",
         "roles_update": "تحديث دور",
-        "roles_delete": "حذف دور"
+        "roles_delete": "حذف دور",
+        "blogs_view": "عرض المدونات",
+        "blogs_create": "اضافة مدونة",
+        "blogs_update": "تحديث مدونة",
+        "blogs_delete": "حذف مدونة"
     },
     "Files": {
         "title": "الملفات",

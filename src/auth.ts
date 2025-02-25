@@ -32,27 +32,27 @@ export const { handlers, auth, signIn, signOut } =
             const deviceInfo = UAParser(userAgent);;
             const tokenSession = uuidv4();
 
-            const existDevice = await prisma.session.findFirst({
-              where: {
-                userId: user.id,
-                // @ts-ignore
-                deviceName: user.deviceName || 'Unknown',
-                // @ts-ignore
-                deviceType: user.deviceType || 'Unknown',
-                // @ts-ignore
-                browser: `${user.browserName} ${user.browserVersion}`,
-                // @ts-ignore
-                os: `${user.osName} ${deviceInfo.os.version}`,
-              },
-            })
+            // const existDevice = await prisma.session.findFirst({
+            //   where: {
+            //     userId: user.id,
+            //     // @ts-ignore
+            //     deviceName: user.deviceName || 'Unknown',
+            //     // @ts-ignore
+            //     deviceType: user.deviceType || 'Unknown',
+            //     // @ts-ignore
+            //     browser: `${user.browserName} ${user.browserVersion}`,
+            //     // @ts-ignore
+            //     os: `${user.osName} ${deviceInfo.os.version}`,
+            //   },
+            // })
 
-            if (existDevice) {
-              await prisma.session.delete({
-                where: {
-                  id: existDevice.id,
-                },
-              })
-            }
+            // if (existDevice) {
+            //   await prisma.session.delete({
+            //     where: {
+            //       id: existDevice.id,
+            //     },
+            //   })
+            // }
             const session = await prisma.session.create({
               data: {
                 sessionToken: tokenSession,

@@ -1,4 +1,4 @@
-import { updateImage } from "@/actions/accont-settings/updateInfo";
+import { updateImage } from "@/actions/accont-settings/update";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(request: NextRequest, { params }: { params: any }) {

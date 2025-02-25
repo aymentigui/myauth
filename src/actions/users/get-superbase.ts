@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { verifySession } from "../auth/auth";
-import { withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission, verifySession } from "../permissions";
 import { prisma } from "@/lib/db";
 import { getTemporaryUrl } from "../superbase/download";
 import { addStringToFilenameWithNewExtension } from "../util/util-public";
@@ -12,7 +11,7 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
         if (!session || session.status != 200) {
             return { status: 401, data: { message: e('unauthorized') } }
         }
-        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_view']);
+        const hasPermissionAdd = await withAuthorizationPermission(['users_view']);
 
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };

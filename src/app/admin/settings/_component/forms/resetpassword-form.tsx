@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import { updatePassword } from '@/actions/accont-settings/updateInfo'
+import { updatePassword } from '@/actions/accont-settings/update'
 import { useTranslations } from 'next-intl'
 
 

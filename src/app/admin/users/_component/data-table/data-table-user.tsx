@@ -40,20 +40,20 @@ export function DataTable<TData, TValue>({
   const searchParams = useSearchParams();
 
   const [data, setData] = useState<TData[]>(initialData);
+
   const [page, setPage] = useState(searchParams.get("page") ? Number(searchParams.get("page")) : 1);
   const pageSize = 8
+  const [count, setCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState(""); // État pour la recherche
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(""); // État pour la recherche avec debounce
 
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [count, setCount] = useState(0);
-
-  const [searchQuery, setSearchQuery] = useState(""); // État pour la recherche
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(""); // État pour la recherche avec debounce
 
   const { session } = useSession();
   const s = useTranslations("System");
 
-  // Débounce la recherche
+  // Débounce la recherche (pour attendre un peu de time)
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
@@ -106,7 +106,7 @@ export function DataTable<TData, TValue>({
   });
 
   const hasPermissionAction =
-    (session?.user?.permissions.find((permission: string) => permission === "updateUser" || permission === "deleteUser") ?? false) ||
+    (session?.user?.permissions.find((permission: string) => permission === "users_update" || permission === "users_delete") ?? false) ||
     session?.user?.isAdmin;
 
   if (!mounted) {

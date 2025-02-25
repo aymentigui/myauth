@@ -1,3 +1,4 @@
+import { accessPage, verifySession } from "@/actions/permissions";
 import AddRoleForm from "@/app/admin/roles/role/_component/forms/role-form";
 import { Card } from "@/components/ui/card";
 import { permissions } from "@/db/permissions";
@@ -7,6 +8,8 @@ import { getTranslations } from "next-intl/server";
 
 export default async function AddRolePage() {
   const r = await getTranslations("Roles")
+
+  await accessPage(['roles_update']);
 
   return (
     <Card className='p-4'>

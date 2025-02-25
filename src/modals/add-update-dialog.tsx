@@ -21,13 +21,11 @@ import {
 } from "@/components/ui/form";
 import Select from "react-select";
 import { useEffect, useState } from "react";
-import { updateUser } from "@/actions/users/update";
-import { useRouter } from "next/navigation";
 import { getRoles } from "@/actions/roles/get";
-import AvatarUploader from "../myui/avata-uploader";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { useOrigin } from "@/hooks/use-origin";
+import AvatarUploader from "@/components/myui/avata-uploader";
 
 type Role = {
   id: string;
@@ -41,7 +39,6 @@ export const AddUpdateUserDialog = () => {
   const { isOpen, closeDialog, isAdd, user } = useAddUpdateUserDialog();
   const [roles, setRoles] = useState<Role[]>([]);
   const [image, setImage] = useState<string | null>(null);
-  const router = useRouter()
   const [loading, setLoading] = useState(false);
   const origin = useOrigin()
 
@@ -130,9 +127,9 @@ export const AddUpdateUserDialog = () => {
     formData.append("roles", JSON.stringify(data.roles));
 
     if (isAdd) {
-      res = await axios.post(origin + "/api/admin/users", formData);      
+      res = await axios.post(origin + "/api/admin/users", formData);
     } else {
-      res = await axios.put(origin + "/api/admin/users/"+user?.id, formData); 
+      res = await axios.put(origin + "/api/admin/users/" + user?.id, formData);
     }
 
     status = res.data.status
@@ -165,7 +162,7 @@ export const AddUpdateUserDialog = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[70%] max-w-[70%] h-[80vh] overflow-y-auto">
+      <DialogContent className="w-[70%] max-w-[70%] h-[50%] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">{isAdd ? u("adduser") : u("updateuser")}</DialogTitle>
         </DialogHeader>
@@ -190,7 +187,9 @@ export const AddUpdateUserDialog = () => {
                   </FormItem>
                 )}
               />
+              <div className="h-[200px] !bg-red-500">
 
+              </div>
               {/* Last Name */}
               <FormField
                 control={form.control}

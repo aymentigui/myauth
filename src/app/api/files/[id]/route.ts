@@ -1,5 +1,4 @@
-import { verifySession } from "@/actions/auth/auth";
-import { withAuthorizationPermission2 } from "@/actions/permissions";
+import { withAuthorizationPermission, verifySession } from "@/actions/permissions";
 import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
@@ -45,7 +44,7 @@ export async function GET(request: Request, { params }: { params: any }) {
         }
         if (fileexists.canViewPermissions && !havePermission) {
             const permissions = fileexists.canViewPermissions.split(',')
-            const hasPermission = await withAuthorizationPermission2(session.data.user.id, permissions);
+            const hasPermission = await withAuthorizationPermission(permissions,session.data.user.id);
             if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
             }
@@ -77,7 +76,7 @@ export async function GET(request: Request, { params }: { params: any }) {
                 }
                 if (fileexists.canDownloadPermissions && !havePermission) {
                     const permissions = fileexists.canDownloadPermissions.split(',')
-                    const hasPermission = await withAuthorizationPermission2(session.data.user.id, permissions);
+                    const hasPermission = await withAuthorizationPermission(permissions,session.data.user.id);
                     if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
                         return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
                     }
@@ -155,7 +154,7 @@ export async function DELETE(request: Request, { params }: { params: any }) {
         }
         if (fileexist.canDeletePermissions && !havePermission) {
             const permissions = fileexist.canDeletePermissions.split(',')
-            const hasPermission = await withAuthorizationPermission2(session.data.user.id, permissions);
+            const hasPermission = await withAuthorizationPermission(permissions,session.data.user.id);
             if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
             }

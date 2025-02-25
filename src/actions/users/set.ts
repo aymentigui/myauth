@@ -3,8 +3,7 @@ import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { verifySession } from "../auth/auth";
-import { withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission, verifySession } from "../permissions";
 import { compressImage } from "../util/util";
 import { uploadFileDB } from "../localstorage/upload-db";
 
@@ -32,7 +31,7 @@ export async function createUser(data: any) {
         if (!session || session.status != 200) {
             return { status: 401, data: { message: e('unauthorized') } }
         }
-        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_create']);
+        const hasPermissionAdd = await withAuthorizationPermission( ['users_create']);
 
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };

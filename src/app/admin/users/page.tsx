@@ -1,10 +1,10 @@
 
-import { accessPage2, withAuthorizationPermission2 } from '@/actions/permissions'
-import AddUpdateUserButton from '@/app/admin/users/_component/buttons/add-update-user'
+import { accessPage, withAuthorizationPermission, verifySession } from '@/actions/permissions'
 import UsersAdminPage from '@/app/admin/users/_component/list-users'
+import AddModalButton from '@/components/my/button/add-modal-button'
 import { Card } from '@/components/ui/card'
+import { useAddUpdateUserDialog } from '@/context/add-update-dialog-context';
 import React from 'react'
-import { verifySession } from '@/actions/auth/auth'
 
 const RolesPage = async () => {
 
@@ -13,14 +13,14 @@ const RolesPage = async () => {
   if (!session || session.status !== 200 || !session.data.user || !session.data.user.id) {
     return null;
   }
-  await accessPage2(session.data.user.id, ['users_view']);
-  const hasPermissionView = await withAuthorizationPermission2(session.data.user.id, ['users_view']);
-  const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_create']);
+  await accessPage(['users_view'],session.data.user.id);
+  const hasPermissionView = await withAuthorizationPermission(['users_view'],session.data.user.id);
+  const hasPermissionAdd = await withAuthorizationPermission(['users_create'],session.data.user.id);
 
   return (
     <Card className='p-4 w-full'>
       <div className='flex flex-col gap-2'>
-        {hasPermissionAdd.data.hasPermission && <AddUpdateUserButton />}
+        {hasPermissionAdd.data.hasPermission && <AddModalButton translationName="Users" translationButton="adduser" useModal={useAddUpdateUserDialog} />}
         {/* <ListUsers /> */}
         {hasPermissionView.data.hasPermission && <UsersAdminPage />}
       </div>

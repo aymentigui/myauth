@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { verifySession } from "../auth/auth";
+import { verifySession } from "../permissions";
 import { getTranslations } from "next-intl/server";
 import { compressImage } from "../util/util";
 import { deleteFileDb } from "../localstorage/delete-db";

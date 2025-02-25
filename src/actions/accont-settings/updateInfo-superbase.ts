@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { verifySession } from "../auth/auth";
+import { verifySession } from "../permissions";
 import { getTranslations } from "next-intl/server";
 import { deleteFile } from "../superbase/delete";
 import { addStringToFilename, addStringToFilenameWithNewExtension } from "../util/util-public";

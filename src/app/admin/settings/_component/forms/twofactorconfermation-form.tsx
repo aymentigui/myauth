@@ -1,7 +1,7 @@
 "use client"
 import React, { useRef, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
-import { updateTwoFactorConfermation } from '@/actions/accont-settings/updateInfo'
+import { updateTwoFactorConfermation } from '@/actions/accont-settings/update'
 import toast from 'react-hot-toast'
 import { useTranslations } from 'next-intl'
 

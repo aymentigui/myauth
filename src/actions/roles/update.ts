@@ -2,8 +2,7 @@
 
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/db";
-import { verifySession } from "../auth/auth";
-import { withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission,verifySession } from "../permissions";
 
 export async function UpdateRole(id: string, name: string, permission: string) {
     const e = await getTranslations('Error');
@@ -13,7 +12,7 @@ export async function UpdateRole(id: string, name: string, permission: string) {
         if (!session?.data?.user) {
             return { status: 401, data: { message: e("unauthorized") } };
         }
-        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id,['roles_update']);
+        const hasPermissionAdd = await withAuthorizationPermission(['roles_update']);
         
         if(hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };

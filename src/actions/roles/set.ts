@@ -1,8 +1,7 @@
 "use server"
 import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
-import { verifySession } from "../auth/auth";
-import { withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission, verifySession } from "../permissions";
 
 export async function AddRole(name: string, permission: string) {
     const e = await getTranslations('Error');
@@ -12,7 +11,7 @@ export async function AddRole(name: string, permission: string) {
         if (!session?.data?.user) {
             return { status: 401, data: { message: e("unauthorized") } };
         }
-        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id,['roles_create']);
+        const hasPermissionAdd = await withAuthorizationPermission(['roles_create'],session.data.user.id);
         
         if(hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };

@@ -20,8 +20,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
-import { withAuthorizationPermission2 } from "@/actions/permissions";
-import { usePermissions } from "@/hooks/use-permissions";
 import { useSession } from "@/hooks/use-session";
 import { useOrigin } from "@/hooks/use-origin";
 import axios from "axios";
@@ -37,8 +35,27 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
 
   const [data, setData] = useState<TData[]>([])
+
   const origin = useOrigin()
   const [mounted, setMounted] = useState(false)
+  
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const { session } = useSession()
+
+  const r = useTranslations('Roles')
+  const s = useTranslations('System')
+
+  // fetch
+  useEffect(() => {
+    if (!origin) return
+    setSelectedLanguage(Cookies.get('lang') || 'en')
+    const roles = axios(origin + "/api/admin/roles")
+    roles.then((res) => {
+      setData(res.data)
+      setMounted(true)
+    })
+      .catch((e) => toast.error(e.message))
+  }, [origin])
 
   const table = useReactTable({
     data,
@@ -48,34 +65,8 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const [selectedLanguage, setSelectedLanguage] = useState("");
-  const { hasPermissionUpdateRoles, hasPermissionDeleteRoles, setHasPermissionUpdateRoles, setHasPermissionDeleteRoles } = usePermissions();
-  const { session } = useSession()
+  const hasPermissionAction=(session?.user?.permissions.find((permission: string) => permission === "roles_update" || permission === "roles_delete") ?? false) ||  session?.user?.isAdmin;
 
-  useEffect(() => {
-    if (!origin) return
-    const roles = axios(origin + "/api/admin/roles")
-    roles.then((res) => {
-      setData(res.data)
-      setMounted(true)
-    })
-      .catch((e) => toast.error(e.message))
-  }, [origin])
-
-  useEffect(() => {
-    setSelectedLanguage(Cookies.get('lang') || 'en')
-    if (session && session.user && session.user.id) {
-      withAuthorizationPermission2(session.user.id, ["roles_update"]).then((response) => {
-        setHasPermissionUpdateRoles(response.data.hasPermission ?? false)
-      });
-      withAuthorizationPermission2(session.user.id, ["roles_delete"]).then((response) => {
-        setHasPermissionDeleteRoles(response.data.hasPermission ?? false)
-      });
-    }
-  }, [session])
-
-  const r = useTranslations('Roles')
-  const s = useTranslations('System')
 
   return (
     <div>
@@ -93,7 +84,7 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  (header.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableHead
+                  (header.id !== "actions" || (hasPermissionAction)) && <TableHead
                     key={header.id}
                     className={`
                     ${selectedLanguage == "ar" ? "text-right" : ""}
@@ -117,7 +108,7 @@ export function DataTable<TData, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      (cell.column.id !== "actions" || (hasPermissionDeleteRoles || hasPermissionUpdateRoles)) && <TableCell
+                      (cell.column.id !== "actions" || (hasPermissionAction)) && <TableCell
                         key={cell.id}
                         className={`
                       ${cell.column.id === "name" ? "w-4/6" : ""}

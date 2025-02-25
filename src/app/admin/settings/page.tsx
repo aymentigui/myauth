@@ -2,7 +2,7 @@ import SettingsForm from "./settingsForm";
 import { getUser } from "@/actions/users/get";
 import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/card";
-import { verifySession } from "@/actions/auth/auth";
+import { verifySession } from "@/actions/permissions";
 
 export default async function SettingsPage() {
   const session = await verifySession();

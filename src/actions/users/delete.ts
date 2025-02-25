@@ -1,9 +1,8 @@
 "use server"
 
 import { getTranslations } from "next-intl/server";
-import { verifySession } from "../auth/auth"
 import { prisma } from "@/lib/db";
-import { withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission,verifySession } from "../permissions";
 import { deleteFileDb } from "../localstorage/delete-db";
 
 export async function deleteUsers(ids: string[]): Promise<{ status: number, data: any }> {
@@ -14,7 +13,7 @@ export async function deleteUsers(ids: string[]): Promise<{ status: number, data
         if (!session || session.status != 200) {
             return { status: 401, data: { message: e('unauthorized') } }
         }
-        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id, ['users_delete']);
+        const hasPermissionAdd = await withAuthorizationPermission(['users_delete']);
 
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };

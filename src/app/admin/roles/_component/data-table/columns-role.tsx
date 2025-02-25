@@ -7,10 +7,9 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { deleteRole } from "@/actions/roles/delete";
-import { usePermissions } from "@/hooks/use-permissions";
 import axios from "axios";
 import { useOrigin } from "@/hooks/use-origin";
+import { useSession } from "@/hooks/use-session";
 
 export type Role = {
   id: string;
@@ -48,7 +47,10 @@ const totalusersHeader = () => {
 const actionsCell = (row: any) => {
   const role = row.original;
   const router = useRouter();
-  const { hasPermissionUpdateRoles, hasPermissionDeleteRoles } = usePermissions();
+  const { session } = useSession()
+  const hasPermissionDeleteRoles = (session?.user?.permissions.find((permission: string) => permission === "roles_delete") ?? false) || session?.user?.isAdmin;
+  const hasPermissionUpdateRoles = (session?.user?.permissions.find((permission: string) => permission === "roles_update") ?? false) || session?.user?.isAdmin;
+  
   const origin = useOrigin();
 
   useEffect(() => {

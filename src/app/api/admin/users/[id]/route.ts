@@ -1,5 +1,5 @@
 
-import { updateImage } from "@/actions/accont-settings/updateInfo";
+import { updateImage } from "@/actions/accont-settings/update";
 import { deleteUsers } from "@/actions/users/delete";
 import { getUser } from "@/actions/users/get";
 import { updateUser } from "@/actions/users/update";

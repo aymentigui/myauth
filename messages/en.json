@@ -159,7 +159,11 @@
         "roles_view": "Roles View",
         "roles_create": "Roles Create",
         "roles_update": "Roles Update",
-        "roles_delete": "Roles Delete"
+        "roles_delete": "Roles Delete",
+        "blogs_view": "Blogs View",
+        "blogs_create": "Blogs Create",
+        "blogs_update": "Blogs Update",
+        "blogs_delete": "Blogs Delete"
     },
     "Files": {
         "title": "Files",

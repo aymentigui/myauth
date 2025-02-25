@@ -2,8 +2,7 @@
 
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/db";
-import { verifySession } from "../auth/auth";
-import { withAuthorizationPermission2 } from "../permissions";
+import { withAuthorizationPermission,verifySession } from "../permissions";
 
 export async function getRoles(): Promise<{ status: number, data: any }> {
     const e = await getTranslations('Error');
@@ -12,7 +11,7 @@ export async function getRoles(): Promise<{ status: number, data: any }> {
         if (!session?.data?.user) {
             return { status: 401, data: { message: e("unauthorized") } };
         }
-        const hasPermission = await withAuthorizationPermission2(session.data.user.id,['roles_view']);
+        const hasPermission = await withAuthorizationPermission(['roles_view'],session.data.user.id);
 
         if(hasPermission.status != 200 || !hasPermission.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };
@@ -50,7 +49,7 @@ export async function getRole(id: string): Promise<{ status: number, data: any }
         if (!session?.data?.user) {
             return { status: 401, data: { message: e("unauthorized") } };
         }
-        const hasPermissionAdd = await withAuthorizationPermission2(session.data.user.id,['roles_update']);
+        const hasPermissionAdd = await withAuthorizationPermission(['roles_update'],session.data.user.id);
         
         if(hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };

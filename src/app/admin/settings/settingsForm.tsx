@@ -1,6 +1,6 @@
 
 
-import { getSessions } from '@/actions/accont-settings/getInfo';
+import { getSessions } from '@/actions/accont-settings/get';
 import EmailForm from '@/app/admin/settings/_component/forms/email-form';
 import ImageForm from '@/app/admin/settings/_component/forms/image-form';
 import ListSessionsForm from '@/app/admin/settings/_component/list-sessions/listsessions-form';

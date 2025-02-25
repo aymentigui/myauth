@@ -1,5 +1,5 @@
 "use client"
-import { deleteSession } from '@/actions/accont-settings/updateInfo'
+import { deleteSession } from '@/actions/accont-settings/update'
 import { Button } from '@/components/ui/button'
 import { Trash } from 'lucide-react'
 import React from 'react'
