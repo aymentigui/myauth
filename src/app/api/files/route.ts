@@ -1,6 +1,5 @@
-import { verifySession } from "@/actions/auth/auth";
 import { uploadFileDB } from "@/actions/localstorage/upload-db";
-import { withAuthorizationPermission2 } from "@/actions/permissions";
+import { withAuthorizationPermission, verifySession } from "@/actions/permissions";
 import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -51,7 +50,7 @@ export async function GET(request: Request) {
             }
             if (file.canViewPermissions) {
                 const permissions = file.canViewPermissions.split(',')
-                const hasPermission = await withAuthorizationPermission2(session.data.user.id, permissions);
+                const hasPermission = await withAuthorizationPermission(permissions, session.data.user.id);
                 if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
                     continue
                 }

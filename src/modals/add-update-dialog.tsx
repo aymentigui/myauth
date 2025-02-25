@@ -162,7 +162,7 @@ export const AddUpdateUserDialog = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[70%] max-w-[70%] h-[50%] overflow-y-auto">
+      <DialogContent className="w-[70%] max-w-[70%] h-[80%] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">{isAdd ? u("adduser") : u("updateuser")}</DialogTitle>
         </DialogHeader>
@@ -187,9 +187,6 @@ export const AddUpdateUserDialog = () => {
                   </FormItem>
                 )}
               />
-              <div className="h-[200px] !bg-red-500">
-
-              </div>
               {/* Last Name */}
               <FormField
                 control={form.control}
@@ -271,7 +268,7 @@ export const AddUpdateUserDialog = () => {
               control={form.control}
               name="isAdmin"
               render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
+                <FormItem className="flex items-center space-x-2 my-4">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
@@ -320,7 +317,7 @@ export const AddUpdateUserDialog = () => {
             )}
 
             {/* Submit Button */}
-            <Button type="submit" className={`w-full`}>
+            <Button type="submit" className={`w-full mt-4`}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isAdd ? u("adduser") : u("updateuser")}
             </Button>

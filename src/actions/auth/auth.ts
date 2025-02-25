@@ -1,5 +1,5 @@
 "use server"
-import { auth, signIn, signOut } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';

@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+import "./globals.css";
 import { Cairo } from "next/font/google";
+import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
-import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const cairo = Cairo({
