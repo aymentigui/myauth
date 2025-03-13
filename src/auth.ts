@@ -10,6 +10,7 @@ import DeviceDetector from 'device-detector-js';
 import { v4 as uuidv4 } from 'uuid';
 import { getTranslations } from "next-intl/server"
 import { z } from "zod"
+import { createNewSession, findExistingSession } from "./actions/helpers"
 
 /* eslint-disable */
 export const { handlers, auth, signIn, signOut } =
@@ -32,44 +33,19 @@ export const { handlers, auth, signIn, signOut } =
             const deviceInfo = UAParser(userAgent);;
             const tokenSession = uuidv4();
 
-            // const existDevice = await prisma.session.findFirst({
-            //   where: {
-            //     userId: user.id,
-            //     // @ts-ignore
-            //     deviceName: user.deviceName || 'Unknown',
-            //     // @ts-ignore
-            //     deviceType: user.deviceType || 'Unknown',
-            //     // @ts-ignore
-            //     browser: `${user.browserName} ${user.browserVersion}`,
-            //     // @ts-ignore
-            //     os: `${user.osName} ${deviceInfo.os.version}`,
-            //   },
-            // })
-
-            // if (existDevice) {
-            //   await prisma.session.delete({
-            //     where: {
-            //       id: existDevice.id,
-            //     },
-            //   })
-            // }
-            const session = await prisma.session.create({
-              data: {
-                sessionToken: tokenSession,
-                userId: user.id,
-                expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 jours
-                // @ts-ignore
-                deviceName: user.deviceName || 'Unknown',
-                // @ts-ignore
-                deviceType: user.deviceType || 'Unknown',
-                // @ts-ignore
-                browser: `${user.browserName} ${user.browserVersion}`,
-                // @ts-ignore
-                os: `${user.osName} ${deviceInfo.os.version}`,
-              },
-            });
             // @ts-ignore
-            token.session = session
+            const existDevice = await findExistingSession(user.id, user.deviceName || 'Unknown', user.deviceType || 'Unknown', `${user.browserName} ${user.browserVersion}`, `${user.osName} ${deviceInfo.os.version}`);
+
+            if (existDevice) {
+              await prisma.session.delete({
+                where: { id: existDevice.id, },
+              })
+            }
+            // @ts-ignore
+            const session = await createNewSession(user.id, tokenSession, user.deviceName || 'Unknown', user.deviceType || 'Unknown', `${user.browserName} ${user.browserVersion}`, `${user.osName} ${deviceInfo.os.version}`);
+            // @ts-ignore
+            if (session)
+              token.session = session
 
           } catch (error) {
             console.error("An error occurred in jwt");
@@ -84,6 +60,7 @@ export const { handlers, auth, signIn, signOut } =
         session.user.isAdmin = token.isAdmin
         // @ts-ignore
         session.session = token.session
+        
         if (token?.id) {
           const roles = await prisma.userrole.findMany({
             where: { userId: token.id },

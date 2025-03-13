@@ -12,7 +12,7 @@ import { useOrigin } from "@/hooks/use-origin";
 import GetImage from "@/hooks/use-getImage";
 import { LzyImage } from "@/components/myui/pdf/lazy-image";
 
-export type User = {
+export type Columns = {
   id: string;
   firstname: string;
   lastname: string;
@@ -147,7 +147,7 @@ const actionsCell = (row: any) => {
   );
 };
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Columns>[] = [
   {
     accessorKey: "imageCompressed",
     header: "image",

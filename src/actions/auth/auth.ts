@@ -7,11 +7,12 @@ import { deleteVerificationTokenByEmail, generateVerificationToken, getVerificat
 import { sendEmail } from '../email';
 import { createTowFactorConfermation } from './tow-factor-confermation';
 import { getTranslations } from 'next-intl/server';
+import { verifySession } from '../permissions';
 
 
 
 export async function registerUser(data: any): Promise<{ status: number, data: any }> {
-    const u=await getTranslations('Users');
+    const u = await getTranslations('Users');
     const registerSchema = z.object({
         username: z
             .string({ required_error: u("usernamerequired") })
@@ -165,11 +166,24 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
 
 export async function logoutUser() {
     try {
+        const session = await verifySession();
+        if (session.status !== 200)
+            return { status: 401, data: { message: 'Unauthorized' } };
+
+        if (session.data && session.data.session && session.data.session.id)
+            await prisma.session.update({
+                where: {
+                    id: session.data.session.id
+                },
+                data: {
+                    active: false
+                }
+            })
         await signOut({ redirect: false });
         console.log('Logout successful');
         return { status: 200, data: { message: 'Logout successful' } };
-    } catch (error) {
-        console.error("An error occurred in logout");
+    } catch (error) { // @ts-ignore
+        console.log("An error occurred in logout", error.message);
         return { status: 500, data: { message: 'An error occurred in logout' } };
     }
 }

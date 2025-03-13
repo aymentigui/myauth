@@ -5,6 +5,7 @@ import DivAdmin from "@/components/my/admin/div-admin";
 import HeaderAdmin from "@/components/my/admin/header";
 import { AddUpdateUserDialog } from "@/modals/add-update-dialog";
 import { AddUpdateUserDialogProvider } from "@/context/add-update-dialog-context";
+import ModalClass from "@/components/my/modal-class";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -19,6 +20,7 @@ export default async function RootLayout({
 
   return (
     <div>
+      <ModalClass />
       <SidebarProvider >
         <DivAdmin />
         <AppSidebar />
