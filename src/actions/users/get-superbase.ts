@@ -113,7 +113,7 @@ export async function getUser(): Promise<{ status: number, data: any }> {
 
         return { status: 200, data: user };
     } catch (error) {
-        console.error("An error occurred in getUserByid");
+        console.error("An error occurred in getUsers");
         return { status: 500, data: { message: e("error") } };
     }
 }

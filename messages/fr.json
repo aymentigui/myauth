@@ -2,7 +2,7 @@
     "Index":{
         "title": "Bonjour le monde"
     },
-    "System": {
+   "System": {
         "title": "Système",
         "createsuccess": "Création avec succès",
         "createfail": "Création echoue",
@@ -12,6 +12,7 @@
         "deletefail": "Suppression echoue",
         "create": "Ajouter",
         "save" : "Enregistrer",
+        "edit": "Modifier",
         "update" : "Modifier",
         "confirm" : "Confirmer",
         "check" : "Verifier",
@@ -24,15 +25,42 @@
         "loginsuccess" : "Connexion avec succès",
         "register" : "Inscription",
         "registersuccess" : "Inscription avec succès",
+        "registerorlogin": "Inscrivez-vous ou connectez-vous",
+        "dashboard": "Tableau de bord",
+        "settings": "Paramètres",
+        "logout": "Se deconnecter",
         "next" : "Suivant",
         "reset" : "Reinitialiser",
         "options" : "Options",
+        "selectoption": "Selectionner une option",
         "noresults" : "Aucun resultat",
         "search" : "Rechercher",
         "import" : "Importer",
         "import_data" : "Importer des données",
         "tabledata" : "table de données",
-        "back" : "Retour"
+        "back" : "Retour",
+        "pagesize": "Taille de page",
+        "pagesizeplaceholder": "Selectionnez la taille de page",
+        "page" : "Page",
+        "all" : "Tous",
+        "of" : "de",
+        "total" : "Total",
+        "selected" : "Selectionnés",
+        "user": "Utilisateur",
+        "users": "Utilisateurs",
+        "anonymous": "Anonyme",
+        "posting": "Publication",
+
+        "image": "Image",
+        "video" : "Video",
+        "file" : "Fichier",
+        "text" : "Texte",
+        "document" : "Document",
+        "audio" : "Audio",
+        "other" : "Autre",
+        
+        "confermationdelete": "Etes-vous absolument sur?",
+        "confermationdeletemessage": "Cette action ne peut pas etre annulee. Cela supprimera definitivement vos donnees et supprimera vos donnees de nos serveurs."
     },
     "Menu" : {
         "title": "Menu",

@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card'
 import { useAddUpdateUserDialog } from '@/context/add-update-dialog-context';
 import React from 'react'
 
-const RolesPage = async () => {
+const UserPage = async () => {
 
   const session = await verifySession()
 
@@ -28,4 +28,4 @@ const RolesPage = async () => {
   )
 }
 
-export default RolesPage
+export default UserPage

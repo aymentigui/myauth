@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { useOrigin } from "@/hooks/use-origin";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import SelectFetch from "@/components/myui/select-fetch";
 
 export default function UsersAdminPage() {
   const r = useTranslations("Users")
 
   const locale = useLocale()
+  const translateSystem = useTranslations("System");
   const origin = useOrigin()
   const searchParams = useSearchParams();
 
@@ -18,7 +20,7 @@ export default function UsersAdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(searchParams.get("page") ? Number(searchParams.get("page")) : 1);
-  const pageSize = 8;
+  const [pageSize, setPageSize] = useState(10);
   const [count, setCount] = useState(0);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(""); // Etat pour la recherche avec debounce
 
@@ -31,7 +33,7 @@ export default function UsersAdminPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [page, debouncedSearchQuery, mounted]); // Ajouter debouncedSearchQuery comme dépendance
+  }, [page, debouncedSearchQuery, mounted, pageSize]); // Ajouter debouncedSearchQuery comme dépendance
 
 
   const fetchProducts = async () => {
@@ -68,6 +70,21 @@ export default function UsersAdminPage() {
   return (
     <div className="py-10">
       <h1 className="text-2xl font-bold mb-4">{r("title")}</h1>
+      <div className='w-48 mb-2'>
+        <SelectFetch
+          value={pageSize.toString()}
+          onChange={(val) => setPageSize(Number(val))}
+          label={translateSystem("pagesize")}
+          placeholder={translateSystem("pagesizeplaceholder")}
+          options={[
+            { value: "1", label: "1" },
+            { value: "10", label: "10" },
+            { value: "20", label: "20" },
+            { value: "50", label: "50" },
+            { value: "100", label: "100" },
+          ]}
+        />
+      </div>
       <DataTable
         data={data}
         selectedIds={selectedIds}

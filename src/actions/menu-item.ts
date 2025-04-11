@@ -1,5 +1,5 @@
 "use server"
-import { CircleEllipsis, FileSpreadsheet, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
+import { CircleEllipsis, Download, FileSpreadsheet, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getUserPermissions, verifySession} from "./permissions";
 
@@ -62,6 +62,29 @@ const itemsMenu = async () =>{
                     icon: FileSpreadsheet,
                     admin: false,
                     permissions: [],
+                },
+            ],
+        },
+        {
+            title: Menu("files"),
+            url: "/admin/files",
+            icon: File,
+            admin: false,
+            permissions: [],
+            subItems: [
+                {
+                    title: Menu("files"),
+                    url: "/admin/files",
+                    icon: File,
+                    admin: false,
+                    permissions: [],
+                },
+                {
+                    title: Menu("files_upload"),
+                    url: "/admin/files/upload-files",
+                    icon: Download,
+                    admin: false,
+                    permissions: ["files_create"],
                 },
             ],
         },

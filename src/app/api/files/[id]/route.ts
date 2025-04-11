@@ -27,10 +27,13 @@ export async function GET(request: Request, { params }: { params: any }) {
         if (session.status !== 200 || !session.data || !session.data.user) {
             return NextResponse.json({ message: e("unauthorized") }, { status: 401 });
         }
+        if(session.data.user.isAdmin === true) {
+            havePermission = true
+        }
         if (fileexists.adminViewOnly) {
-            if (session.data.user.isAdmin === false) {
+            if (session.data.user.isAdmin === false && fileexists.addedFrom !== session.data.user.id) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-            }else {
+            } else {
                 havePermission = true
             }
         }
@@ -38,13 +41,13 @@ export async function GET(request: Request, { params }: { params: any }) {
             const users = fileexists.canViewUsers.split(',')
             if (!users.includes(session.data.user.id)) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-            }else {
+            } else {
                 havePermission = true
             }
         }
         if (fileexists.canViewPermissions && !havePermission) {
             const permissions = fileexists.canViewPermissions.split(',')
-            const hasPermission = await withAuthorizationPermission(permissions,session.data.user.id);
+            const hasPermission = await withAuthorizationPermission(permissions, session.data.user.id);
             if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
             }
@@ -53,35 +56,6 @@ export async function GET(request: Request, { params }: { params: any }) {
 
     if (allFile === "true") {
         try {
-            if (fileexists?.canViewUsers || fileexists?.adminViewOnly || fileexists?.canViewPermissions) {
-                const session = await verifySession();
-                let havePermission = false
-                if (session.status !== 200 || !session.data || !session.data.user) {
-                    return NextResponse.json({ message: e("unauthorized") }, { status: 401 });
-                }
-                if (fileexists.adminDownloadOnly) {
-                    if (session.data.user.isAdmin === false) {
-                        return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-                    }else {
-                        havePermission = true
-                    }
-                }
-                if (fileexists.canDownloadUsers && !havePermission) {
-                    const users = fileexists.canDownloadUsers.split(',')
-                    if (!users.includes(session.data.user.id)) {
-                        return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-                    }else {
-                        havePermission = true
-                    }
-                }
-                if (fileexists.canDownloadPermissions && !havePermission) {
-                    const permissions = fileexists.canDownloadPermissions.split(',')
-                    const hasPermission = await withAuthorizationPermission(permissions,session.data.user.id);
-                    if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
-                        return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-                    }
-                }
-            }
             // Définition du chemin du fichier
             const filePath = path.join(process.cwd(), fileexists.path);
 
@@ -131,38 +105,40 @@ export async function DELETE(request: Request, { params }: { params: any }) {
         return NextResponse.json({ message: f("filedoesnotexist") }, { status: 404 });
     }
 
-    if (fileexist?.canDeleteUsers || fileexist?.adminDeleteOnly || fileexist?.canDeletePermissions) {
-        const session = await verifySession();
-        let havePermission = false
-        if (session.status !== 200 || !session.data || !session.data.user) {
+    const session = await verifySession();
+    let havePermission = false
+    if (session.status !== 200 || !session.data || !session.data.user) {
+        return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
+    }
+    if(session.data.user.isAdmin === true) {
+        havePermission = true
+    }
+    if (!havePermission && fileexist.adminDeleteOnly && fileexist.addedFrom !== session.data.user.id) {
+        if (session.data.user.isAdmin === false) {
+            return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
+        } else {
+            havePermission = true
+        }
+    }
+    if (fileexist.canDeleteUsers && !havePermission) {
+        const users = fileexist.canDeleteUsers.split(',')
+        if (!users.includes(session.data.user.id) && fileexist.addedFrom !== session.data.user.id) {
+            return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
+        } else {
+            havePermission = true
+        }
+    }
+    if (fileexist.canDeletePermissions && !havePermission) {
+        const permissions = fileexist.canDeletePermissions.split(',')
+        const hasPermission = await withAuthorizationPermission(permissions, session.data.user.id);
+        if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
             return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
         }
-        if (fileexist.adminDeleteOnly) {
-            if (session.data.user.isAdmin === false) {
-                return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-            }else{
-                havePermission = true
-            }
-        }
-        if (fileexist.canDeleteUsers && !havePermission) {
-            const users = fileexist.canDeleteUsers.split(',')
-            if (!users.includes(session.data.user.id)) {
-                return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-            }else {
-                havePermission = true
-            }
-        }
-        if (fileexist.canDeletePermissions && !havePermission) {
-            const permissions = fileexist.canDeletePermissions.split(',')
-            const hasPermission = await withAuthorizationPermission(permissions,session.data.user.id);
-            if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
-                return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
-            }
-        }
-
-        const deletedFile = await prisma.files.delete({ where: { id: paramsID.id } });
-        deleteFile(paramsID.id);
-
-        return NextResponse.json({ data: deletedFile }, { status: 200 });
     }
+
+    const deletedFile = await prisma.files.delete({ where: { id: paramsID.id } });
+    deleteFile(paramsID.id);
+
+    return NextResponse.json({ data: deletedFile }, { status: 200 });
+
 }

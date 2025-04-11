@@ -22,7 +22,7 @@ export const addStringToFilenameWithNewExtension = (filePath: string, str: strin
 
     const nameParts = filename.split(".");
     nameParts.pop(); // Supprime l'ancienne extension
-    
+
     return `${pathParts.join("/")}/${nameParts.join(".")}_${str}.${newExtension}`;
 };
 
@@ -60,5 +60,37 @@ export function generateRandomFilename() {
     const timestamp = Date.now(); // Obtenir un timestamp unique
     const randomString = Math.random().toString(36).substring(2, 10); // Chaîne aléatoire
     return `file_${timestamp}_${randomString}`;
-  }
-  
+}
+
+
+export function hasPermissionDeleteFile(file: any,session:any) {
+    let havePermission=true
+    const canDeletePermissions = file.canDeletePermissions ? file.canDeletePermissions.split(',') : []
+    const canDeleteUsers = file.canDeleteUsers ? file.canDeleteUsers.split(',') : []
+    if (!session && (canDeleteUsers.length > 0 || canDeletePermissions.length > 0)) {
+        havePermission = false
+    }
+    if (session && session.user && !session.user.isAdmin) {
+        havePermission = canDeletePermissions.length === 0 || canDeletePermissions.some((p: any) => session.user.permissions.includes(p)) || canDeleteUsers.includes(session.user.id)
+    }
+    if(session && session.user && file.addedFrom===session.user.id)
+        havePermission=true
+    return havePermission
+}
+
+export function hasPermissionDownloadFile(file: any,session:any) {
+    let havePermission=true
+    
+    const canDownloadPermissions = file.canDownloadPermissions ? file.canDownloadPermissions.split(',') : []
+    const canDownloadUsers = file.canDownloadUsers ? file.canDownloadUsers.split(',') : []
+    if (!session && (canDownloadPermissions.length > 0 || canDownloadUsers.length > 0)) {
+        havePermission = false
+    }
+    if (session && session.user && !session.user.isAdmin) {
+        havePermission = canDownloadPermissions.length === 0 || canDownloadPermissions.some((p: any) => session.user.permissions.includes(p)) || canDownloadUsers.includes(session.user.id)
+    }
+    if(session && session.user && file.addedFrom===session.user.id)
+        havePermission=true
+    return havePermission
+}
+

@@ -18,11 +18,12 @@ import Cookies from 'js-cookie';
 import { useTranslations } from "next-intl";
 import { useSession } from "@/hooks/use-session";
 import Loading from "@/components/myui/loading";
-import BackPagination from "./back-pagination";
-import NextPagination from "./next-pagination";
-import SearchTable from "./search-table";
+
 import { Columns } from "./columns-table";
 import { columns } from "./columns-table";
+import SearchTable from "@/components/myui/table/search-table";
+import BackPagination from "@/components/myui/table/back-pagination";
+import NextPagination from "@/components/myui/table/next-pagination";
 
 interface DataTableProps {
     data: Columns[];

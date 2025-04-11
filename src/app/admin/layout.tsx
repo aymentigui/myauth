@@ -4,8 +4,8 @@ import { AppSidebar } from "@/components/ui/app-sidebar";
 import DivAdmin from "@/components/my/admin/div-admin";
 import HeaderAdmin from "@/components/my/admin/header";
 import { AddUpdateUserDialog } from "@/modals/add-update-dialog";
-import { AddUpdateUserDialogProvider } from "@/context/add-update-dialog-context";
 import ModalClass from "@/components/my/modal-class";
+import ModalContext from "@/components/my/modal-context";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -24,7 +24,7 @@ export default async function RootLayout({
       <SidebarProvider >
         <DivAdmin />
         <AppSidebar />
-        <AddUpdateUserDialogProvider>
+        <ModalContext>
           <main className="flex min-h-screen flex-col w-full overflow-auto bg-border">
             <HeaderAdmin>
               <SidebarTrigger />
@@ -34,7 +34,7 @@ export default async function RootLayout({
               <AddUpdateUserDialog />
             </div>
           </main>
-        </AddUpdateUserDialogProvider>
+        </ModalContext>
       </SidebarProvider>
     </div>
   );

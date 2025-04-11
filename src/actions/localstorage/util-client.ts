@@ -74,7 +74,7 @@ export const getImageFromLocalHost = async (idFile : string, origin="/api/files/
 };
 
 export const getFileFromLocalHost = async (idFile : string, origin="/api/files/") => {
-    const blob = await getFileBlobFromLocalHost(idFile, "true");
+    const blob = await getFileBlobFromLocalHost(idFile, "true",origin);
     if(!blob) return null;
     const file = new File([blob?.blob], blob.metadata.name??"file", { type: blob.metadata.mimeType });
     return file;

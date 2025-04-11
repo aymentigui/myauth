@@ -26,6 +26,7 @@ export const { handlers, auth, signIn, signOut } =
         if (user && user.id) {
           token.id = user.id
           // @ts-ignore
+          token.username = user.username; token.firstname = user.firstname; token.lastname = user.lastname;          // @ts-ignore
           token.isAdmin = user.isAdmin
           try {
             // @ts-ignore
@@ -57,10 +58,16 @@ export const { handlers, auth, signIn, signOut } =
         // @ts-ignore
         session.user.id = token.id
         // @ts-ignore
+        session.user.username = token.username
+        // @ts-ignore
+        session.user.firstname = token.firstname
+        // @ts-ignore
+        session.user.lastname = token.lastname
+        // @ts-ignore
         session.user.isAdmin = token.isAdmin
         // @ts-ignore
         session.session = token.session
-        
+
         if (token?.id) {
           const roles = await prisma.userrole.findMany({
             where: { userId: token.id },

@@ -10,7 +10,8 @@ import { useSession } from "@/hooks/use-session";
 import axios from "axios";
 import { useOrigin } from "@/hooks/use-origin";
 import GetImage from "@/hooks/use-getImage";
-import { LzyImage } from "@/components/myui/pdf/lazy-image";
+import { LzyImage } from "@/components/myui/lazy-image";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export type Columns = {
   id: string;
@@ -148,6 +149,29 @@ const actionsCell = (row: any) => {
 };
 
 export const columns: ColumnDef<Columns>[] = [
+  {
+    id: "actionsCheck",
+    header: ({ table }) => {
+      const allSelected = table.getIsAllRowsSelected(); // Vérifie si toutes les lignes sont sélectionnées
+
+      return (
+        <Checkbox
+          checked={allSelected}
+          onCheckedChange={(value) => {
+            table.toggleAllRowsSelected(!!value); // Sélectionne ou désélectionne toutes les lignes
+          }}
+        />
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+        />
+      );
+    },
+  },
   {
     accessorKey: "imageCompressed",
     header: "image",

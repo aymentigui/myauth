@@ -1,5 +1,5 @@
 import { uploadFileDB } from "@/actions/localstorage/upload-db";
-import { withAuthorizationPermission, verifySession } from "@/actions/permissions";
+import { verifySession } from "@/actions/permissions";
 import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,66 +7,146 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: Request) {
 
     const url = new URL(request.url);
-    const type = url.searchParams.get("type");
+    let type = null, searchQuery = null, page = 1, pageSize = 10, count = null, justpublic = null;
+    if (url.searchParams && url.searchParams.get("type")) {
+        type = url.searchParams.get("type");
+    }
+    if (url.searchParams && url.searchParams.get("justpublic")) {
+        justpublic = url.searchParams.get("justpublic");
+    }
+    if (url.searchParams && url.searchParams.get("searchQuery")) {
+        searchQuery = url.searchParams.get("searchQuery");
+    }
+    if (url.searchParams && url.searchParams.get("page")) {
+        page = parseFloat(url.searchParams.get("page") ?? "1");
+    }
+    if (url.searchParams && url.searchParams.get("pageSize")) {
+        pageSize = parseFloat(url.searchParams.get("pageSize") ?? "10");
+    }
+    if (url.searchParams && url.searchParams.get("count")) {
+        count = url.searchParams.get("count");
+    }
 
+    // @ts-ignore
+    let where = []
     const f = await getTranslations('Files');
-    
-    let where  = {}     
 
-    if(type){
-        where = [
+    if (justpublic) {
+        where.push(
             {
-                type: type
+                adminViewOnly: false
+            },
+            {
+                canViewUsers: null
+            },
+            {
+                canViewPermissions: null
             }
-        ]
+        )
     }
+    else {
+        const session = await verifySession();
 
-    const fileexists = await prisma.files.findMany({
-        where: where
-    })
-
-    if (!fileexists) {
-        return NextResponse.json({ message: f("filedoesnotexist") }, { status: 404 });
-    }
-    const files = [];
-
-    for (const file of fileexists) {
-
-        if (file?.canViewUsers || file?.adminViewOnly || file?.canViewPermissions) {
-            const session = await verifySession();
-            if (session.status !== 200 || !session.data || !session.data.user) {
-                continue
-            }
-            if (file.adminViewOnly) {
-                if (session.data.user.isAdmin === false) {
-                    continue
+        if (session.status !== 200 || !session.data || !session.data.user)
+            where.push(
+                {
+                    adminViewOnly: false
+                },
+                {
+                    canViewUsers: null
+                },
+                {
+                    canViewPermissions: null
                 }
-            }
-            if (file.canViewUsers) {
-                const users = file.canViewUsers.split(',')
-                if (!users.includes(session.data.user.id)) {
-                    continue
-                }
-            }
-            if (file.canViewPermissions) {
-                const permissions = file.canViewPermissions.split(',')
-                const hasPermission = await withAuthorizationPermission(permissions, session.data.user.id);
-                if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
-                    continue
-                }
+            )
+        else if (!justpublic && session.status === 200 && session.data && session.data.user) {
+            if (session.data.user.isAdmin === false) {
+                where.push(
+                    {
+                        or: [
+                            {
+                                adminViewOnly: false,
+                            },
+                            {
+                                addedFrom: session.data.user.id
+                            },
+                        ],
+                    }
+                )
+                where.push(
+                    {
+                        OR: session.data.user.permissions.map((perm: string) => ({
+                            canViewPermissions: { contains: perm },
+                        })),
+                    }
+                )
+                where.push(
+                    {
+                        canViewUsers: { contains: session.data.user.id },
+                    }
+                )
             }
         }
+    }
 
-        files.push(file)
+    if (type) {
+        where.push({
+            mimeType: { contains: type },
+        })
+    }
+
+    if (searchQuery) {
+        where.push({
+            AND: [
+                { name: { contains: searchQuery } },
+            ],
+        })
+    }
+
+    if (count) {
+        const count = await prisma.files.count(
+            {
+                // @ts-ignore
+                where: where.length ? { AND: where } : {},
+            }
+        );
+        return NextResponse.json({ data: count }, { status: 200 });
+    }
+
+    const files = await prisma.files.findMany({
+        skip: (page - 1) * pageSize, // Nombre d'éléments à sauter
+        take: pageSize, // Nombre d'éléments à prendre
+        // @ts-ignore
+        where: where.length ? { AND: where } : {},
+    })
+
+    if (!files) {
+        return NextResponse.json({ message: f("filedoesnotexist") }, { status: 404 });
     }
 
     return NextResponse.json({ data: files }, { status: 200 });
 }
 
 
-export async function POST(request: NextRequest) { 
+export async function POST(request: NextRequest) {
+
     const data = await request.formData();
     const files = data.getAll("file") as File[];
+
+    const isPublicView = data.get("isPublicView") === "true";
+    const isJustMeView = data.get("isJustMeView") === "true";
+    const permissionsView = JSON.parse(data.get("permissionsView") as string);
+    const usersView = JSON.parse(data.get("usersView") as string);
+
+    const isPublicDownload = data.get("isPublicDownload") === "true";
+    const isJustMeDownload = data.get("isJustMeDownload") === "true";
+    const permissionsDownload = JSON.parse(data.get("permissionsDownload") as string);
+    const usersDownload = JSON.parse(data.get("usersDownload") as string);
+
+    const isPublicDelete = data.get("isPublicDelete") === "true";
+    const isJustMeDelete = data.get("isJustMeDelete") === "true";
+    const permissionsDelete = JSON.parse(data.get("permissionsDelete") as string);
+    const usersDelete = JSON.parse(data.get("usersDelete") as string);
 
     if (!files.length) {
         return NextResponse.json({ message: "No files found" }, { status: 400 });
@@ -78,9 +158,21 @@ export async function POST(request: NextRequest) {
     }
 
     const uploadedFiles = [];
-    
+
     for (const file of files) {
-        const newFile = await uploadFileDB(file, session.data.user.id);
+        const newFile = await uploadFileDB(
+            file,
+            session.data.user.id,
+            isPublicView || isJustMeView ? null : usersView,
+            isPublicView || isJustMeView ? null : permissionsView,
+            !isPublicView && isJustMeView,
+            isPublicDownload || isJustMeDownload ? null : usersDownload,
+            isPublicDownload || isJustMeDownload ? null : permissionsDownload,
+            !isPublicDownload && isJustMeDownload,
+            isPublicDelete || isJustMeDelete ? null : usersDelete,
+            isPublicDelete || isJustMeDelete ? null : permissionsDelete,
+            !isPublicDelete && isJustMeDelete
+        );
         uploadedFiles.push({ data: newFile.data, status: newFile.status });
     }
 

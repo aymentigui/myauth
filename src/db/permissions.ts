@@ -14,4 +14,9 @@ export const permissions = [
     { name: "blogs_create" },
     { name: "blogs_update" },
     { name: "blogs_delete" },    
+
+    { name: "files_view" },
+    { name: "files_create" },
+    { name: "files_update" },
+    { name: "files_delete" },
   ];

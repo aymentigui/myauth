@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, FileImage, FileVideo, Paperclip, FileX, File, X, Trash2, Archive, Type, Camera, Download, SquareArrowOutUpRight } from "lucide-react";
+import { FileText, FileImage, FileVideo, Paperclip, FileX, File, X, Trash2, Archive, Type, Camera, Download, SquareArrowOutUpRight, Pen } from "lucide-react";
 import "pdfjs-dist/build/pdf.worker";
 import { Button } from "../ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
@@ -11,10 +11,11 @@ interface FilePreviewProps {
     compact?: boolean;
     onRemove?: (fileid: string) => void;
     onDownload?: (fileid: string) => void;
-    onView?: (fileid: string) => void
+    onView?: (fileid: string) => void;
+    onEdit?: (fileid: string) => void;
 }
 
-const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", compact = false, onRemove, onDownload, onView }) => {
+const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", compact = false, onRemove, onDownload, onView, onEdit }) => {
     const [type, setType] = useState<string>("file");
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
@@ -43,8 +44,9 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", com
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className={"absolute bottom-2 right-2  flex-col gap-2"+ " " + (isHovered ? 'flex' : 'hidden') }>
-                {onRemove && (
+            {/* <div className={"absolute bottom-2 right-2 flex flex-col gap-2"+ " " + (isHovered ? 'flex' : 'lg:hidden') }> */}
+            <div className={"absolute bottom-2 right-2 flex flex-col gap-2" }>
+            {onRemove && (
                     <Button
                         type="button"
                         variant={"link"}
@@ -72,6 +74,16 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, size = "w-40 h-48", com
                         onClick={() => onView(file.fileid)}
                     >
                         <SquareArrowOutUpRight  className={compact ? '!w-8 !h-8' : '!w-3 !h-3'} />
+                    </Button>
+                )}
+                {onEdit && (
+                    <Button
+                        type="button"
+                        variant={"link"}
+                        className={"p-2 bg-orange-500 z-50 text-white rounded-md hover:bg-orange-600 shadow-md" + " " + (compact ? 'w-8 h-8' : 'w-3 h-3')}
+                        onClick={() => onEdit(file.fileid)}
+                    >
+                        <Pen className={compact ? '!w-8 !h-8' : '!w-3 !h-3'} />
                     </Button>
                 )}
             </div>

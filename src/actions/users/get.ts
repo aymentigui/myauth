@@ -69,6 +69,27 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
     }
 }
 
+export async function getUsersPublic(): Promise<{ status: number, data: any }> {
+    const e = await getTranslations('Error');
+    try {
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+                email: true,
+                imageCompressed: true,
+            },
+        });
+
+        return { status: 200, data: users };
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return { status: 500, data: null };
+    }
+}
+
 
 export async function getUser(userId?: string): Promise<{ status: number, data: any }> {
     

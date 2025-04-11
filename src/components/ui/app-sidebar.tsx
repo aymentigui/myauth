@@ -40,8 +40,19 @@ export async function AppSidebar() {
                         <div className="flex w-full justify-between items-center hover:bg-sidebar-accent py-1 rounded">
                           {item.url && item.url !== ""
                             ? <Link href={item.url}>
-                              {item.icon && <item.icon />}
-                              <span>{item.title}</span>
+                              <div className="flex items-center gap-2 px-2">
+                                {item.icon && <item.icon size={18} />}
+                                <span>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger>{item.title}</TooltipTrigger>
+                                      <TooltipContent>
+                                        {item.title}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </span>
+                              </div>
                             </Link>
                             : <div className="flex items-center gap-2 px-2">
                               {item.icon && <item.icon size={18} />}
@@ -57,7 +68,7 @@ export async function AppSidebar() {
                               </span>
                             </div>
                           }
-                          <div className="px-2">
+                          <div className="px-2 cursor-pointer">
                             <ChevronDown width={15} />
                           </div>
                         </div>
