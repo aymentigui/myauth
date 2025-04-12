@@ -21,32 +21,32 @@ export async function GET(request: Request, { params }: { params: any }) {
         return NextResponse.json(fileexists);
     }
 
-    if (fileexists?.canViewUsers || fileexists?.adminViewOnly || fileexists?.canViewPermissions) {
+    if (fileexists?.can_view_users || fileexists?.admin_view_only || fileexists?.can_view_permissions) {
         const session = await verifySession();
         let havePermission = false
         if (session.status !== 200 || !session.data || !session.data.user) {
             return NextResponse.json({ message: e("unauthorized") }, { status: 401 });
         }
-        if(session.data.user.isAdmin === true) {
+        if(session.data.user.is_admin === true) {
             havePermission = true
         }
-        if (fileexists.adminViewOnly) {
-            if (session.data.user.isAdmin === false && fileexists.addedFrom !== session.data.user.id) {
+        if (fileexists.admin_view_only) {
+            if (session.data.user.is_admin === false && fileexists.added_from !== session.data.user.id) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
             } else {
                 havePermission = true
             }
         }
-        if (fileexists.canViewUsers && !havePermission) {
-            const users = fileexists.canViewUsers.split(',')
+        if (fileexists.can_view_users && !havePermission) {
+            const users = fileexists.can_view_users.split(',')
             if (!users.includes(session.data.user.id)) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
             } else {
                 havePermission = true
             }
         }
-        if (fileexists.canViewPermissions && !havePermission) {
-            const permissions = fileexists.canViewPermissions.split(',')
+        if (fileexists.can_view_permissions && !havePermission) {
+            const permissions = fileexists.can_view_permissions.split(',')
             const hasPermission = await withAuthorizationPermission(permissions, session.data.user.id);
             if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
                 return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
@@ -80,7 +80,7 @@ export async function GET(request: Request, { params }: { params: any }) {
             // Retourner la réponse avec le stream
             return new Response(readableStream, {
                 headers: {
-                    "Content-Type": fileexists.mimeType,
+                    "Content-Type": fileexists.mime_type,
                     "X-File-Metadata": JSON.stringify(fileexists),
                 },
             });
@@ -110,26 +110,26 @@ export async function DELETE(request: Request, { params }: { params: any }) {
     if (session.status !== 200 || !session.data || !session.data.user) {
         return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
     }
-    if(session.data.user.isAdmin === true) {
+    if(session.data.user.is_admin === true) {
         havePermission = true
     }
-    if (!havePermission && fileexist.adminDeleteOnly && fileexist.addedFrom !== session.data.user.id) {
-        if (session.data.user.isAdmin === false) {
+    if (!havePermission && fileexist.admin_delete_only && fileexist.added_from !== session.data.user.id) {
+        if (session.data.user.is_admin === false) {
             return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
         } else {
             havePermission = true
         }
     }
-    if (fileexist.canDeleteUsers && !havePermission) {
-        const users = fileexist.canDeleteUsers.split(',')
-        if (!users.includes(session.data.user.id) && fileexist.addedFrom !== session.data.user.id) {
+    if (fileexist.can_delete_users && !havePermission) {
+        const users = fileexist.can_delete_users.split(',')
+        if (!users.includes(session.data.user.id) && fileexist.added_from !== session.data.user.id) {
             return NextResponse.json({ message: f("unauthorized") }, { status: 401 });
         } else {
             havePermission = true
         }
     }
-    if (fileexist.canDeletePermissions && !havePermission) {
-        const permissions = fileexist.canDeletePermissions.split(',')
+    if (fileexist.can_delete_permissions && !havePermission) {
+        const permissions = fileexist.can_delete_permissions.split(',')
         const hasPermission = await withAuthorizationPermission(permissions, session.data.user.id);
         if (hasPermission.status !== 200 || !hasPermission.data.hasPermission) {
             return NextResponse.json({ message: f("unauthorized") }, { status: 401 });

@@ -9,15 +9,15 @@ export async function getSessions(user:user): Promise<{ status: number, data: an
         const sessions = await prisma.session.findMany(
             {
                 where: {
-                    userId: user.id
+                    user_id: user.id
                 }
             }
         );
 
         const sessionsFormatted = sessions.map((session) => ({
             id: session.id,
-            deviceType: session.deviceType ?? "Unknown",
-            deviceName: session.deviceName ?? "Unknown",
+            deviceType: session.device_type ?? "Unknown",
+            deviceName: session.device_name ?? "Unknown",
             browser: session.browser ?? "Unknown",
             os: session.os ?? "Unknown",
             createdAt: session.expires.toISOString(),

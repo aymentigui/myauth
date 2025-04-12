@@ -12,7 +12,7 @@ const MyDialog = ({ children, title, width, onClose }: any) => {
     };
 
     return (
-        <div className="absolute inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div  onClick={handleOutsideClick} className='absolute inset-0 h-full w-full  bg-gray-500 bg-opacity-50'></div>
             <div className={cn(
                 "relative bg-white p-6 rounded-md shadow-lg",

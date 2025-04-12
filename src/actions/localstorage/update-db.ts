@@ -38,17 +38,17 @@ export async function updateFilePermissionsDB(
         )
         await prisma.files.update({
             data: {
-                canViewUsers: adminViewOnly?null:canViewUsers ? canViewUsers.join(",") : null,
-                canDownloadUsers: adminDownloadOnly?null:canDownloadUsers ? canDownloadUsers.join(",") : null,
-                canDeleteUsers: adminDeleteOnly?null:canDeleteUsers ? canDeleteUsers.join(",") : null,
+                can_view_users: adminViewOnly?null:canViewUsers ? canViewUsers.join(",") : null,
+                can_download_users: adminDownloadOnly?null:canDownloadUsers ? canDownloadUsers.join(",") : null,
+                can_delete_users: adminDeleteOnly?null:canDeleteUsers ? canDeleteUsers.join(",") : null,
 
-                adminDeleteOnly: adminDeleteOnly??false,
-                adminDownloadOnly:adminDownloadOnly??false,
-                adminViewOnly: adminViewOnly??false,
+                admin_delete_only: adminDeleteOnly??false,
+                admin_download_only:adminDownloadOnly??false,
+                admin_view_only: adminViewOnly??false,
 
-                canDeletePermissions: adminDeleteOnly?null:canDeletePermissions ? canDeletePermissions.join(",") : null,
-                canDownloadPermissions: adminDownloadOnly?null:canDownloadPermissions ? canDownloadPermissions.join(",") : null,
-                canViewPermissions: adminViewOnly?null:canViewPermissions ? canViewPermissions.join(",") : null,
+                can_delete_permissions: adminDeleteOnly?null:canDeletePermissions ? canDeletePermissions.join(",") : null,
+                can_download_permissions: adminDownloadOnly?null:canDownloadPermissions ? canDownloadPermissions.join(",") : null,
+                can_view_permissions: adminViewOnly?null:canViewPermissions ? canViewPermissions.join(",") : null,
             },
             where: {
                 id: fileId

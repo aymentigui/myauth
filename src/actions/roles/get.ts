@@ -18,10 +18,13 @@ export async function getRoles(): Promise<{ status: number, data: any }> {
         }
 
         const roles = await prisma.role.findMany({
+            where: {
+                public : true 
+            },
             include: {
                 users: {
                     select: {
-                        userId: true
+                        user_id: true
                     }
                 }
             }

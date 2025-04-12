@@ -16,27 +16,28 @@ generator client {
 }
 
 model user {
-  id                            String                     @id @default(cuid())
-  firstname                     String?
-  lastname                      String?
-  username                      String?                    @unique
-  email                         String?                    @unique
-  emailVerified                 DateTime?
-  password                      String
-  image                         String?
-  imageCompressed               String?
-  isTwoFactorEnabled            Boolean?                   @default(false)
-  twoFactorConfermationCode     twofactorconfermation?
-  resetPasswordConfermationCode resetpasswordconfermation?
+  id                               String                     @id @default(cuid())
+  firstname                        String?
+  lastname                         String?
+  username                         String?                    @unique
+  email                            String?                    @unique
+  email_verified                   DateTime?
+  password                         String
+  image                            String?
+  image_compressed                 String?
+  is_two_factor_enabled            Boolean?                   @default(false)
+  two_factor_confermation_code     twofactorconfermation?
+  reset_password_confermation_code resetpasswordconfermation?
   // accounts                      Account[]
-  sessions                      session[]
-  roles                         userrole[]
-  isAdmin                       Boolean                    @default(false)
+  sessions                         session[]
+  roles                            userrole[]
+  is_admin                         Boolean                    @default(false)
+  public                           Boolean                    @default(true)
   // Optional for WebAuthn support
   // Authenticator                 Authenticator[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 // model Account {

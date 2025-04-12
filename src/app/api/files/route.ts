@@ -60,7 +60,7 @@ export async function GET(request: Request) {
                 }
             )
         else if (!justpublic && session.status === 200 && session.data && session.data.user) {
-            if (session.data.user.isAdmin === false) {
+            if (session.data.user.is_admin === false) {
                 where.push(
                     {
                         or: [

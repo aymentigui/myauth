@@ -34,7 +34,7 @@ export async function updateEmail(email: string): Promise<{ status: number, data
             return { status: 400, data: { message: u("emailexists") } };
         }
         const user = await prisma.user.update({
-            where: { id: session.data.session.userId },
+            where: { id: session.data.session.user_id },
             data: { email },
         });
 
@@ -71,7 +71,7 @@ export async function updateUsername(username: string): Promise<{ status: number
             return { status: 400, data: { message: u("usernameexists") } };
         }
         await prisma.user.update({
-            where: { id: session.data.session.userId },
+            where: { id: session.data.session.user_id },
             data: { username },
         });
 
@@ -94,8 +94,8 @@ export async function updateTwoFactorConfermation(twoFactorConfermation: boolean
 
     try {
         await prisma.user.update({
-            where: { id: session.data.session.userId },
-            data: { isTwoFactorEnabled: twoFactorConfermation },
+            where: { id: session.data.session.user_id },
+            data: { is_two_factor_enabled: twoFactorConfermation },
         });
 
         return { status: 200, data: { message: s("updatesuccess") } };
@@ -122,7 +122,7 @@ export async function updatePassword(currentPassword: string, newPassword: strin
     try {
 
         const user = await prisma.user.findUnique({
-            where: { id: session.data.session.userId },
+            where: { id: session.data.session.user_id },
         })
         if (!user) {
             return { status: 400, data: { message: e("usernotfound") } };
@@ -140,7 +140,7 @@ export async function updatePassword(currentPassword: string, newPassword: strin
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         await prisma.user.update({
-            where: { id: session.data.session.userId },
+            where: { id: session.data.session.user_id },
             data: { password: hashedPassword },
         });
 
@@ -164,7 +164,7 @@ export async function deleteSession(id: string) {
     const sessionExisting = await prisma.session.findFirst({
         where: {
             id: id,
-            userId: session.data.session.userId
+            user_id: session.data.session.user_id
         }
     })
 
@@ -174,7 +174,7 @@ export async function deleteSession(id: string) {
     await prisma.session.deleteMany({
         where: {
             id: id,
-            userId: session.data.session.userId
+            user_id: session.data.session.user_id
         }
     })
     return { status: 200, data: { message: s("deletesuccess") } };
@@ -192,7 +192,7 @@ export async function deleteAllSessions() {
 
     const sessionExisting = await prisma.session.findFirst({
         where: {
-            userId: session.data.session.userId
+            user_id: session.data.session.user_id
         }
     })
 
@@ -201,7 +201,7 @@ export async function deleteAllSessions() {
     }
     await prisma.session.deleteMany({
         where: {
-            userId: session.data.session.userId
+            user_id: session.data.session.user_id
         }
     })
 
@@ -241,12 +241,12 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
             return { status: 400, data: { message: f("filesizemax")+" 10Mo" } };
         }
         const userExists = await prisma.user.findUnique({
-            where: { id: session.data.session.userId },
+            where: { id: session.data.session.user_id },
         })
 
 
         userExists?.image && await deleteFileDb(userExists.image)
-        userExists?.imageCompressed && await deleteFileDb(userExists.imageCompressed)
+        userExists?.image_compressed && await deleteFileDb(userExists.image_compressed)
 
         const arrayBuffer = await image.arrayBuffer();
 
@@ -267,7 +267,7 @@ export async function updateImage(image: File): Promise<{ status: number, data: 
             where: { id: userExists?.id },
             data: {
                 image: imageId,
-                imageCompressed : imageCompressedId
+                image_compressed : imageCompressedId
             }
         })
 

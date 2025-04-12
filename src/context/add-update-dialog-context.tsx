@@ -9,7 +9,7 @@ type User = {
   username: string;
   email: string;
   image: string;
-  isAdmin: boolean;
+  is_admin: boolean;
   roles: string[];
 };
 

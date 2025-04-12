@@ -6,6 +6,7 @@ import HeaderAdmin from "@/components/my/admin/header";
 import { AddUpdateUserDialog } from "@/modals/add-update-dialog";
 import ModalClass from "@/components/my/modal-class";
 import ModalContext from "@/components/my/modal-context";
+import { verifySession } from "@/actions/permissions";
 
 export const metadata: Metadata = {
   title: "Admin",

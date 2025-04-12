@@ -29,12 +29,15 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
                     { username: { contains: searchQuery } },
                     { email: { contains: searchQuery } },
                 ],
+                AND: [
+                    { public: true }, // Filtrer les utilisateurs non supprimés
+                ],
             }
-            : {};
+            : {public: true};
 
         const users = await prisma.user.findMany({
             skip: skip, // Nombre d'éléments à sauter
-            take: pageSize, // Nombre d'éléments à prendre
+            take: pageSize === 0 ? undefined : pageSize, // Nombre d'éléments à prendre
             where: searchConditions,
             select: {
                 id: true,
@@ -43,9 +46,14 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
                 username: true,
                 email: true,
                 image: true,
-                imageCompressed: true,
-                isAdmin: true,
+                image_compressed: true,
+                is_admin: true,
                 roles: {
+                    where: {
+                        role: {
+                            public: true,
+                        },
+                    },
                     select: {
                         role: {
                             select: {
@@ -79,7 +87,7 @@ export async function getUsersPublic(): Promise<{ status: number, data: any }> {
                 lastname: true,
                 username: true,
                 email: true,
-                imageCompressed: true,
+                image_compressed: true,
             },
         });
 

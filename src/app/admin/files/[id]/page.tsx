@@ -27,15 +27,15 @@ const BlogPreview = async ({ params }: any) => {
         return null
 
     let havePermission=true
-    const canDeletePermissions = file.canDeletePermissions ? file.canDeletePermissions.split(',') : []
-    const canDeleteUsers = file.canDeleteUsers ? file.canDeleteUsers.split(',') : []
+    const canDeletePermissions = file.can_delete_permissions ? file.can_delete_permissions.split(',') : []
+    const canDeleteUsers = file.can_delete_users ? file.can_delete_users.split(',') : []
     if (!session && (canDeleteUsers.length > 0 || canDeletePermissions.length > 0)) {
         havePermission = false
     }
-    if (!session.data.user.isAdmin) {
+    if (!session.data.user.is_admin) {
         havePermission = canDeletePermissions.length === 0 || canDeletePermissions.some((p: any) => session.data.user.permissions.includes(p)) || canDeleteUsers.includes(session.data.user.id)
     }
-    if(file.addedFrom===session.data.user.id)
+    if(file.added_from===session.data.user.id)
         havePermission=true
 
     if(!havePermission)
@@ -45,15 +45,15 @@ const BlogPreview = async ({ params }: any) => {
         <Card className='p-4'>
         <UpdateFiles
             getFile={file}
-            isJustMeViewProps={file.adminViewOnly}
-            isJustMeDownloadProps={file.adminDownloadOnly}
-            isJustMeDeleteProps={file.adminDeleteOnly}
-            usersViewProps={file.canViewUsers?file.canViewUsers.split(','):[]}
-            usersDownloadProps={file.canDownloadUsers?file.canDownloadUsers.split(','):[]}
-            usersDeleteProps={file.canDeleteUsers?file.canDeleteUsers.split(','):[]}
-            permissionsViewProps={file.canViewPermissions?file.canViewPermissions.split(','):[]}
-            permissionsDownloadProps={file.canDownloadPermissions?file.canDownloadPermissions.split(','):[]}
-            permissionsDeleteProps={file.canDeletePermissions?file.canDeletePermissions.split(','):[]}
+            isJustMeViewProps={file.admin_view_only}
+            isJustMeDownloadProps={file.admin_download_only}
+            isJustMeDeleteProps={file.admin_delete_only}
+            usersViewProps={file.can_view_users?file.can_view_users.split(','):[]}
+            usersDownloadProps={file.can_download_users?file.can_download_users.split(','):[]}
+            usersDeleteProps={file.can_delete_users?file.can_delete_users.split(','):[]}
+            permissionsViewProps={file.can_view_permissions?file.can_view_permissions.split(','):[]}
+            permissionsDownloadProps={file.can_download_users?file.can_download_users.split(','):[]}
+            permissionsDeleteProps={file.can_delete_users?file.can_delete_users.split(','):[]}
         />
       </Card>
     )

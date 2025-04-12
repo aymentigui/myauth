@@ -47,22 +47,22 @@ export async function uploadFileDB(
         const fileCreated = await prisma.files.create({
             data: {
                 name: filename,
-                mimeType: file.type,
+                mime_type: file.type,
                 size: file.size,
                 extention: getFileExtension(file.name),
                 path: fileUploaded.data.path,
-                addedFrom: userId,
-                canViewUsers: canViewUsers ? canViewUsers.join(",")  : null,
-                canDownloadUsers: canDownloadUsers ? canDownloadUsers.join(",") : null,
-                canDeleteUsers: canDeleteUsers ? canDeleteUsers.join(",") : null,
+                added_from: userId,
+                can_view_users: canViewUsers ? canViewUsers.join(",")  : null,
+                can_download_users: canDownloadUsers ? canDownloadUsers.join(",") : null,
+                can_delete_users: canDeleteUsers ? canDeleteUsers.join(",") : null,
 
-                adminDeleteOnly: adminDeleteOnly??false,
-                adminDownloadOnly:adminDownloadOnly??false,
-                adminViewOnly: adminViewOnly??false,
+                admin_delete_only: adminDeleteOnly??false,
+                admin_download_only:adminDownloadOnly??false,
+                admin_view_only: adminViewOnly??false,
 
-                canDeletePermissions: canDeletePermissions ? canDeletePermissions.join(",") : null,
-                canDownloadPermissions: canDownloadPermissions ? canDownloadPermissions.join(",") : null,
-                canViewPermissions: canViewPermissions ? canViewPermissions.join(",") : null,
+                can_delete_permissions: canDeletePermissions ? canDeletePermissions.join(",") : null,
+                can_download_permissions: canDownloadPermissions ? canDownloadPermissions.join(",") : null,
+                can_view_permissions: canViewPermissions ? canViewPermissions.join(",") : null,
             },
         })
 

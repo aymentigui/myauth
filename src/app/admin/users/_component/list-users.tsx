@@ -7,14 +7,26 @@ import { useOrigin } from "@/hooks/use-origin";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import SelectFetch from "@/components/myui/select-fetch";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useImportSheetsStore } from "@/hooks/use-import-csv";
+import { getColumns } from "@/actions/util/sheet-columns/user";
+import { createUsers } from "@/actions/users/set";
+import toast from "react-hot-toast";
+import { useSession } from "@/hooks/use-session";
+import { deleteUsers } from "@/actions/users/delete";
+import ConfirmDialogDelete from "@/components/myui/shadcn-dialog-confirm";
 
 export default function UsersAdminPage() {
-  const r = useTranslations("Users")
+  const translate = useTranslations("Users")
 
-  const locale = useLocale()
   const translateSystem = useTranslations("System");
+  const translateErrors = useTranslations("Error")
+
   const origin = useOrigin()
+  const { session } = useSession()
   const searchParams = useSearchParams();
+  const { data: sheetData, setColumns, setData: setSheetData } = useImportSheetsStore();
 
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false);
@@ -24,25 +36,55 @@ export default function UsersAdminPage() {
   const [count, setCount] = useState(0);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(""); // Etat pour la recherche avec debounce
 
+  const [open, setOpen] = useState(false); // for confirm delete
+
+  const [userSheetNotCreated, setUserSheetNotCreated] = useState<any>([])
+  const [userSheetCreated, setUserSheetCreated] = useState(false)
 
   const [data, setData] = useState<any[]>([]);
+  const columnsSheet = getColumns()
 
   useEffect(() => {
     setMounted(true);
+    setColumns(columnsSheet);
   }, []);
 
+  // pour la creation depuis les sheet
   useEffect(() => {
-    fetchProducts();
+    if (sheetData && sheetData.length > 0) {
+      createUsers(sheetData).then((res) => {
+        if (res.status === 200) {
+          if (res.data.users) {
+            res.data.users.forEach((user) => {
+              if (user.status !== 200) {
+                setUserSheetNotCreated((prev: any) => [...prev, user.data])
+              } else {
+                setUserSheetCreated(true)
+              }
+            })
+          }
+        } else {
+          toast.error(res.data.message);
+        }
+      }).catch((error) => {
+        toast.error(translateSystem("errorcreate"));
+      }).finally(() => {
+        setSheetData([]); // Mettre à jour le tableau avec les données créées
+      });
+    }
+  }, [sheetData]);
+
+  useEffect(() => {
+    fetchUsers();
   }, [page, debouncedSearchQuery, mounted, pageSize]); // Ajouter debouncedSearchQuery comme dépendance
 
 
-  const fetchProducts = async () => {
+  const fetchUsers = async () => {
     setData([]);
     try {
       if (!origin) return
       setIsLoading(true);
       const response = await axios(origin + "/api/admin/users", { params: { page, pageSize, search: debouncedSearchQuery } });
-      console.log(response)
       if (response.status === 200) {
         setData(response.data);
       }
@@ -69,21 +111,61 @@ export default function UsersAdminPage() {
 
   return (
     <div className="py-10">
-      <h1 className="text-2xl font-bold mb-4">{r("title")}</h1>
-      <div className='w-48 mb-2'>
-        <SelectFetch
-          value={pageSize.toString()}
-          onChange={(val) => setPageSize(Number(val))}
-          label={translateSystem("pagesize")}
-          placeholder={translateSystem("pagesizeplaceholder")}
-          options={[
-            { value: "1", label: "1" },
-            { value: "10", label: "10" },
-            { value: "20", label: "20" },
-            { value: "50", label: "50" },
-            { value: "100", label: "100" },
-          ]}
-        />
+      <h1 className="text-2xl font-bold mb-4">{translate("title")}</h1>
+      {userSheetCreated && (
+        <div className="bg-blue-500 text-white p-4 mb-4 rounded">
+          {translateSystem("userSheetCreated")}
+        </div>
+      )}
+      {userSheetNotCreated && userSheetNotCreated.length > 0 && (
+        <div className="max-h-48 overflow-auto">
+          {userSheetNotCreated.map((data: any, index: any) => (
+            <div key={index} className="mt-4 p-4 bg-red-200 text-red-700 rounded">
+              <h2 className="font-bold">{translateErrors("errors")}</h2>
+              <ul className="list-disc pl-5">
+                <li>
+                  {
+                    (data.message ? data.message + " : " : "") + " " + (data.user.firstname ?? "") + " " + (data.user.lastname ?? "") + " " + (data.user.username ?? "") + " " + (data.user.email ?? "") + " " + (data.user.password ?? "")
+                  }
+                </li>
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex gap-2 justify-between items-center">
+        <div className="flex gap-2">
+          <Link href="/admin/sheetimport">
+            <Button>{translateSystem('import')}</Button>
+          </Link>
+          {(session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.is_admin 
+            &&
+            <ConfirmDialogDelete
+              open={open}
+              setOpen={setOpen}
+              selectedIds={selectedIds}
+              textToastSelect={translate("selectusers")}
+              triggerText={translate("deleteusers")}
+              titleText={translate("confermationdelete")}
+              descriptionText={translate("confermationdeletemessage")}
+              deleteAction= {deleteUsers}
+            />
+          }
+        </div>
+        <div className='w-48 mb-2'>
+          <SelectFetch
+            value={pageSize.toString()}
+            onChange={(val) => setPageSize(Number(val))}
+            label={translateSystem("pagesize")}
+            placeholder={translateSystem("pagesizeplaceholder")}
+            options={[
+              { value: "10", label: "10" },
+              { value: "20", label: "20" },
+              { value: "50", label: "50" },
+              { value: "100", label: "100" },
+            ]}
+          />
+        </div>
       </div>
       <DataTable
         data={data}

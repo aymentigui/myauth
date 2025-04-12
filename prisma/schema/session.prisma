@@ -1,13 +1,13 @@
 model session {
   id           String   @id @default(cuid())
-  sessionToken String
-  userId       String
+  session_token String
+  user_id       String
   expires      DateTime
-  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deviceName   String?
-  deviceType   String?
+  user         user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  device_name   String?
+  device_type   String?
   browser      String?
   os           String?
   active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
+  created_at    DateTime @default(now())
 }

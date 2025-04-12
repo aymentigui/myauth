@@ -59,6 +59,7 @@
         "audio" : "Audio",
         "other" : "Other",
 
+        "userSheetCreated": "Please refresh the page to see the new data.",
 
         "confermationdelete": "Are you absolutely sure?",
         "confermationdeletemessage": "This action cannot be undone. This will permanently delete your data and remove your data from our servers."
@@ -73,6 +74,8 @@
         "testimportsheet": "Import data from sheet",
         "pdfutil": "PDF Utility",
         "fileslocalstorage": "Files local storage",
+        "files": "Files",
+        "files_upload": "Upload files",
         "blog": "Blog",
         "logout": "Logout",
         "footer": "© 2025 All rights reserved"
@@ -90,7 +93,8 @@
         "codeexpired": "Code expired",
         "invalidtoken": "Invalid token",
         "tokenexpired": "Token expired",
-        "badrequest": "Bad request"
+        "badrequest": "Bad request",
+        "errorscreating": "Error creating"
     },
     "Settings": {
         "title": "Settings",
@@ -176,7 +180,12 @@
         "selectrole": "Please select a role",
         "avatarinvalid": "Avatar is invalid",
         "imagerequired": "Image is required",
-        "onlyimagesallowed": "Only images are allowed"
+        "onlyimagesallowed": "Only images are allowed",
+
+        "selectusers": "Select users",
+        "deleteusers": "Delete users",
+        "confermationdelete" : "Are you absolutely sure?",
+        "confermationdeletemessage" : "This action cannot be undone. This will permanently delete your users and remove your data from our servers."
     },
     "Permissions": {
         "title": "Permissions",
@@ -189,12 +198,16 @@
         "roles_create": "Roles Create",
         "roles_update": "Roles Update",
         "roles_delete": "Roles Delete",
+        "files_view": "Files View",
+        "files_create": "Files Create",
+        "files_update": "Files Update",
+        "files_delete": "Files Delete",
         "blogs_view": "Blogs View",
         "blogs_create": "Blogs Create",
         "blogs_update": "Blogs Update",
         "blogs_delete": "Blogs Delete"
     },
-    "Files": {
+   "Files": {
         "title": "Files",
         "uploadfile": "Upload File",
         "deletefile": "Delete File",
@@ -215,7 +228,19 @@
         "drop1": "Drop file here...",
         "selectoneormorefiles": "Select one or more files to upload.",
         "selectonefile": "Select one file to upload.",
-        "selectfilesheet": "Select file sheet"
+        "selectfilesheet": "Select file sheet",
+
+        "filespermission": "Files Permission",
+        "public": "Public",
+        "allusers": "All Users",
+        "viewpermissions" : "Who can view files",
+        "downloadpermissions" : "Who can download files",
+        "deletepermissions" : "Who can delete files",
+        "havepermission": "Who have permission",
+        "users": "Users",
+        "justme": "Just me",
+
+        "confermationdeletemessage": "This action cannot be undone. This will permanently delete your file and remove your data from our servers."
     },
     "Blogs":{
         "title": "Blogs",
@@ -231,5 +256,55 @@
     },
     "TextEditor":{
         "placeholder": "Write something..."
+    },
+    "sheet":{
+        "title": "Sheet",
+        "addsheet": "Add Sheet",
+        "updatesheet": "Update Sheet",
+        "deletesheet": "Delete Sheet",
+        "titlerequired": "Please enter a title",
+        "contentrequired": "Please enter a content",
+        "statusrequired": "Please choose a status",
+        "publish": "Publish",
+        "draft": "Draft",
+        "sheetnotfound": "Sheet not found",
+
+        "required": "This field is required",
+        "invalidemail": "This field must be an email",
+        "invalidphone": "This field must be a phone number",
+        "invalidurl": "This field must be a URL",
+        "invaliddate": "This field must be a date",
+        "invalidnumber": "This field must be a number",
+        "invalidtime": "This field must be a time",
+        "invalidpassword": "This field must be a text at least 8 characters",
+        "invalidtext": "This field must be a text",
+        "invalidfile": "This field must be a file",
+        "invalidimage": "This field must be an image",
+        "invalidjson": "This field must be a JSON",
+        "invalidcsv": "This field must be a CSV",
+        "invalidxlsx": "This field must be an XLSX",
+        "invalidpdf": "This field must be a PDF",
+        "invalidhtml": "This field must be an HTML",
+        "invalidhtml5": "This field must be an HTML5",
+
+        "number": "Number",
+        "date": "Date",
+        "time": "Time",
+        "password": "Password",
+        "text": "Text",
+        "select": "Select",
+        "checkbox": "Checkbox",
+        "radio": "Radio",
+        "file": "File",
+        "image": "Image",
+        "json": "JSON",
+        "csv": "CSV",
+        "xlsx": "XLSX",
+        "pdf": "PDF",
+        "html": "HTML",
+        "html5": "HTML5",
+        "email": "Email",
+        "phone": "Phone number",
+        "url": "URL"
     }
 }

@@ -48,8 +48,8 @@ const actionsCell = (row: any) => {
   const role = row.original;
   const router = useRouter();
   const { session } = useSession()
-  const hasPermissionDeleteRoles = (session?.user?.permissions.find((permission: string) => permission === "roles_delete") ?? false) || session?.user?.isAdmin;
-  const hasPermissionUpdateRoles = (session?.user?.permissions.find((permission: string) => permission === "roles_update") ?? false) || session?.user?.isAdmin;
+  const hasPermissionDeleteRoles = (session?.user?.permissions.find((permission: string) => permission === "roles_delete") ?? false) || session?.user?.is_admin;
+  const hasPermissionUpdateRoles = (session?.user?.permissions.find((permission: string) => permission === "roles_update") ?? false) || session?.user?.is_admin;
   
   const origin = useOrigin();
 

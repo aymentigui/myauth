@@ -100,8 +100,8 @@ export async function createResetPasswordConfermation(id: string) : Promise<{ st
         }
         const verificationToken=await prisma.resetpasswordconfermation.create({
             data : {
-                userId: id,
-                expiredAt: new Date(new Date().getTime() + 1000 * 60 * 5)
+                user_id: id,
+                expired_at: new Date(new Date().getTime() + 1000 * 60 * 5)
             }
         })
         return { status: 200, data: verificationToken };
@@ -116,7 +116,7 @@ export async function getResetPasswordConfermation(id: string) : Promise<{ statu
     try {
         const verificationToken=await prisma.resetpasswordconfermation.findFirst({
             where : {
-                userId: id
+                user_id: id
             }
         })
         if(!verificationToken){
@@ -134,7 +134,7 @@ export async function deleteResetPasswordConfermation(id: string) : Promise<{ st
     try {
         const verificationToken=await prisma.resetpasswordconfermation.deleteMany({
             where : {
-                userId: id
+                user_id: id
             }
         })
         return { status: 200, data: verificationToken };

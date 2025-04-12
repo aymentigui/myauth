@@ -34,7 +34,7 @@ export default async function SettingsForm({ user }: SettingsFormProps) {
             <Separator />
             {user.username && <UsernameForm username={user.username} />}
             <Separator />
-            <TwoFactorConfermationForm twoFactorConfermation={user.isTwoFactorEnabled ?? false} />
+            <TwoFactorConfermationForm twoFactorConfermation={user.is_two_factor_enabled ?? false} />
             <Separator />
             <ResetPasswordForm />
             <Separator />

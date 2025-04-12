@@ -55,7 +55,7 @@ export const AddUpdateUserDialog = () => {
     username: z.string().min(1, u("usernamerequired")),
     email: z.string().email(u("emailinvalid")),
     password: z.string().optional(),
-    isAdmin: z.boolean().default(false),
+    is_admin: z.boolean().default(false),
     roles: z.array(z.string()).optional(),
     image: z
       .instanceof(File, { message: u("avatarinvalid") })
@@ -84,12 +84,12 @@ export const AddUpdateUserDialog = () => {
       username: "",
       email: "",
       password: "",
-      isAdmin: false,
+      is_admin: false,
       roles: [],
     },
   });
 
-  const isAdmin = form.watch("isAdmin");
+  const is_admin = form.watch("is_admin");
 
   useEffect(() => {
     if (user) {
@@ -97,7 +97,7 @@ export const AddUpdateUserDialog = () => {
       form.setValue("lastname", user.lastname ?? "");
       form.setValue("username", user.username ?? "");
       form.setValue("email", user.email ?? "");
-      form.setValue("isAdmin", user.isAdmin ?? false);
+      form.setValue("is_admin", user.is_admin ?? false);
       form.setValue("roles", roles.filter((role) => user.roles.includes(role.name)).map((role) => role.id));
       setImage(user.image ?? null);
     }
@@ -122,7 +122,7 @@ export const AddUpdateUserDialog = () => {
     formData.append("username", data.username);
     formData.append("password", data.password ?? "");
     formData.append("email", data.email);
-    formData.append("isAdmin", String(data.isAdmin));
+    formData.append("is_admin", String(data.is_admin));
     formData.append("roles", JSON.stringify(data.roles));
 
     if (isAdd) {
@@ -161,7 +161,7 @@ export const AddUpdateUserDialog = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[70%] max-w-[70%] h-[80%] overflow-y-auto">
+      <DialogContent className="w-[70%] max-w-[70%] gb-r h-[80%] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">{isAdd ? u("adduser") : u("updateuser")}</DialogTitle>
         </DialogHeader>
@@ -265,7 +265,7 @@ export const AddUpdateUserDialog = () => {
             {/* Is Admin */}
             <FormField
               control={form.control}
-              name="isAdmin"
+              name="is_admin"
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2 my-4">
                   <FormControl>
@@ -281,7 +281,7 @@ export const AddUpdateUserDialog = () => {
             />
 
             {/* Roles (Multi-Select) */}
-            {!isAdmin && (
+            {!is_admin && (
               <FormField
                 control={form.control}
                 name="roles"

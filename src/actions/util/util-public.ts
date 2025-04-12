@@ -70,7 +70,7 @@ export function hasPermissionDeleteFile(file: any,session:any) {
     if (!session && (canDeleteUsers.length > 0 || canDeletePermissions.length > 0)) {
         havePermission = false
     }
-    if (session && session.user && !session.user.isAdmin) {
+    if (session && session.user && !session.user.is_admin) {
         havePermission = canDeletePermissions.length === 0 || canDeletePermissions.some((p: any) => session.user.permissions.includes(p)) || canDeleteUsers.includes(session.user.id)
     }
     if(session && session.user && file.addedFrom===session.user.id)
@@ -86,7 +86,7 @@ export function hasPermissionDownloadFile(file: any,session:any) {
     if (!session && (canDownloadPermissions.length > 0 || canDownloadUsers.length > 0)) {
         havePermission = false
     }
-    if (session && session.user && !session.user.isAdmin) {
+    if (session && session.user && !session.user.is_admin) {
         havePermission = canDownloadPermissions.length === 0 || canDownloadPermissions.some((p: any) => session.user.permissions.includes(p)) || canDownloadUsers.includes(session.user.id)
     }
     if(session && session.user && file.addedFrom===session.user.id)

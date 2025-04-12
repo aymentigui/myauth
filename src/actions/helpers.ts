@@ -37,9 +37,9 @@ export async function findExistingSession(userId: string, deviceName: string, de
     try {
         const existingSession = await prisma.session.findFirst({
             where: {
-                userId: userId || 'Unknown',
-                deviceName: deviceName || 'Unknown',
-                deviceType: deviceType,
+                user_id: userId || 'Unknown',
+                device_name: deviceName || 'Unknown',
+                device_type: deviceType,
                 browser: browser,
                 os: os,
                 OR: [
@@ -67,11 +67,11 @@ export async function createNewSession(userId: string, sessionToken: string, dev
     try {
         const newSession = await prisma.session.create({
             data: {
-                sessionToken: sessionToken,
-                userId: userId || 'Unknown',
+                session_token: sessionToken,
+                user_id: userId || 'Unknown',
                 expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 
-                deviceName: deviceName || 'Unknown',
-                deviceType: deviceType,
+                device_name: deviceName || 'Unknown',
+                device_type: deviceType,
                 browser: browser,
                 os: os,
                 active: true

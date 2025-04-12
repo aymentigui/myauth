@@ -21,7 +21,7 @@ export async function createUser(data: any) {
         username: z.string().min(1, u("usernamerequired")),
         email: z.string().email(u("emailinvalid")),
         password: z.string().min(6, u("password6")),
-        isAdmin: z.boolean().default(false),
+        is_admin: z.boolean().default(false),
         roles: z.array(z.string()).optional(),
         image: z.instanceof(File, { message: u("avatarinvalid") }).optional().refine((file) => !file || file.type.startsWith("image/"), {
             message: u("avatarinvalid")
@@ -43,7 +43,7 @@ export async function createUser(data: any) {
             console.log(result.error.errors);
             return { status: 400, data: { errors: result.error.errors } };
         }
-        const { firstname, lastname, username, email, password, isAdmin, roles, image } = result.data;
+        const { firstname, lastname, username, email, password, is_admin, roles, image } = result.data;
 
         const usernameExists = await prisma.user.findUnique({ where: { username } });
         if (usernameExists) {
@@ -64,16 +64,16 @@ export async function createUser(data: any) {
                 username,
                 email,
                 password: hashedPassword,
-                isAdmin: (isAdmin && session.data.user.isAdmin) ? true : false,
+                is_admin: (is_admin && session.data.user.is_admin) ? true : false,
             },
         });
 
-        if (!isAdmin) {
+        if (!is_admin) {
             const rolesFound = await prisma.role.findMany({ where: { id: { in: roles } } });
             await prisma.userrole.createMany({
                 data: rolesFound.map((role: any) => ({
-                    userId: user.id,
-                    roleId: role.id,
+                    user_id: user.id,
+                    role_id: role.id,
                 })),
             })
         }

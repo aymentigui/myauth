@@ -1,25 +1,25 @@
 model files {
-    id        String    @id @default(cuid())
-    name      String
-    mimeType  String
-    extention String
-    size      Int
-    path      String
-    createdAt DateTime  @default(now())
-    deletedAt DateTime?
-    addedFrom String?
+    id         String    @id @default(cuid())
+    name       String
+    mime_type  String
+    extention  String
+    size       Int
+    path       String
+    created_at DateTime  @default(now())
+    deleted_at DateTime?
+    added_from String?
 
-    canViewPermissions     String?
-    canDownloadPermissions String?
-    canDeletePermissions   String?
+    can_view_permissions     String?
+    can_download_permissions String?
+    can_delete_permissions   String?
 
     // Définition des permissions spécifiques aux utilisateurs
-    canViewUsers     String?
-    canDownloadUsers String?
-    canDeleteUsers   String?
+    can_view_users     String?
+    can_download_users String?
+    can_delete_users   String?
 
     // Indicateur si seul l'admin a le contrôle total
-    adminViewOnly Boolean @default(false)
-    adminDownloadOnly Boolean @default(false)
-    adminDeleteOnly Boolean @default(false)
+    admin_view_only     Boolean @default(false)
+    admin_download_only Boolean @default(false)
+    admin_delete_only   Boolean @default(false)
 }

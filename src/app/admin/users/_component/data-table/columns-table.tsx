@@ -22,7 +22,7 @@ export type Columns = {
   image: string;
   imageCompressed: string;
   roles: string[];
-  isAdmin: boolean;
+  is_admin: boolean;
 };
 
 const fitstnameHeader = (column: any) => {
@@ -98,17 +98,17 @@ const rolesHeader = (column: any) => {
 const rolesCell = (row: any) => {
   const u = useTranslations("Users");
   const roles = row.getValue("roles") as string[];
-  const isAdmin = row.original.isAdmin as boolean;
+  const is_admin = row.original.is_admin as boolean;
 
   return (
     <div className="w-4/6">
-      {isAdmin ? u("isadmin") : roles.join(", ") || "No roles"}
+      {is_admin ? u("isadmin") : roles.join(", ") || "No roles"}
     </div>
   );
 };
 
 const imageCell = (row: any) => {
-  const preview = row.getValue("imageCompressed")
+  const preview = row.getValue("image_compressed")
   return preview ? (
     <LzyImage
       src={GetImage(preview)}
@@ -126,8 +126,8 @@ const actionsCell = (row: any) => {
   const origin= useOrigin()
   const { openDialog } = useAddUpdateUserDialog();
   const { session } = useSession()
-  const hasPermissionDeleteUsers = (session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.isAdmin;
-  const hasPermissionUpdateUsers = (session?.user?.permissions.find((permission: string) => permission === "users_update") ?? false) || session?.user?.isAdmin;
+  const hasPermissionDeleteUsers = (session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.is_admin;
+  const hasPermissionUpdateUsers = (session?.user?.permissions.find((permission: string) => permission === "users_update") ?? false) || session?.user?.is_admin;
   
   const handleOpenDialogWithTitle = () => {
     openDialog(false, row.original)
@@ -173,7 +173,7 @@ export const columns: ColumnDef<Columns>[] = [
     },
   },
   {
-    accessorKey: "imageCompressed",
+    accessorKey: "image_compressed",
     header: "image",
     cell: ({ row }) => ( imageCell(row) ),
     enableSorting: true,

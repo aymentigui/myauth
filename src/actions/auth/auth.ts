@@ -120,7 +120,7 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
             return { status: 400, data: { message: 'Invalid password' } };
         }
 
-        if (user.isTwoFactorEnabled && user.email) {
+        if (user.is_two_factor_enabled && user.email) {
             if (!code) {
                 const token = await generateVerificationToken(user.email);
                 sendEmail(user.email, 'Confirmation code', 'Your confirmation code is ' + token.data.token);
@@ -167,8 +167,10 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
 export async function logoutUser() {
     try {
         const session = await verifySession();
-        if (session.status !== 200)
-            return { status: 401, data: { message: 'Unauthorized' } };
+        if (session.status !== 200) {
+            await signOut({ redirect: false });
+            return { status: 200, data: { message: 'Logout successful' } };
+        }
 
         if (session.data && session.data.session && session.data.session.id)
             await prisma.session.update({
@@ -180,7 +182,6 @@ export async function logoutUser() {
                 }
             })
         await signOut({ redirect: false });
-        console.log('Logout successful');
         return { status: 200, data: { message: 'Logout successful' } };
     } catch (error) { // @ts-ignore
         console.log("An error occurred in logout", error.message);

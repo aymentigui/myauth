@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const hasPermissionAction=(session?.user?.permissions.find((permission: string) => permission === "roles_update" || permission === "roles_delete") ?? false) ||  session?.user?.isAdmin;
+  const hasPermissionAction=(session?.user?.permissions.find((permission: string) => permission === "roles_update" || permission === "roles_delete") ?? false) ||  session?.user?.is_admin;
 
 
   return (

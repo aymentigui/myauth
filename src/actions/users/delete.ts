@@ -29,7 +29,7 @@ export async function deleteUsers(ids: string[]): Promise<{ status: number, data
 
         users.map(async (user) => {
             user.image && await deleteFileDb(user.image)
-            user.imageCompressed && await deleteFileDb(user.imageCompressed)
+            user.image_compressed && await deleteFileDb(user.image_compressed)
         })
 
         await prisma.user.deleteMany({

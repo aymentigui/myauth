@@ -30,14 +30,14 @@ export async function POST(request: NextRequest) {
     const username = data.get("username") as string;
     const email = data.get("email") as string;
     const password = data.get("password") as string;
-    const isAdmin = data.get("isAdmin") === "true";
+    const is_admin = data.get("is_admin") === "true";
     const roles = JSON.parse(data.get("roles") as string);
 
     if (!image) 
         image = new File([], "default.png", { type: "image/png" });
 
 
-    const res = await createUser({ image, firstname, lastname, username, email, password, isAdmin, roles });
+    const res = await createUser({ image, firstname, lastname, username, email, password, is_admin, roles });
 
     return NextResponse.json(res);
 }

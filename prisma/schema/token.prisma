@@ -2,23 +2,23 @@ model verificationtoken {
   id        String   @id @default(cuid())
   email     String
   token     String
-  expiredAt DateTime
+  expired_at DateTime
 }
 
 model twofactorconfermation {
   id        String   @id @default(cuid())
-  userId    String
-  expiredAt DateTime
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user_id    String
+  expired_at DateTime
+  user      user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@unique([userId])
+  @@unique([user_id])
 }
 
 model resetpasswordconfermation {
   id        String   @id @default(cuid())
-  userId    String
-  expiredAt DateTime
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user_id    String
+  expired_at DateTime
+  user      user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@unique([userId])
+  @@unique([user_id])
 }

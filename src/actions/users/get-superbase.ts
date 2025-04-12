@@ -42,7 +42,7 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
                 username: true,
                 email: true,
                 image: true,
-                isAdmin: true,
+                is_admin: true,
                 roles: {
                     select: {
                         role: {

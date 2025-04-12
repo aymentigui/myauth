@@ -28,7 +28,7 @@ const SelectFetch = ({
             </SelectTrigger>
             <SelectContent>
                 {options.map((options) => (<SelectItem key={options.value} value={options.value}>{options.label}</SelectItem>))}
-                <SelectItem value="all">{translate("all")}</SelectItem>
+                <SelectItem value="0">{translate("all")}</SelectItem>
             </SelectContent>
         </Select>
     )

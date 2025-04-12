@@ -1,5 +1,5 @@
 "use server"
-import { CircleEllipsis, Download, FileSpreadsheet, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
+import { CircleEllipsis, Download, File, FileSpreadsheet, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getUserPermissions, verifySession} from "./permissions";
 
@@ -104,8 +104,8 @@ export async function getMenuItems() {
 
     const session = await verifySession();
     if(!session || !session.data || !session.data.user) return []
-
-    if(session.data.user.isAdmin) return items
+    
+    if(session.data.user.is_admin) return items
         
     const permissions = await getUserPermissions(session.data.user.id)
     if(!permissions || permissions.status !== 200 || !permissions.data) return []

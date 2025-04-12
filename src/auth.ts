@@ -27,7 +27,7 @@ export const { handlers, auth, signIn, signOut } =
           token.id = user.id
           // @ts-ignore
           token.username = user.username; token.firstname = user.firstname; token.lastname = user.lastname;          // @ts-ignore
-          token.isAdmin = user.isAdmin
+          token.is_admin = user.is_admin
           try {
             // @ts-ignore
             const userAgent = user.userAgent || "Unknown";
@@ -64,13 +64,13 @@ export const { handlers, auth, signIn, signOut } =
         // @ts-ignore
         session.user.lastname = token.lastname
         // @ts-ignore
-        session.user.isAdmin = token.isAdmin
+        session.user.is_admin = token.is_admin
         // @ts-ignore
         session.session = token.session
 
         if (token?.id) {
           const roles = await prisma.userrole.findMany({
-            where: { userId: token.id },
+            where: { user_id: token.id },
             include: { role: true },
           });
           // @ts-ignore

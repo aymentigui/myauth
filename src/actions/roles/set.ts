@@ -19,7 +19,7 @@ export async function AddRole(name: string, permission: string) {
         
         await prisma.role.create({
             data: {
-                name: name,
+                name: name.toLowerCase().trim(),
                 permissions: permission,
             },
         })

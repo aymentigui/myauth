@@ -24,6 +24,7 @@ import { columns } from "./columns-table";
 import SearchTable from "@/components/myui/table/search-table";
 import BackPagination from "@/components/myui/table/back-pagination";
 import NextPagination from "@/components/myui/table/next-pagination";
+import TablePagination from "@/components/myui/table/table-pagination";
 
 interface DataTableProps {
     data: Columns[];
@@ -59,8 +60,12 @@ export function DataTable({
     const [selectedLanguage, setSelectedLanguage] = useState("");
     const [selectedData, setSelectedData] = useState<string[]>([]);
     const { session } = useSession()
+
+    //-------------------------------------------------------------
+    // modifier 
+    // --------------------------------------------------------------
     const hasPermissionAction = (session?.user?.permissions.find((permission: string) => permission === "users_update" || permission === "users_delete") ?? false) ||
-        session?.user?.isAdmin;
+        session?.user?.is_admin;
 
     const s = useTranslations('System')
     useEffect(() => {
@@ -68,6 +73,9 @@ export function DataTable({
     }, [])
 
 
+    //-------------------------------------------------------------
+    // don't touch it
+    //-------------------------------------------------------------
     const table = useReactTable({
         data: data,
         columns, // Utilisez les colonnes importées
@@ -75,7 +83,7 @@ export function DataTable({
         state: {
             rowSelection: selectedIds
                 ? selectedIds.reduce((acc, id) => {
-                    const index = data.findIndex((product) => product.id === id);
+                    const index = data.findIndex((element) => element.id === id);
                     if (index === -1) {
                         return acc;
                     }
@@ -95,11 +103,13 @@ export function DataTable({
             const selectedIndexes = Object.keys(newRowSelection).filter(
                 (name) => newRowSelection[name]
             );
-            const selectedProductsIds2 = selectedIndexes.map((id) => table.getRowModel().rows.find((row) => row.id === id)?.original.id || '')
-            setSelectedIds(selectedProductsIds2)
+            const selectedIds2 = selectedIndexes.map((id) => table.getRowModel().rows.find((row) => row.id === id)?.original.id || '')
+            setSelectedIds(selectedIds2)
             setSelectedData(selectedIndexes);
         },
     });
+    //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
 
     return (
@@ -158,10 +168,9 @@ export function DataTable({
                     </div>
             }
             {/* Pagination */}
-            {!isLoading && showPagination && <div className="flex items-center justify-end space-x-2 py-4">
-                <BackPagination page={page} setPage={setPage} searchQuery={debouncedSearchQuery} isLoading={isLoading} />
-                <NextPagination page={page} setPage={setPage} count={count} pageSize={pageSize} isLoading={isLoading} searchQuery={debouncedSearchQuery} />
-            </div>}
+            {!isLoading && showPagination &&
+                <TablePagination page={page} setPage={setPage} count={count} pageSize={pageSize} isLoading={isLoading} debouncedSearchQuery={debouncedSearchQuery} />
+            }
         </div>
     );
 }

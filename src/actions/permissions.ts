@@ -40,7 +40,7 @@ export async function verifySession(): Promise<{ status: number, data: any }> {
             where: {
                 // @ts-ignore
                 id: session.session.id,
-                userId: session.user.id,
+                user_id: session.user.id,
                 // @ts-ignore
                 browser: session.session.browser,
                 // @ts-ignore
@@ -111,7 +111,7 @@ export async function getUserPermissions(id: string): Promise<{ status: number, 
     const e = await getTranslations('Error');
     try {
         const userPermissions = await prisma.userrole.findMany({
-            where: { userId: id },
+            where: { user_id: id },
             include: { role: true },
         })
 
@@ -129,7 +129,7 @@ export async function getUserRolesNames(id: string): Promise<{ status: number, d
     const e = await getTranslations('Error');
     try {
         const userRoles = await prisma.userrole.findMany({
-            where: { userId: id },
+            where: { user_id: id },
             include: { role: true },
         });
 
@@ -146,10 +146,10 @@ export async function getUserRolesId(id: string): Promise<{ status: number, data
     const e = await getTranslations('Error');
     try {
         const userRoles = await prisma.userrole.findMany({
-            where: { userId: id }
+            where: { user_id: id }
         });
 
-        const roles = userRoles.flatMap((role) => role.roleId);
+        const roles = userRoles.flatMap((role) => role.role_id);
 
         return { status: 200, data: roles };
     } catch (error) {
@@ -174,9 +174,9 @@ export async function withAuthorizationPermission(
             userId = session.data.user.id as string;
         }
 
-        const isAdmin = await ISADMIN(userId);
+        const is_admin = await ISADMIN(userId);
 
-        if (isAdmin.status === 200 && isAdmin.data.isAdmin) {
+        if (is_admin.status === 200 && is_admin.data.is_admin) {
             return { status: 200, data: { hasPermission: true } };
         }
 
@@ -239,8 +239,8 @@ export async function ISADMIN(id?: string): Promise<{ status: number, data: any 
             }
             userId = session.data.user.id as string;
         }
-        const isAdmin = await prisma.user.findUnique({ where: { id: userId} });
-        return { status: 200, data: { isAdmin: isAdmin?.isAdmin?true:false } };
+        const is_admin = await prisma.user.findUnique({ where: { id: userId} });
+        return { status: 200, data: { is_admin: is_admin?.is_admin?true:false } };
     } catch (error) {
         console.error("An error occurred in ISADMIN");
         return { status: 500, data: { message: e("error") } };

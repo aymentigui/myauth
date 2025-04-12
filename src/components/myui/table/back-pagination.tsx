@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import React from 'react';
 
-const BackPagination = ({ page, setPage, searchQuery, isLoading }: any) => {
+const BackPagination = ({ page, setPage, searchQuery, isLoading, pageSize }: any) => {
     const router = useRouter();
     const pathname = usePathname(); // Utilisation de usePathname pour obtenir le chemin actuel
     const searchParams = useSearchParams(); // Utilisation de useSearchParams pour accéder aux paramètres de recherche
@@ -29,6 +30,10 @@ const BackPagination = ({ page, setPage, searchQuery, isLoading }: any) => {
         <Button
             variant="outline"
             size="sm"
+            className={cn(
+                pageSize === 0 ? "hidden" : "block",
+                page === 1 ? "cursor-not-allowed" : ""
+            )}
             onClick={handleBackPage}
             disabled={page === 1 || isLoading}
         >

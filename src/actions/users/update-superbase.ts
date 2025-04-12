@@ -30,7 +30,7 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             username: z.string().min(1, u("usernamerequired")),
             email: z.string().email(u("emailinvalid")),
             password: z.string().optional(),
-            isAdmin: z.boolean().default(false),
+            is_admin: z.boolean().default(false),
             roles: z.array(z.string()).optional(),
             image: z.instanceof(File, { message: u("avatarinvalid") }).optional().refine((file) => !file || file.type.startsWith("image/"), {
                 message: u("avatarinvalid")
@@ -54,7 +54,7 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             return { status: 400, data: { errors: result.error.errors } };
         }
 
-        const { firstname, lastname, username, email, password, isAdmin, roles, image } = result.data;
+        const { firstname, lastname, username, email, password, is_admin, roles, image } = result.data;
 
         const emailExists = await prisma.user.findUnique({ where: { email } });
         if (emailExists && emailExists.id !== id) {
@@ -73,7 +73,7 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
                 lastname,
                 username,
                 email,
-                isAdmin: (isAdmin && session.data.user.isAdmin) ? true : false,
+                is_admin: (is_admin && session.data.user.is_admin) ? true : false,
             },
         })
 
@@ -87,13 +87,13 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
             })
         }
 
-        await prisma.userrole.deleteMany({ where: { userId: id } })
-        if (isAdmin) {
+        await prisma.userrole.deleteMany({ where: { user_id: id } })
+        if (is_admin) {
             if (roles && roles.length > 0) {
                 await prisma.userrole.createMany({
                     data: roles.map((role: string) => ({
-                        userId: id,
-                        roleId: role,
+                        user_id: id,
+                        role_id: role,
                     })),
                 })
             }

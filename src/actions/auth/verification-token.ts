@@ -29,7 +29,7 @@ export async function getVerificationTokenByToken(token:string) : Promise<{ stat
             {
                 where : {
                     token,
-                    expiredAt: {
+                    expired_at: {
                         gt: new Date()
                     }
                 }
@@ -81,7 +81,7 @@ export async function generateVerificationToken(email: string) : Promise<{ statu
             data : {
                 email:email,
                 token:token,
-                expiredAt:expiredAt
+                expired_at:expiredAt
             }
         })
         return { status: 200, data: verificationToken };
