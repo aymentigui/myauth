@@ -16,6 +16,19 @@ import toast from "react-hot-toast";
 import { useSession } from "@/hooks/use-session";
 import { deleteUsers } from "@/actions/users/delete";
 import ConfirmDialogDelete from "@/components/myui/shadcn-dialog-confirm";
+import { generateFileClient } from "@/actions/util/export-data/export-client";
+import ExportButton from "@/components/my/export-button";
+import { getAllUsers, getUsersWithIds } from "@/actions/users/get";
+
+const selectors = [
+  { title: "Firstname", selector: "firstname" },
+  { title: "Lastname", selector: "lastname" },
+  { title: "Username", selector: "username" },
+  { title: "Email", selector: "email" },
+  { title: "Role", selector: "roles" },
+  { title: "Created At", selector: "created_at" },
+  { title: "Updated At", selector: "updated_at" },
+];
 
 export default function UsersAdminPage() {
   const translate = useTranslations("Users")
@@ -101,6 +114,34 @@ export default function UsersAdminPage() {
     }
   };
 
+  const exportSelected = async (type: number = 1) => {
+
+    const res = await getUsersWithIds(selectedIds)
+
+    if (res.status !== 200) {
+      toast.error(translateErrors("badrequest"))
+      return
+    }
+
+    const users = res.data
+    generateFileClient(selectors, users, type);
+
+  };
+
+  const exportAll = async (type: number = 1) => {
+
+    const res = await getAllUsers()
+
+    if (res.status !== 200) {
+      toast.error(translateErrors("badrequest"))
+      return
+    }
+
+    const users = res.data
+    generateFileClient(selectors, users, type);
+
+  };
+
   if (!mounted) {
     return (
       <div className="h-[300px] flex items-center justify-center">
@@ -114,7 +155,7 @@ export default function UsersAdminPage() {
       <h1 className="text-2xl font-bold mb-4">{translate("title")}</h1>
       {userSheetCreated && (
         <div className="bg-blue-500 text-white p-4 mb-4 rounded">
-          {translateSystem("userSheetCreated")}
+          {translateSystem("mustrefreshtoseedata")}
         </div>
       )}
       {userSheetNotCreated && userSheetNotCreated.length > 0 && (
@@ -138,7 +179,11 @@ export default function UsersAdminPage() {
           <Link href="/admin/sheetimport">
             <Button>{translateSystem('import')}</Button>
           </Link>
-          {(session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.is_admin 
+          <ExportButton all={true} handleExportCSV={() => exportAll(1)} handleExportXLSX={() => exportAll(2)} />
+          {selectedIds.length > 0 && <ExportButton all={false} handleExportCSV={() => exportSelected(1)} handleExportXLSX={() => exportSelected(2)} />}
+          {(session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.is_admin
+            &&
+            selectedIds.length > 0
             &&
             <ConfirmDialogDelete
               open={open}
@@ -148,7 +193,7 @@ export default function UsersAdminPage() {
               triggerText={translate("deleteusers")}
               titleText={translate("confermationdelete")}
               descriptionText={translate("confermationdeletemessage")}
-              deleteAction= {deleteUsers}
+              deleteAction={deleteUsers}
             />
           }
         </div>

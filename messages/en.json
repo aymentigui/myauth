@@ -58,8 +58,34 @@
         "document" : "Document",
         "audio" : "Audio",
         "other" : "Other",
+        
+        "number": "Number",
+        "date": "Date",
+        "time": "Time",
+        "password": "Password",
+        "select": "Select",
+        "checkbox": "Checkbox",
+        "radio": "Radio",
+        "json": "JSON",
+        "csv": "CSV",
+        "xlsx": "XLSX",
+        "pdf": "PDF",
+        "html": "HTML",
+        "html5": "HTML5",
+        "email": "Email",
+        "phone": "Phone number",
+        "url": "URL",
 
-        "userSheetCreated": "Please refresh the page to see the new data.",
+        "export": "Export",
+        "exportall": "Export all",
+        "exportselected": "Export selected",
+        "exportCSV": "Export CSV",
+        "exportXLSX": "Export XLSX",
+        "exportPDF": "Export PDF",
+        "exportHTML": "Export HTML",
+        "exportHTML5": "Export HTML5",
+
+        "mustrefreshtoseedata": "Please refresh the page to see the new data.",
 
         "confermationdelete": "Are you absolutely sure?",
         "confermationdeletemessage": "This action cannot be undone. This will permanently delete your data and remove your data from our servers."
@@ -285,26 +311,6 @@
         "invalidxlsx": "This field must be an XLSX",
         "invalidpdf": "This field must be a PDF",
         "invalidhtml": "This field must be an HTML",
-        "invalidhtml5": "This field must be an HTML5",
-
-        "number": "Number",
-        "date": "Date",
-        "time": "Time",
-        "password": "Password",
-        "text": "Text",
-        "select": "Select",
-        "checkbox": "Checkbox",
-        "radio": "Radio",
-        "file": "File",
-        "image": "Image",
-        "json": "JSON",
-        "csv": "CSV",
-        "xlsx": "XLSX",
-        "pdf": "PDF",
-        "html": "HTML",
-        "html5": "HTML5",
-        "email": "Email",
-        "phone": "Phone number",
-        "url": "URL"
+        "invalidhtml5": "This field must be an HTML5"
     }
 }

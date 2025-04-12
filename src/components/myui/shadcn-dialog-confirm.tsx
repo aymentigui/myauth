@@ -1,9 +1,10 @@
 "use client"
 import React from 'react'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '../ui/button';
 import toast from 'react-hot-toast';
+import { cn } from '@/lib/utils';
 
 interface ConfirmDialogProps {
     open: boolean;
@@ -18,6 +19,8 @@ interface ConfirmDialogProps {
 
 const ConfirmDialogDelete = ({ open, setOpen, selectedIds, textToastSelect, triggerText, titleText, descriptionText, deleteAction }: ConfirmDialogProps) => {
     const translateSystem = useTranslations("System")
+
+    const locale = useLocale()
 
     const hadnleConfirmDelete = async () => {
         if (selectedIds.length === 0) {
@@ -42,17 +45,17 @@ const ConfirmDialogDelete = ({ open, setOpen, selectedIds, textToastSelect, trig
     return (
         <AlertDialog open={open} onOpenChange={hadnleConfirmDelete}>
             <AlertDialogTrigger asChild>
-                <Button variant="outline">{triggerText}</Button>
+                <Button variant="destructive">{triggerText}</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>{titleText}</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogTitle className={cn(locale=="ar"?"text-right":"text-left")}>{titleText}</AlertDialogTitle>
+                    <AlertDialogDescription className={cn(locale=="ar"?"text-right":"text-left")}>
                         {descriptionText}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setOpen(false)}>{translateSystem("cancel")}</AlertDialogCancel>
+                    <AlertDialogCancel className='mx-2' onClick={() => setOpen(false)}>{translateSystem("cancel")}</AlertDialogCancel>
                     <AlertDialogAction onClick={handleDelete}>{translateSystem("confirm")}</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

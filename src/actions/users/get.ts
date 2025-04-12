@@ -12,7 +12,7 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
         if (!session || session.status != 200) {
             return { status: 401, data: { message: e('unauthorized') } }
         }
-        const hasPermissionAdd = await withAuthorizationPermission( ['users_view']);
+        const hasPermissionAdd = await withAuthorizationPermission(['users_view']);
 
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };
@@ -21,7 +21,7 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
         // Calculer le nombre d'éléments à sauter
         const skip = (page - 1) * pageSize;
 
-        const searchConditions = searchQuery && searchQuery !==""
+        const searchConditions = searchQuery && searchQuery !== ""
             ? {
                 OR: [
                     { firstname: { contains: searchQuery } },
@@ -33,7 +33,7 @@ export async function getUsers(page: number = 1, pageSize: number = 10, searchQu
                     { public: true }, // Filtrer les utilisateurs non supprimés
                 ],
             }
-            : {public: true};
+            : { public: true };
 
         const users = await prisma.user.findMany({
             skip: skip, // Nombre d'éléments à sauter
@@ -88,10 +88,134 @@ export async function getUsersPublic(): Promise<{ status: number, data: any }> {
                 username: true,
                 email: true,
                 image_compressed: true,
+                roles: {
+                    where: {
+                        role: {
+                            public: true,
+                        },
+                    },
+                    select: {
+                        role: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
-        return { status: 200, data: users };
+        const formattedUsers = users.map((user) => ({
+            ...user,
+            roles: user.roles.map((role) => role.role.name).join(", "),
+        }))
+
+        return { status: 200, data: formattedUsers };
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return { status: 500, data: null };
+    }
+}
+
+export async function getAllUsers(): Promise<{ status: number, data: any }> {
+    const e = await getTranslations('Error');
+    try {
+        const session = await verifySession()
+        if (!session || session.status != 200) {
+            return { status: 401, data: { message: e('unauthorized') } }
+        }
+        const hasPermissionAdd = await withAuthorizationPermission( ['users_view']);
+
+        if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
+            return { status: 403, data: { message: e('forbidden') } };
+        }
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+                email: true,
+                image_compressed: true,
+                roles: {
+                    where: {
+                        role: {
+                            public: true,
+                        },
+                    },
+                    select: {
+                        role: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        const formattedUsers = users.map((user) => ({
+            ...user,
+            roles: user.roles.map((role) => role.role.name).join(", "),
+        }))
+
+        return { status: 200, data: formattedUsers };
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return { status: 500, data: { message : e("badrequest") } };
+    }
+}
+
+export async function getUsersWithIds(userIds: string[]): Promise<{ status: number, data: any }> {
+
+    const e = await getTranslations('Error');
+    try {
+        const session = await verifySession()
+        if (!session || session.status != 200) {
+            return { status: 401, data: { message: e('unauthorized') } }
+        }
+        const hasPermissionAdd = await withAuthorizationPermission(['users_view']);
+
+        if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
+            return { status: 403, data: { message: e('forbidden') } };
+        }
+        const users = await prisma.user.findMany({
+            where: {
+                id: {
+                    in: userIds,
+                }
+
+            },
+            select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+                email: true,
+                image_compressed: true,
+                roles: {
+                    where: {
+                        role: {
+                            public: true,
+                        },
+                    },
+                    select: {
+                        role: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        const formattedUsers = users.map((user) => ({
+            ...user,
+            roles: user.roles.map((role) => role.role.name).join(", "),
+        }))
+
+        return { status: 200, data: formattedUsers };
     } catch (error) {
         console.error("Error fetching users:", error);
         return { status: 500, data: null };
@@ -100,7 +224,7 @@ export async function getUsersPublic(): Promise<{ status: number, data: any }> {
 
 
 export async function getUser(userId?: string): Promise<{ status: number, data: any }> {
-    
+
     const e = await getTranslations('Error');
     try {
 
@@ -126,16 +250,16 @@ export async function getUser(userId?: string): Promise<{ status: number, data: 
 
 export async function getCountUsers(searchQuery?: string): Promise<{ status: number, data: any }> {
 
-    const searchConditions = searchQuery && searchQuery !==""
-    ? {
-        OR: [
-            { firstname: { contains: searchQuery } },
-            { lastname: { contains: searchQuery } },
-            { username: { contains: searchQuery } },
-            { email: { contains: searchQuery } },
-        ],
-    }
-    : {};
+    const searchConditions = searchQuery && searchQuery !== ""
+        ? {
+            OR: [
+                { firstname: { contains: searchQuery } },
+                { lastname: { contains: searchQuery } },
+                { username: { contains: searchQuery } },
+                { email: { contains: searchQuery } },
+            ],
+        }
+        : {};
 
     const e = await getTranslations('Error');
     try {
