@@ -22,8 +22,6 @@ import Loading from "@/components/myui/loading";
 import { Columns } from "./columns-table";
 import { columns } from "./columns-table";
 import SearchTable from "@/components/myui/table/search-table";
-import BackPagination from "@/components/myui/table/back-pagination";
-import NextPagination from "@/components/myui/table/next-pagination";
 import TablePagination from "@/components/myui/table/table-pagination";
 
 interface DataTableProps {

@@ -10,10 +10,10 @@ const TextEditor = ({ id, value, onChange }: { id?: string, value?: string, onCh
 
     useEffect(() => {
         const Quill = require("quill").default;
-        const ImageResize = require("quill-image-resize").default;
+        // const ImageResize = require("quill-image-resize").default;
         const Widget = require("quill-table-widget").default;
 
-        Quill.register("modules/imageResize", ImageResize);
+        // Quill.register("modules/imageResize", ImageResize);
         Quill.register("modules/tableWidget", Widget);
 
         const quill = new Quill(quillRef.current, {

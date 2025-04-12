@@ -1,6 +1,6 @@
 "use client"
 import { DataTable } from "./data-table/data-table-user";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import Loading from "@/components/myui/loading";
 import { useEffect, useState } from "react";
 import { useOrigin } from "@/hooks/use-origin";
