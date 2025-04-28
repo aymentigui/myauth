@@ -93,9 +93,9 @@ const ResetForm = () => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='text-black'>{t("password")}</FormLabel>
+                                <FormLabel >{t("password")}</FormLabel>
                                 <FormControl>
-                                    <Input className='border-gray-200 focus:border-black' placeholder={t("password")}{...field} />
+                                    <Input placeholder={t("password")}{...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -106,9 +106,9 @@ const ResetForm = () => {
                         name="passwordConfermation"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='text-black'>{t("confirmpassword")}</FormLabel>
+                                <FormLabel>{t("confirmpassword")}</FormLabel>
                                 <FormControl>
-                                    <Input className='border-gray-200 focus:border-black' placeholder={t("confirmpassword")} {...field} />
+                                    <Input placeholder={t("confirmpassword")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -121,9 +121,9 @@ const ResetForm = () => {
                         name="code"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='text-black'>{t("codeverification")}</FormLabel>
+                                <FormLabel >{t("codeverification")}</FormLabel>
                                 <FormControl>
-                                    <Input className='border-gray-200 focus:border-black' placeholder="XXXX" {...field} />
+                                    <Input  placeholder="XXXX" {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -132,7 +132,7 @@ const ResetForm = () => {
                 </>}
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full bg-black hover:bg-gray-800 text-white', loading && 'cursor-wait')} type="submit">{!passwordForget ? s("next") : s("reset")}</Button>
+                        disabled={loading} className={cn('font-bold w-full ', loading && 'cursor-wait')} type="submit">{!passwordForget ? s("next") : s("reset")}</Button>
                 </div>
             </form>
         </Form>

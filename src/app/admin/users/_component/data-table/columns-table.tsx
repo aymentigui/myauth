@@ -1,7 +1,6 @@
 "use client"
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { Trash, ArrowUpDown, Settings2, CircleUserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
@@ -9,9 +8,8 @@ import { useAddUpdateUserDialog } from "@/context/add-update-dialog-context";
 import { useSession } from "@/hooks/use-session";
 import axios from "axios";
 import { useOrigin } from "@/hooks/use-origin";
-import GetImage from "@/hooks/use-getImage";
-import { LzyImage } from "@/components/myui/lazy-image";
 import { Checkbox } from "@/components/ui/checkbox";
+import MyImage from "@/components/myui/my-image";
 
 export type Columns = {
   id: string;
@@ -110,25 +108,25 @@ const rolesCell = (row: any) => {
 const imageCell = (row: any) => {
   const preview = row.getValue("image_compressed")
   return preview ? (
-    <LzyImage
-      src={GetImage(preview)}
+    <MyImage
+      image={preview}
       alt="Avatar"
       load
-      className="w-4 h-4 object-cover rounded-full"
+      classNameProps="w-4 h-4 object-cover rounded-full"
     />
   ) : (
-    <CircleUserRound  className="w-4 h-4 text-gray-500" />
+    <CircleUserRound className="w-4 h-4 text-gray-500" />
   )
 }
 
 const actionsCell = (row: any) => {
   const user = row.original;
-  const origin= useOrigin()
+  const origin = useOrigin()
   const { openDialog } = useAddUpdateUserDialog();
   const { session } = useSession()
   const hasPermissionDeleteUsers = (session?.user?.permissions.find((permission: string) => permission === "users_delete") ?? false) || session?.user?.is_admin;
   const hasPermissionUpdateUsers = (session?.user?.permissions.find((permission: string) => permission === "users_update") ?? false) || session?.user?.is_admin;
-  
+
   const handleOpenDialogWithTitle = () => {
     openDialog(false, row.original)
   };
@@ -136,7 +134,7 @@ const actionsCell = (row: any) => {
   return (
     <div className="w-1/6 flex gap-2">
       {hasPermissionDeleteUsers && <Button
-        onClick={() => deleteUserHandler(user.id, origin??"")}
+        onClick={() => deleteUserHandler(user.id, origin ?? "")}
         variant="destructive"
       >
         <Trash />
@@ -175,7 +173,7 @@ export const columns: ColumnDef<Columns>[] = [
   {
     accessorKey: "image_compressed",
     header: "image",
-    cell: ({ row }) => ( imageCell(row) ),
+    cell: ({ row }) => (imageCell(row)),
     enableSorting: true,
   },
   {
@@ -235,9 +233,9 @@ export const columns: ColumnDef<Columns>[] = [
   },
 ];
 
-const deleteUserHandler = async (userId: string, origin:string) => {
-  if(!origin) return
-  const response = await axios.delete(origin+"/api/admin/users/" + userId);
+const deleteUserHandler = async (userId: string, origin: string) => {
+  if (!origin) return
+  const response = await axios.delete(origin + "/api/admin/users/" + userId);
   if (response.data.status === 200) {
     toast.success(response.data.data.message);
     window.location.reload()

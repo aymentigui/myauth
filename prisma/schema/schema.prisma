@@ -36,7 +36,8 @@ model user {
   // Optional for WebAuthn support
   // Authenticator                 Authenticator[]
 
-  created_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
   updated_at DateTime @updatedAt
 }
 

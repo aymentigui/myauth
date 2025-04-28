@@ -19,11 +19,15 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { getConfirmationCodePasswordChange } from '@/actions/auth/password-change'
 import { useTranslations } from 'next-intl'
+import { Eye, EyeClosed } from 'lucide-react'
+import { useSession } from '@/hooks/use-session'
 
 const LoginForm = () => {
     const [loading, setLoading] = useState(false)
     const [twoFactorConfermation, setTwoFactorConfermation] = useState(false)
     const router = useRouter()
+    const [hidePassword, setHidePassword] = useState(true)
+    const { setSession} = useSession()
 
     const t = useTranslations("Settings")
     const s = useTranslations("System")
@@ -49,7 +53,8 @@ const LoginForm = () => {
                 if (res.data.twoFactorConfermation) {
                     setTwoFactorConfermation(true)
                 } else {
-                    router.push("/admin");
+                    router.push("/admin/settings");
+                    setSession(res)
                 }
             } else {
                 toast.error(res.data.message);
@@ -74,7 +79,7 @@ const LoginForm = () => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 text-black">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 ">
                 {!twoFactorConfermation && <>
                     <FormField
                         control={form.control}
@@ -83,7 +88,7 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("emailorusername")}</FormLabel>
                                 <FormControl>
-                                    <Input className='border-gray-200 focus:border-black' placeholder={t("emailorusername")} {...field} />
+                                    <Input  placeholder={t("emailorusername")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -96,7 +101,12 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("password")}</FormLabel>
                                 <FormControl>
-                                    <Input className='border-gray-200 focus:border-black' placeholder={t("password")} {...field} />
+                                    <div className='flex items-center gap-1'>
+                                        <Input type={hidePassword ? "password" : "text"} placeholder={t("password")} {...field} />
+                                        <div onClick={()=>setHidePassword(!hidePassword)} className='p-2  border shadow rounded-md cursor-pointer'>
+                                            {!hidePassword ? <Eye className="w-4 h-4" /> : <EyeClosed className="w-4 h-4" />}
+                                        </div>
+                                    </div>
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -111,19 +121,20 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("codeverification")} </FormLabel>
                                 <FormControl>
-                                    <Input className='border-gray-200 focus:border-black' placeholder={t("codeverification")} {...field} />
+                                    <Input  placeholder={t("codeverification")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
                         )}
                     />
                 </>}
-                <Button variant='link' type='button' onClick={passwordForget} className='p-0 text-black'>{t("forgetpassword")}</Button>
+                <Button variant='link' type='button' onClick={passwordForget} className='p-0'>{t("forgetpassword")}</Button>
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full bg-black hover:bg-gray-800 text-white', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? s("confirm") : s("login")}</Button>
+                        disabled={loading} className={cn('font-bold w-full ', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? s("confirm") : s("login")}</Button>
                 </div>
             </form>
+            <Button variant='link' type='button' onClick={() => router.push("/auth/register")} className='p-0 mt-2 '>{t("youhavenotaccount")}</Button>
         </Form>
     )
 }

@@ -14,6 +14,10 @@ import { verifySession } from '../permissions';
 export async function registerUser(data: any): Promise<{ status: number, data: any }> {
     const u = await getTranslations('Users');
     const registerSchema = z.object({
+        firstname: z
+            .string({ required_error: u("firstnamerequired") }),
+        lastname: z
+            .string({ required_error: u("lastnamerequired") }),
         username: z
             .string({ required_error: u("usernamerequired") })
             .min(3, { message: u("username6") })
@@ -32,7 +36,7 @@ export async function registerUser(data: any): Promise<{ status: number, data: a
         console.log(result.error.errors);
         return { status: 400, data: result.error.errors };
     }
-    const { username, email, password } = result.data;
+    const { username, email, password, firstname, lastname } = result.data;
 
 
     try {
@@ -58,6 +62,8 @@ export async function registerUser(data: any): Promise<{ status: number, data: a
 
         const newUser = await prisma.user.create({
             data: {
+                firstname,
+                lastname,
                 username,
                 email,
                 password: passwordHash, // Note: In a real application, make sure to hash the password before storing it
@@ -99,6 +105,9 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
                 OR: [
                     { email: email },
                     { username: email }
+                ],
+                AND: [
+                    { deleted_at: null },
                 ]
             }
         })

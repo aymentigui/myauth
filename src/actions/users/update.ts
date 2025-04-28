@@ -140,6 +140,29 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
                     image_compressed: imageCompressedUrl,
                 },
             })
+        }else {
+            if (user.image) {
+                await prisma.user.update(
+                    {
+                        where: { id: user.id },
+                        data: {
+                            image: null
+                        }
+                    }
+                )
+                await deleteFileDb(user.image)
+            }
+            if (user.image_compressed) {
+                await prisma.user.update(
+                    {
+                        where: { id: user.id },
+                        data: {
+                            image_compressed: null
+                        }
+                    }
+                )
+                await deleteFileDb(user.image_compressed)
+            }
         }
 
         return { status: 200, data: { message: s("updatesuccess") } }

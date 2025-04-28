@@ -68,5 +68,9 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+	require("tailwindcss-animate"),
+	({ addVariant }:any) => {
+		addVariant("theme-ocean", ".theme-ocean &")
+	},],
 } satisfies Config;

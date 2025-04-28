@@ -17,14 +17,21 @@ import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { registerUser } from '@/actions/auth/auth'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 
 const RegisterForm = () => {
     const [loading, setLoading] = useState(false)
-    const u=useTranslations('Users');
-    const s=useTranslations('System');
-    const t=useTranslations('Settings');
+    const u = useTranslations('Users');
+    const s = useTranslations('System');
+    const t = useTranslations('Settings');
+
+    const router = useRouter()
 
     const RegisterSchema = z.object({
+        firstname: z
+            .string({ required_error: u("firstnamerequired") }),
+        lastname: z
+            .string({ required_error: u("lastnamerequired") }),
         username: z
             .string({ required_error: u("usernamerequired") })
             .min(3, { message: u("username6") })
@@ -40,6 +47,8 @@ const RegisterForm = () => {
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
+            firstname:"",
+            lastname:"",
             username: "",
             email: "",
             password: "",
@@ -49,8 +58,9 @@ const RegisterForm = () => {
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
         setLoading(true)
         registerUser(values).then((res) => {
-            if (res.status === 201) {  
+            if (res.status === 201) {
                 toast.success(s("registersuccess"))
+                router.push("/auth/login")
             } else {
                 toast.error(res.data.message)
             }
@@ -61,14 +71,42 @@ const RegisterForm = () => {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+                <div className=' flex flex-wrap gap-2'>
+                    <FormField
+                        control={form.control}
+                        name="firstname"
+                        render={({ field }) => (
+                            <FormItem className='grow'>
+                                <FormLabel>{u("firstname")}</FormLabel>
+                                <FormControl>
+                                    <Input placeholder={u("firstname")} {...field} />
+                                </FormControl>
+                                <FormMessage className='font-bold' />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="lastname"
+                        render={({ field }) => (
+                            <FormItem className='grow'>
+                                <FormLabel>{u("lastname")}</FormLabel>
+                                <FormControl>
+                                    <Input placeholder={u("lastname")} {...field} />
+                                </FormControl>
+                                <FormMessage className='font-bold' />
+                            </FormItem>
+                        )}
+                    />
+                </div>
                 <FormField
                     control={form.control}
                     name="username"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className='text-black'>{t("username")}</FormLabel>
+                            <FormLabel>{t("username")}</FormLabel>
                             <FormControl>
-                                <Input className='border-gray-200 focus:border-black' placeholder={t("username")} {...field} />
+                                <Input placeholder={t("username")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -79,9 +117,9 @@ const RegisterForm = () => {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className='text-black'>{t("email")}</FormLabel>
+                            <FormLabel >{t("email")}</FormLabel>
                             <FormControl>
-                                <Input className='border-gray-200 focus:border-black' placeholder={t("email")} {...field} />
+                                <Input placeholder={t("email")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -92,9 +130,9 @@ const RegisterForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className='text-black'>{t("password")}</FormLabel>
+                            <FormLabel >{t("password")}</FormLabel>
                             <FormControl>
-                                <Input className='border-gray-200 focus:border-black' placeholder={t("password")} {...field} />
+                                <Input placeholder={t("password")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -105,9 +143,9 @@ const RegisterForm = () => {
                     name="passwordConfirm"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className='text-black'>{t("confirmpassword")}</FormLabel>
+                            <FormLabel >{t("confirmpassword")}</FormLabel>
                             <FormControl>
-                                <Input className='border-gray-200 focus:border-black' placeholder={t("confirmpassword")} {...field} />
+                                <Input placeholder={t("confirmpassword")} {...field} />
                             </FormControl>
                             <FormMessage className='font-bold' />
                         </FormItem>
@@ -115,9 +153,10 @@ const RegisterForm = () => {
                 />
                 <div className='pt-4'>
                     <Button
-                        disabled={loading} className={cn('font-bold w-full bg-black hover:bg-gray-800', loading && 'cursor-wait')} type="submit">{s("register")}</Button>
+                        disabled={loading} className={cn('font-bold w-full ', loading && 'cursor-wait')} type="submit">{s("register")}</Button>
                 </div>
             </form>
+            <Button variant='link' type='button' onClick={() => router.push("/auth/login")} className='p-0 mt-2 '>{t("youhaveaccount")}</Button>
         </Form>
     )
 }

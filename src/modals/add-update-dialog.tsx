@@ -24,7 +24,7 @@ import { getRoles } from "@/actions/roles/get";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { useOrigin } from "@/hooks/use-origin";
-import AvatarUploader from "@/components/myui/avata-uploader";
+import AvatarUploader from "@/components/myui/avatar-uploader";
 
 type Role = {
   id: string;

@@ -1,11 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React from 'react'
 
 const NextPagination = ({ page, setPage, count, pageSize, isLoading, searchQuery }: any) => {
-    const router = useRouter()
+    const router=useRouter()
     const s = useTranslations("System")
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -30,10 +29,8 @@ const NextPagination = ({ page, setPage, count, pageSize, isLoading, searchQuery
         <Button
             variant="outline"
             size="sm"
-            className={cn(pageSize === 0 ? "hidden" : "block",
-                page === Math.ceil(count / pageSize) ? "cursor-not-allowed" : "")}
             onClick={handleNextPage}
-            disabled={pageSize === 0 || page === Math.ceil(count / pageSize) || isLoading}
+            disabled={page === Math.ceil(count / pageSize) || count ===0 || isLoading}
         >
             {s("next")}
         </Button>

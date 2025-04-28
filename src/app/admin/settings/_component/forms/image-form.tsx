@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { useTranslations } from 'next-intl'
-import AvatarUploader from '@/components/myui/avata-uploader'
+import AvatarUploader from '@/components/myui/avatar-uploader'
 import axios from 'axios'
 import { useOrigin } from '@/hooks/use-origin'
 
@@ -19,6 +19,7 @@ const ImageForm = ({ image, userId }: { image: string, userId: string }) => {
     const ts = useTranslations('System');
     const u = useTranslations('Users');
     const origin = useOrigin()
+    const [isChanged, setIsChanged] = useState(false)
 
     const ImageScema = z.object({
         image: z
@@ -35,19 +36,20 @@ const ImageForm = ({ image, userId }: { image: string, userId: string }) => {
 
     const imageChnage = form.watch('image')
 
+
+
     const onSubmit = async (data: z.infer<typeof ImageScema>) => {
         setLoading(true)
-        if (data.image) {
-            const formData = new FormData();
-            formData.append("file", data.image);
-            const res = await axios.put(origin + "/api/admin/users/" + userId+ "/image",formData)
-            if (res.data.status === 200) {
-                toast.success(ts("updatesuccess"))
-                form.reset()
-            } else {
-                toast.error(res.data.data.message)
-            }
+        const formData = new FormData();
+        formData.append("file", data.image??new File([], ""));
+        const res = await axios.put(origin + "/api/admin/users/" + userId + "/image", formData)
+        if (res.data.status === 200) {
+            toast.success(ts("updatesuccess"))
+            form.reset()
+        } else {
+            toast.error(res.data.data.message)
         }
+
         setLoading(false)
     }
 
@@ -56,9 +58,9 @@ const ImageForm = ({ image, userId }: { image: string, userId: string }) => {
             <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-between items-center flex-nowrap gap-4">
-                        <AvatarUploader name="image" image={image} />
+                        <AvatarUploader name="image" image={image} setIsChanged={setIsChanged} />
                         <div className='pt-6'>
-                            {imageChnage && <Button
+                            {(imageChnage || isChanged) && <Button
                                 disabled={loading} className={cn('font-bold w-full', loading && 'cursor-wait')} type="submit">{ts('save')}
                             </Button>}
                         </div>
