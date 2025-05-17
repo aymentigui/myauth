@@ -63,11 +63,11 @@ export async function deleteVerificationTokenByEmail(email:string) : Promise<{ s
     }
 }
 
-export async function generateVerificationToken(email: string) : Promise<{ status: number, data: any }> {
+export async function generateVerificationToken(email: string, minutes?: number) : Promise<{ status: number, data: any }> {
     const e=await getTranslations('Error');
     try {
         const token=generateToken4Chiffres();
-        const expiredAt=new Date(new Date().getTime() + 60*60*1000);
+        const expiredAt=new Date(new Date().getTime() + (minutes??60)*60*1000);
         const existingToken=await getVerificationTokenByEmail(email);
 
         if(existingToken.status===200 && existingToken.data){

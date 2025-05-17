@@ -1,4 +1,4 @@
-import ResetForm from "@/components/my/auth-form/reset";
+import ResetForm from "@/app/auth/reset/reset";
 import { getTranslations } from "next-intl/server";
 
 export default async function LoginPage() {

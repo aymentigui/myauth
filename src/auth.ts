@@ -147,6 +147,25 @@ export const { handlers, auth, signIn, signOut } =
           if (!isValid) {
             return null
           }
+
+          if (user.email_verified === null) {
+            return null
+          }
+
+          if (user.is_two_factor_enabled) {
+            const towFacorConfermation = await getTowFactorConfermationByUserId(user.id);
+            if (!towFacorConfermation.data) {
+              return null
+            }
+
+            if (towFacorConfermation.data.expiresAt > new Date()) {
+              await deleteTowFactorConfermationByUserId(user.id);
+              return null
+            }
+
+            await deleteTowFactorConfermationByUserId(user.id);
+          }
+
           const sessionId = uuidv4();
 
           return {

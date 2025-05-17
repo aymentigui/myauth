@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { loginUser } from '@/actions/auth/auth'
+import { loginUser, SendVerificationCode, SendVerificationCode2FA } from '@/actions/auth/auth'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { getConfirmationCodePasswordChange } from '@/actions/auth/password-change'
@@ -27,14 +27,14 @@ const LoginForm = () => {
     const [twoFactorConfermation, setTwoFactorConfermation] = useState(false)
     const router = useRouter()
     const [hidePassword, setHidePassword] = useState(true)
-    const { setSession} = useSession()
+    const { setSession } = useSession()
 
     const t = useTranslations("Settings")
     const s = useTranslations("System")
     const u = useTranslations("Users")
 
     const LoginSchema = z.object({
-        email: z.string({ required_error: u("emailrequired") }).email({ message: u("emailinvalid") }),
+        email: z.string({ required_error: u("emailrequired") }),
         password: z.string({ required_error: u("passwordrequired") }).min(6, { message: u("password6") }),
         code: z.string().optional(),
     });
@@ -53,9 +53,13 @@ const LoginForm = () => {
                 if (res.data.twoFactorConfermation) {
                     setTwoFactorConfermation(true)
                 } else {
-                    router.push("/admin/settings");
+                    router.push("/");
                     setSession(res)
                 }
+            } else if (res.data && res.data.emailNotVerified) {
+                SendVerificationCode(values.email).then((e) => {
+                    router.push(`/auth/confermation?email=${values.email}`)
+                });
             } else {
                 toast.error(res.data.message);
             }
@@ -77,6 +81,20 @@ const LoginForm = () => {
         })
     }
 
+    const resendTheCode = ()=>{
+        if (!form.getValues().email) {
+            toast.error(t("emailorusername"))
+            return
+        }
+        SendVerificationCode2FA(form.getValues().email).then((res) => {
+            if (res.status === 200) {
+                toast.success(s("verificationemailsent"));
+            }else{
+                toast.error(res.data.message);
+            }
+        })
+    }
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 ">
@@ -88,7 +106,7 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("emailorusername")}</FormLabel>
                                 <FormControl>
-                                    <Input  placeholder={t("emailorusername")} {...field} />
+                                    <Input placeholder={t("emailorusername")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
@@ -103,7 +121,7 @@ const LoginForm = () => {
                                 <FormControl>
                                     <div className='flex items-center gap-1'>
                                         <Input type={hidePassword ? "password" : "text"} placeholder={t("password")} {...field} />
-                                        <div onClick={()=>setHidePassword(!hidePassword)} className='p-2  border shadow rounded-md cursor-pointer'>
+                                        <div onClick={() => setHidePassword(!hidePassword)} className='p-2  border shadow rounded-md cursor-pointer'>
                                             {!hidePassword ? <Eye className="w-4 h-4" /> : <EyeClosed className="w-4 h-4" />}
                                         </div>
                                     </div>
@@ -121,14 +139,17 @@ const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>{t("codeverification")} </FormLabel>
                                 <FormControl>
-                                    <Input  placeholder={t("codeverification")} {...field} />
+                                    <Input placeholder={t("codeverification")} {...field} />
                                 </FormControl>
                                 <FormMessage className='font-bold' />
                             </FormItem>
                         )}
                     />
                 </>}
-                <Button variant='link' type='button' onClick={passwordForget} className='p-0'>{t("forgetpassword")}</Button>
+                <div className='flex justify-between items-center'>
+                    <Button variant='link' type='button' onClick={passwordForget} className='p-0'>{t("forgetpassword")}</Button>
+                    <Button variant='link' type='button' onClick={resendTheCode} className='p-0'>{s("resendthecode")}</Button>
+                </div>
                 <div className='pt-4'>
                     <Button
                         disabled={loading} className={cn('font-bold w-full ', loading && 'cursor-wait')} type="submit">{twoFactorConfermation ? s("confirm") : s("login")}</Button>

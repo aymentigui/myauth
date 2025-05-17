@@ -59,8 +59,7 @@ const RegisterForm = () => {
         setLoading(true)
         registerUser(values).then((res) => {
             if (res.status === 201) {
-                toast.success(s("registersuccess"))
-                router.push("/auth/login")
+                router.push(`/auth/confermation?email=${values.email}`)
             } else {
                 toast.error(res.data.message)
             }

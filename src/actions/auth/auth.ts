@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { deleteVerificationTokenByEmail, generateVerificationToken, getVerificationTokenByEmail } from './verification-token';
-import { sendEmail } from '../email';
+import { send2FACode, sendCode, sendEmail } from '../email';
 import { createTowFactorConfermation } from './tow-factor-confermation';
 import { getTranslations } from 'next-intl/server';
 import { verifySession } from '../permissions';
@@ -81,7 +81,7 @@ export async function registerUser(data: any): Promise<{ status: number, data: a
     }
 }
 
-export async function loginUser(data: any): Promise<{ status: number, data: any }> {
+export async function loginUser(data: any): Promise<{ status: number, data: any,  }> {
 
     const u = await getTranslations("Users")
 
@@ -94,7 +94,6 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
     const result = LoginSchema.safeParse(data);
 
     if (!result.success) {
-        console.log(result.error.errors);
         return { status: 400, data: result.error.errors };
     }
     const { email, password, code } = result.data;
@@ -113,26 +112,27 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
         })
 
         if (!user) {
-            console.log('User not found');
             return { status: 400, data: { message: 'User not found' } };
         }
 
         if (!user.password) {
-            console.log('You must connect with your provider');
             return { status: 400, data: { message: 'You must connect with your provider' } };
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            console.log('Invalid password');
             return { status: 400, data: { message: 'Invalid password' } };
+        }
+
+        if(user.email_verified===null){
+            return { status: 400, data: { message: 'You must verify your email', emailNotVerified: true } };
         }
 
         if (user.is_two_factor_enabled && user.email) {
             if (!code) {
                 const token = await generateVerificationToken(user.email);
-                sendEmail(user.email, 'Confirmation code', 'Your confirmation code is ' + token.data.token);
+                send2FACode({ email: user.email, code: token.data.token });
                 return { status: 200, data: { twoFactorConfermation: true } };
             } else {
                 const token = await getVerificationTokenByEmail(user.email);
@@ -153,7 +153,6 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
 
         try {
             await signIn("credentials", { email, password, redirect: false });
-            console.log('Login successful');
             return { status: 200, data: user };
         } catch (error) {
             if (error instanceof Error) {
@@ -172,6 +171,109 @@ export async function loginUser(data: any): Promise<{ status: number, data: any 
         return { status: 500, data: { message: 'An error occurred' } };
     }
 }
+
+export async function confermationRegister(data: any, email: string): Promise<{ status: number, data: any }> {
+
+    const u = await getTranslations("Users")
+
+    const schema = z.object({
+        code: z.string(),
+    });
+
+    const result = schema.safeParse(data);
+
+    if (!result.success) {
+        return { status: 400, data: result.error.errors };
+    }
+    const { code } = result.data;
+
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { email: email },
+                ],
+                AND: [
+                    { deleted_at: null },
+                ]
+            }
+        })
+
+        if (!user) {
+            return { status: 400, data: { message: 'User not found' } };
+        }
+
+        const token = await getVerificationTokenByEmail(email);
+        if (token.status !== 200 || !token.data) {
+            return { status: 400, data: { message: 'Invalid code' } };
+        }
+        if (token.data.token !== code) {
+            return { status: 400, data: { message: 'Invalid code' } };
+        }
+        const expired = new Date(token.data.expiredAt) < new Date();
+        if (expired) {
+            return { status: 400, data: { message: 'Code expired' } };
+        }
+        await deleteVerificationTokenByEmail(email);
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                email_verified: new Date()
+            }
+        })
+
+        return { status: 200, data: { message: 'Email confirmed successfully' } };
+
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+            return { status: 500, data: { message: 'An error occurred' } };
+        }
+        console.error("An error occurred");
+        return { status: 500, data: { message: 'An error occurred' } };
+    }
+}
+
+export const SendVerificationCode = async (email: string)=> {
+    const s= await getTranslations('System');
+    const tokenExisting = await getVerificationTokenByEmail(email);
+
+    if(tokenExisting.status===200 && tokenExisting.data && new Date(tokenExisting.data.expiredAt) < new Date()){  
+        await prisma.verificationtoken.delete({
+            where : {
+                id: tokenExisting.data.id
+            }
+        })
+    }else if(tokenExisting.status===200 && tokenExisting.data && new Date(tokenExisting.data.expiredAt) > new Date()) {
+        return { status: 500, data: { message: s("mustwait1minutes") } };
+    }
+    const token = await generateVerificationToken(email,1);
+    sendCode({ email, code: token.data.token });
+    // sendEmail(email, 'Confirmation code', 'Your confirmation code is ' + token.data.token);
+    return { status: 200, data: { message: 'Code sent successfully' } };
+}
+
+export const SendVerificationCode2FA = async (email: string)=> {
+    const s= await getTranslations('System');
+    const tokenExisting = await getVerificationTokenByEmail(email);
+
+    if(tokenExisting.status===200 && tokenExisting.data && new Date(tokenExisting.data.expiredAt-1000*60*59) < new Date()){  
+        await prisma.verificationtoken.delete({
+            where : {
+                id: tokenExisting.data.id
+            }
+        })
+    }else if(tokenExisting.status===200 && tokenExisting.data && new Date(tokenExisting.data.expiredAt-1000*60*59) > new Date()) {
+        return { status: 500, data: { message: s("mustwait1minutes") } };
+    }
+    const token = await generateVerificationToken(email,1);
+    sendCode({ email, code: token.data.token });
+    // sendEmail(email, 'Confirmation code', 'Your confirmation code is ' + token.data.token);
+    return { status: 200, data: { message: 'Code sent successfully' } };
+}
+
 
 export async function logoutUser() {
     try {
